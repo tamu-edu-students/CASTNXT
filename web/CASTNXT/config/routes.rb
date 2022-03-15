@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  get 'home/index'
+
+  root 'home#index'
+  
+  
+  
   get 'gauthcontroller/handle'
   resources :users
   get '/:id/preview', to: 'gforms#preview', as: 'preview'

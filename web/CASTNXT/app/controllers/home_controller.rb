@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
 
   def index
+    Rails.logger.debug(User.column_names)
     if session.key?(:userEmail) and session.key?(:userType) and session.key?(:userName)
       session_redirect
     end
