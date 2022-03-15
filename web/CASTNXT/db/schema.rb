@@ -10,21 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_17_044020) do
-
-  create_table "gforms", force: :cascade do |t|
-    t.string "name"
-    t.string "view_link"
-    t.string "edit_link"
-    t.string "sheets_link"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
+ActiveRecord::Schema.define(version: 202203081935) do
 
   create_table "users", force: :cascade do |t|
-    t.string "token"
     t.string "email"
     t.string "name"
+    t.string "password"
     t.string "userType"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
