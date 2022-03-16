@@ -19,5 +19,5 @@ Rails.application.routes.draw do
   get '/:id/designers', to: 'users#designers', as: 'user_designer'
   get '/:id/admin', to: 'users#admin', as: 'user_admin'
   # map '/' to be a redirect to '/movies'
-  root :to => redirect('/users/new')
+  #root :to => redirect('/users/new')
 end
