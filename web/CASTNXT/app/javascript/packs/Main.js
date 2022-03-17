@@ -7,6 +7,9 @@ import {
 } from "react-router-dom";
 
 import Homepage from '../components/Home/Homepage';
+import UserHomepage from '../components/User/UserHomepage';
+import AdminHomepage from '../components/Admin/AdminHomepage';
+import ClientHomepage from '../components/Client/ClientHomepage';
 
 class Main extends Component {
     constructor(props) {
@@ -20,10 +23,13 @@ class Main extends Component {
     render() {
         return (
         <div className="App">
-          <div style={{ "paddingTop": "2%" }}>
+          <div className="overflow-auto" style={{ "paddingTop": "1%" }}>
             <Router>
               <Switch>
                 <Route exact path="/" render= {() => <Homepage />} />
+                <Route exact path="/user" render= {() => <UserHomepage />} />
+                <Route exact path="/admin" render= {() => <AdminHomepage />} />
+                <Route exact path="/client" render= {() => <ClientHomepage />} />
                 <Redirect from="/" to="/login" />
               </Switch>
             </Router>
