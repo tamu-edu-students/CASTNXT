@@ -90,24 +90,27 @@ class Homepage extends Component {
     login = () => {
         let email = this.state.loginPassword
         let password = this.state.loginPassword
-        
-        axios.get("?", {
-              params: {
-                email: email,
-                password: password
-              }
-            })
-            .then((res) => {
-                console.log("Success", res)
-                let role = res.data.role
-                
-                this.setState({
-                    redirect: role
+        this.setState({
+                    redirect: 'admin'
                 })
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        
+    //     axios.get("?", {
+    //           params: {
+    //             email: email,
+    //             password: password
+    //           }
+    //         })
+    //         .then((res) => {
+    //             console.log("Success", res)
+    //             let role = res.data.role
+                
+    //             this.setState({
+    //                 redirect: role
+    //             })
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
     }
 
     render() {
