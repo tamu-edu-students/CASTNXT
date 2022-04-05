@@ -3,50 +3,43 @@ class HomeController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    Rails.logger.debug(User.column_names)
-    # if session.key?(:userEmail) and session.key?(:userType) and session.key?(:userName)
-    #   session_redirect
-    # end
+    '''
+    TODO: Session Redirect
     
-    # Rails.logger.debug(params)
-    Rails.logger.debug(request.params[:params])
-    
-    if request.params.key?(:params)
-      params = request.params[:params]
-      
-      if params.key?(:email) and params.key?(:password)
-        Rails.logger.debug("HERE")
-        if correct_user?(params)
-          currentUser = User.find_by(:email => params[:email], :password => params[:password])
-          session[:userEmail] = params[:email]
-          session[:userType] = currentUser.userType
-          session[:userName] = currentUser.name
-          session_redirect
-        else
-          render json: {comment: "User not found!"}, status: 400
-        end
-      end
+    if session.key?(:userEmail) and session.key?(:userType) and session.key?(:userName)
+      session_redirect
     end
-    
-    
-    
+    '''
   end
   
-  def create
+  def signup
     if new_user?(params[:email])
       create_user(params)
       session[:userEmail] = params[:email]
       session[:userType] = params[:type]
-      session_redirect
+      session[:userName] = params[:name]
+      render json: {userType: session[:userType]}, status: 200
     else
       render json: {comment: "Email already exists!"}, status: 400
+    end
+  end
+  
+  def login
+    if correct_user?(params)
+      currentUser = get_user(params[:email], params[:password])
+      session[:userEmail] = params[:email]
+      session[:userType] = currentUser.user_type
+      session[:userName] = currentUser.name
+      render json: {userType: session[:userType]}, status: 200
+    else
+      render json: {comment: "User not found!"}, status: 400
     end
   end
   
   private
   
   def new_user? email
-    if User.where(:email => email).blank?
+    if Auth.where(:email => email).blank?
       return true
     end
     
@@ -54,18 +47,28 @@ class HomeController < ApplicationController
   end
   
   def correct_user? params
-    if User.where(:email => params[:email], :password => params[:password]).present?
+    if Auth.where(:email => params[:email], :password => params[:password]).present?
       return true
     end
     
     return false
   end
   
+  def get_user email, password
+    return Auth.find_by(:email => email, :password => password)
+  end
+  
   def create_user params
-    User.create(name:params[:name], email:params[:email], password:params[:password], userType:params[:type])
+    Auth.create(name:params[:name], email:params[:email], password:params[:password], user_type:params[:type])
   end
 
   def session_redirect
-    render json: {userType: session[:userType]}, status: 200
+    if session[:userType] == 'admin'
+      redirect_to admins_path
+    elsif session[:userType] == 'client'
+      redirect_to clients_path
+    else
+      redirect_to users_path
+    end
   end
 end
