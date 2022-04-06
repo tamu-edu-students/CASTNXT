@@ -37,7 +37,7 @@ class AdminCreateEvent extends Component {
                 </div>
                 
                 <div style={{marginTop: '3%', backgroundColor: 'white'}}>
-                    <h1>Admin: Create event</h1>
+                    <h1>Admin: Create form</h1>
                     
 
                     <div className="container" style={{ backgroundColor: 'white', height: '100%', width: '50vw', paddingTop: '1%' }}>
@@ -54,7 +54,7 @@ class AdminCreateEvent extends Component {
                         </div>
     
                         <br />
-                        <p>Use this page to create a new event</p>
+                        <p>Use this page to create a new form</p>
                         <FormBuilderContainer/>
                     </div>
                 </div>

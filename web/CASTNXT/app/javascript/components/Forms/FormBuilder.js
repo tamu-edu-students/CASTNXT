@@ -14,8 +14,10 @@ class FormBuilderContainer extends Component {
     };
   }
   render() {
+    console.log(this.state)
     return (
         <div className="container" style={{ backgroundColor: 'white', height: '100%'}}>
+        <div>
           <FormBuilder
             schema={this.state.schema}
             uischema={this.state.uischema}
@@ -26,6 +28,7 @@ class FormBuilderContainer extends Component {
               })
             }}
           />
+          </div>
           <div className="form-preview">
                 <p className="preview-title">Form preview: </p>
               <Form

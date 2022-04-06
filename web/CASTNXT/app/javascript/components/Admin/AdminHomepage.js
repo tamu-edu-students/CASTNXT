@@ -65,14 +65,14 @@ class AdminHomepage extends Component {
     
                         <br />
                         <p>Use this page to sign up for events and check to see if you've been selected for an event</p>
+                        <div style={{margin: 20}}>
+                            <Button variant="contained" onClick={this.createEventRedirection}>Create New Form</Button>
+                        </div>
                         <div className="row">
                             <div className="col-md-10 offset-md-1">
                                 <TableContainer component={Paper}>
                                     <Table aria-label="simple table">
                                         <TableHead style={{ backgroundColor: '#3498DB' }}>
-                                            <TableRow>
-                                                <Button variant="contained" onClick={this.createEventRedirection}>Create Event</Button>
-                                            </TableRow>
                                             <TableRow>
                                                 <TableCell align="center">Event</TableCell>
                                                 <TableCell>Form Link</TableCell>
