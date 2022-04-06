@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import { Link } from 'react-router-dom';
+import UserEventRegister from './UserEventRegister';
 
 class UserEvents extends Component {
     constructor(props) {
@@ -44,14 +46,19 @@ class UserEvents extends Component {
                             
                             <tbody>
                                 {trows.map((val, key) => {
-                                    return(
-                                        <tr key={key}>
-                                            <td>{val.event}</td>
-                                            <td>{val.link}</td>
-                                            <td>{val.status}</td>
-                                        </tr>
-                                    )
-                                }
+                                        return(
+                                            <tr key={key}>
+                                                <td>{val.event}</td>
+                                                <td>
+                                                    <Link to={{
+                                                                pathname: "/user/event",
+                                                                state: { eventId: 'id1' },
+                                                              }}>{val.link}</Link>
+                                                </td>
+                                                <td>{val.status}</td>
+                                            </tr>
+                                        )
+                                    }
                                 )}
                             </tbody>
                         </table>
