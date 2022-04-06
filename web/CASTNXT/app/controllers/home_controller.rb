@@ -1,15 +1,8 @@
 class HomeController < ApplicationController
-  protect_from_forgery with: :null_session
-  skip_before_action :verify_authenticity_token
-
   def index
-    '''
-    TODO: Session Redirect
-    
     if session.key?(:userEmail) and session.key?(:userType) and session.key?(:userName)
       redirect_to get_redirect_path
     end
-    '''
   end
   
   def signup
