@@ -8,7 +8,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { withRouter, Redirect } from 'react-router-dom';
 import axios from 'axios'
 
 class Homepage extends Component {
@@ -29,7 +28,6 @@ class Homepage extends Component {
             loginError: false,
             passwordErrorText: "",
             tabValue: 0,
-            redirect: "",
             signUpError: false
         }
     }
@@ -96,11 +94,7 @@ class Homepage extends Component {
                 type: role
             })
             .then((res) => {
-                let role = res.data.userType
-                
-                this.setState({
-                    redirect: role
-                })
+                window.location.href = res.data.redirect_path;
             })
             .catch((err) => {
                 this.setState({
@@ -120,11 +114,11 @@ class Homepage extends Component {
                 password: password
             })
             .then((res) => {
-                let role = res.data.userType
                 this.setState({
-                    redirect: role,
                     loginError: false
                 })
+                
+                window.location.href = res.data.redirect_path;
             })
             .catch((err) => {
                 this.setState({
@@ -140,18 +134,6 @@ class Homepage extends Component {
             textAlign: 'center', 
             backgroundColor:'black', 
             display: 'inline-block'
-        }
-
-        if(this.state.redirect === "user") {
-            return <Redirect to='/user'/>;
-        }
-        
-        if(this.state.redirect === "admin") {
-            return <Redirect to='/admin'/>;
-        }
-        
-        if(this.state.redirect === "client") {
-            return <Redirect to='/client'/>;
         }
 
         return (

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   match '/home/login', :controller => 'home', :action => 'login', :via => :post
   match '/home/signup', :controller => 'home', :action => 'signup', :via => :post
   
-  get '/user', to: 'home#index', as: 'user'
-  get '/admin', to: 'home#index', as: 'admin'
+  get '/user', to: 'user#index', as: 'user'
+  get '/admin', to: 'admin#index', as: 'admin'
+  get '/client', to: 'client#index', as: 'client'
 end
