@@ -8,7 +8,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { withRouter, Redirect } from 'react-router-dom';
 import axios from 'axios'
 
 class Homepage extends Component {
@@ -29,8 +28,7 @@ class Homepage extends Component {
             loginError: false,
             passwordErrorText: "",
             tabValue: 0,
-            redirect: "",
-            signUpConfirm: false
+            signUpError: false
         }
     }
 
@@ -41,7 +39,6 @@ class Homepage extends Component {
     }
 
     handleChange = (e, value) => {
-        // console.log(e.target.name, e.target.value)
         this.setState({
             [e.target.name]: e.target.value
         })
@@ -81,8 +78,7 @@ class Homepage extends Component {
         if(!errors) {
             this.setState({
                 passwordError: false,
-                emailError: false,
-                signUpConfirm: true
+                emailError: false
             })
             
             let name = this.state.name
@@ -98,15 +94,13 @@ class Homepage extends Component {
                 type: role
             })
             .then((res) => {
-                console.log("Success", res)
-                let role = res.data.userType
-                
-                this.setState({
-                    redirect: role
-                })
+                window.location.href = res.data.redirect_path;
             })
             .catch((err) => {
-                console.log(err)
+                this.setState({
+                    signUpError: true
+                })
+                
             })
         }
     }
@@ -116,23 +110,17 @@ class Homepage extends Component {
         let password = this.state.loginPassword
         
         axios.post("/home/login", {
-              params: {
                 email: email,
                 password: password
-              }
             })
             .then((res) => {
-                console.log("Success", res)
-                let role = res.data.userType
-                
                 this.setState({
-                    redirect: role,
                     loginError: false
                 })
+                
+                window.location.href = res.data.redirect_path;
             })
             .catch((err) => {
-                console.log(err)
-                
                 this.setState({
                     loginError: true
                 })
@@ -146,18 +134,6 @@ class Homepage extends Component {
             textAlign: 'center', 
             backgroundColor:'black', 
             display: 'inline-block'
-        }
-
-        if(this.state.redirect === "user") {
-            return <Redirect to='/user'/>;
-        }
-        
-        if(this.state.redirect === "admin") {
-            return <Redirect to='/admin'/>;
-        }
-        
-        if(this.state.redirect === "client") {
-            return <Redirect to='/client'/>;
         }
 
         return (
@@ -186,7 +162,7 @@ class Homepage extends Component {
                                     {this.state.loginError && 
                                         <div>
                                             <br />
-                                            <span style={{color: 'red'}}>An Error occured while logging in.</span>
+                                            <span style={{color: 'red'}}>The entered Username or Password is incorrect.</span>
                                         </div>
                                     }
                                 </div>
@@ -229,10 +205,10 @@ class Homepage extends Component {
                                     <br />
                                     <Button className="sign-up-button" variant="contained" onClick={this.signUp}>Sign Up</Button>
                                     
-                                    {this.state.signUpConfirm &&
-                                        <div style={{color: 'black'}}>
+                                    {this.state.signUpError &&
+                                        <div style={{color: 'red'}}>
                                             <br />
-                                            <span>Thank you for signing up! Your account should be active shortly.</span>
+                                            <span>An account with the given Email already exists.</span>
                                         </div>
                                     }
                                 </div>
