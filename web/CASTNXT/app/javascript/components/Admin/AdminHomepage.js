@@ -26,17 +26,26 @@ class AdminHomepage extends Component {
             borderTopLeftRadius: '5px'
         }
         
+        let adminHomepageStyle = {
+            marginTop: '3%',
+            backgroundColor: 'white',
+            height: '100vh',
+            paddingTop: '1%',
+            paddingBottom: '5%',
+            overflowY: 'scroll'
+        }
+        
         return(
             <div>
                 <div>
                     <Header />
                 </div>
                 
-                <div style={{marginTop: '3%', backgroundColor: 'white'}}>
+                <div style={adminHomepageStyle}>
                     <h1>Admin Homepage</h1>
                     
 
-                    <div className="container" style={{ backgroundColor: 'gray', height: '80vh', width: '50vw', paddingTop: '1%' }}>
+                    <div className="container" >
                         
                         <div style={{ color: 'white' }}>
                             <Tabs variant="fullWidth" value={this.state.tabValue} onChange={this.handleTabChange} centered>
