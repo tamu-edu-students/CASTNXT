@@ -77,6 +77,10 @@ table td {
   white-space: nowrap;
 }
 
+body {
+  overflow: auto;
+}
+
 .user-homepage {
   margin-top: 3.5%;
   background-color: white;
@@ -86,7 +90,7 @@ table td {
 
 .user-events {
   padding-top: 1%;
-  background-color: gray;
+  background-color: white;
   height: 80vh;
   width: 60vw;
 }
