@@ -1,4 +1,4 @@
-class ClientController < ApplicationController
+ class ClientController < ApplicationController
   def index
     authenticate_user!('client')
     
