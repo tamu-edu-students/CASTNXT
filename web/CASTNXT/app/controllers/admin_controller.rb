@@ -5,6 +5,12 @@ class AdminController < ApplicationController
     @properties = {name: session[:userName]}
   end
   
+  def create_event
+    authenticate_user!('admin')
+    
+    @properties = {name: session[:userName]}
+  end
+  
   def events
     if is_user_logged_in?
       tableData = []
@@ -25,12 +31,5 @@ class AdminController < ApplicationController
     else
       render json: {redirect_path: '/'}, status: 403
     end
-  end
-  
-  def create_event
-    authenticate_user!('admin')
-    
-    @properties = {name: session[:userName]}
-    return 'Admin/index.html.erb'
   end
 end
