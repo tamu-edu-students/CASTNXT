@@ -3,7 +3,7 @@ class Form
   include Mongoid::Timestamps
   
   belongs_to :producer
-  belongs_to :event
+  has_many :events
   
   field :data, type: String
 end
