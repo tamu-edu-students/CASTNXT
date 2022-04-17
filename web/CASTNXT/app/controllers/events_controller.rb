@@ -8,6 +8,25 @@ class EventsController < ApplicationController
 
   # GET /events/1 or /events/1.json
   def show
+    if is_user_logged_in?
+      tableData = []
+      forms = Form.all
+      forms.each do |form|
+        event = Event.find_by(:_id => form.event_id)
+        formData = JSON.parse(form.data)
+        object = {
+          event: formData['title'],
+          eventId: form.event_id,
+          status: event.status
+        }
+        form.event_id
+          
+        tableData << object
+      end
+      render json: {tableData: tableData}, status: 200
+    else
+      render json: {redirect_path: '/'}, status: 403
+    end
   end
 
   # GET /events/new
@@ -21,6 +40,8 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
+    authenticate_user!('admin')
+    
     @event = Event.new(event_params)
 
     respond_to do |format|
