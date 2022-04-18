@@ -8,8 +8,8 @@ class UserController < ApplicationController
     forms = Form.all
     forms.each do |form|
       submittedFlag = 0
-      event = Event.find_by(:_id => form.event_id)
-      slides = Slide.where(:event_id => form.event_id)
+      event = get_event(form.event_id)
+      slides = get_slides(form.event_id)
       
       formData = JSON.parse(form.data)
       object = {
@@ -38,5 +38,15 @@ class UserController < ApplicationController
       end
     end
     @properties = {name: session[:userName], acceptingTableData: acceptingTableData, submittedTableData: submittedTableData}
+  end
+  
+  private
+  
+  def get_event eventId
+    return Event.find_by(:_id => eventId)
+  end
+  
+  def get_slides eventId
+    return Slide.where(:event_id => eventId)
   end
 end

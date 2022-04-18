@@ -5,18 +5,24 @@ class AdminController < ApplicationController
     tableData = []
     forms = Form.all
     forms.each do |form|
-      event = Event.find_by(:_id => form.event_id)
+      event = get_event(form.event_id)
       formData = JSON.parse(form.data)
+      
       object = {
         event: formData['schema']['title'],
-        eventId: form.event_id,
+        eventId: event._id,
         status: event.status
       }
-      form.event_id
-        
+      
       tableData << object
     end
     
     @properties = {name: session[:userName], tableData: tableData}
+  end
+  
+  private
+  
+  def get_event eventId
+    return Event.find_by(:_id => eventId)
   end
 end

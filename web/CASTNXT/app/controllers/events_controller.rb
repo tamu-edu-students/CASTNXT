@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: %i[ show edit update destroy ]
+  #before_action :set_event, only: %i[ show edit update destroy ]
 
   # GET /events or /events.json
   def index
@@ -8,30 +8,20 @@ class EventsController < ApplicationController
 
   # GET /events/1 or /events/1.json
   def show
-    if is_user_logged_in?
-      tableData = []
-      forms = Form.all
-      forms.each do |form|
-        event = Event.find_by(:_id => form.event_id)
-        formData = JSON.parse(form.data)
-        object = {
-          event: formData['title'],
-          eventId: form.event_id,
-          status: event.status
-        }
-        form.event_id
-          
-        tableData << object
-      end
-      render json: {tableData: tableData}, status: 200
+    if session[:userType] == 'admin'
+      
+    elsif session[:userType] == 'client'
+      
     else
-      render json: {redirect_path: '/'}, status: 403
+      user_event
     end
   end
-
+    
   # GET /events/new
   def new
-    @event = Event.new
+    authenticate_user!('admin')
+    
+    @properties = {name: session[:userName]}
   end
 
   # GET /events/1/edit
@@ -77,7 +67,7 @@ class EventsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event
@@ -88,4 +78,45 @@ class EventsController < ApplicationController
     def event_params
       params.fetch(:event, {})
     end
+    
+  def user_event
+    authenticate_user!('user')
+    
+    eventId = params[:id]
+    if wrong_event?(eventId)
+      return
+    end
+    
+    form = get_form(eventId)
+    slides = get_slides(eventId)
+    
+    data = JSON.parse(form.data)
+    data["eventId"] = eventId
+    
+    slides.each do |slide|
+      if slide.submission.talent_id == session[:userId]
+        data["formData"] = JSON.parse(slide.submission.data)
+        break
+      end
+    end
+    
+    @properties = {name: session[:userName], data: data}
+  end
+  
+  def wrong_event? eventId
+    if Form.where(:event_id => eventId).blank?
+      render :file => "#{Rails.root}/public/404.html",  layout: false, status: :not_found
+      return true
+    else
+      return false
+    end
+  end
+  
+  def get_form eventId
+    return Form.find_by(:event_id => eventId)
+  end
+  
+  def get_slides eventId
+    return Slide.where(:event_id => eventId)
+  end
 end

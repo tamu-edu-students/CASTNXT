@@ -64,7 +64,7 @@ class UserHomepage extends Component {
             rows.push(
                  <TableRow key={0}>
                     <TableCell colSpan={2} align="center">
-                        No Events submitted right now.
+                        No Events submitted to right now.
                     </TableCell>
                  </TableRow>
             )
@@ -152,8 +152,6 @@ class UserHomepage extends Component {
                                         </Table>
                                     </TableContainer>
                                 }
-                            
-                               
                             </div>
                         </div>
                     </div>
