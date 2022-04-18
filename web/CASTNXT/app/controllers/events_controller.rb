@@ -21,7 +21,7 @@ class EventsController < ApplicationController
   
   # POST /admin/events
   def create
-     if is_user_logged_in?
+    if is_user_logged_in?
       
       render json: {redirect_path: '/user'}, status: 201
     else

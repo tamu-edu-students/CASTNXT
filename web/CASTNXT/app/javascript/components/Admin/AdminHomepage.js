@@ -48,7 +48,7 @@ class AdminHomepage extends Component {
     }
     
     createEventRedirection = () => {
-        window.location.href = 'admin/create-event'
+        window.location.href = 'admin/events/new'
     }
 
     render() {

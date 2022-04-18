@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   
   get '/admin', to: 'admin#index'
   match '/admin/events/new', :controller => 'events', :action => 'new', :via => :get
+  match '/admin/events', :controller => 'events', :action => 'create', :via => :post
   
   get '/client', to: 'client#index'
 end
