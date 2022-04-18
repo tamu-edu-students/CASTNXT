@@ -12,11 +12,21 @@ class EventsController < ApplicationController
     end
   end
     
-  # GET /client/events/new
+  # GET /admin/events/new
   def new
     authenticate_user!('admin')
     
     @properties = {name: session[:userName]}
+  end
+  
+  # POST /admin/events
+  def create
+     if is_user_logged_in?
+      
+      render json: {redirect_path: '/user'}, status: 201
+    else
+      render json: {redirect_path: '/'}, status: 403
+    end
   end
 
   private
