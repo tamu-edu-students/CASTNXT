@@ -1,4 +1,5 @@
 class UserController < ApplicationController
+  # GET /user
   def index
     authenticate_user!('user')
     

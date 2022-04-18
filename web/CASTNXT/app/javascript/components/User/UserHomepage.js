@@ -46,7 +46,7 @@ class UserHomepage extends Component {
                     <TableRow key={i}>
                         <TableCell>
                             <b><Link to={{
-                                pathname: "/user/event/" + event.eventId
+                                pathname: "/user/events/" + event.eventId
                             }}>{event.event}</Link></b>
                         </TableCell>
                     </TableRow>
@@ -75,7 +75,7 @@ class UserHomepage extends Component {
                         <TableRow key={i}>
                             <TableCell>
                                 <b><Link to={{
-                                    pathname: "/user/event/" + event.eventId
+                                    pathname: "/user/events/" + event.eventId
                                 }}>{event.event}</Link></b>
                             </TableCell>
                             <TableCell>

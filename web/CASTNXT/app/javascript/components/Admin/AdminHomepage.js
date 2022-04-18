@@ -36,7 +36,7 @@ class AdminHomepage extends Component {
                     <TableRow key={i}>
                         <TableCell>
                             <b><Link to={{
-                                pathname: "/admin/event/" + event.eventId
+                                pathname: "/admin/events/" + event.eventId
                             }}>{event.event}</Link></b>
                         </TableCell>
                         <TableCell>{event.status}</TableCell>

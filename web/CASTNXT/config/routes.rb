@@ -11,10 +11,12 @@ Rails.application.routes.draw do
   match '/home/signup', :controller => 'home', :action => 'signup', :via => :post
   
   get '/user', to: 'user#index'
-  match '/user/event/:id', :controller => 'events', :action => 'show', :via => :get
+  match '/user/events/:id', :controller => 'events', :action => 'show', :via => :get
+  match '/user/events/:id', :controller => 'submissions', :action => 'create', :via => :post
+  match '/user/events/:id', :controller => 'submissions', :action => 'update', :via => :put
   
   get '/admin', to: 'admin#index'
-  match '/admin/event/new', :controller => 'events', :action => 'new', :via => :get
+  match '/admin/events/new', :controller => 'events', :action => 'new', :via => :get
   
   get '/client', to: 'client#index'
 end

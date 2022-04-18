@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
         return flag
     end
     
+    # GET /logout
     def logout
         reset_session
         render json: {redirect_path: '/'}, status: 200

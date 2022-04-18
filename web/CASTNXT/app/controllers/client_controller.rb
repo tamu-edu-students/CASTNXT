@@ -1,4 +1,5 @@
 class ClientController < ApplicationController
+  # GET /client
   def index
     authenticate_user!('client')
     
