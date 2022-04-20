@@ -14,28 +14,8 @@ class ClientHomepage extends Component {
         super(props)
 
         this.state = {
-            tableData: []
+            tableData: properties.tableData
         }
-    }
-    
-    componentDidMount() {
-        this.getEvents()
-    }
-    
-    getEvents() {
-        axios.get("/client/events")
-            .then((res) => {
-                this.setState({
-                    tableData: res.data.tableData
-                })
-            })
-            .catch((err) => {
-                if (err.response.status == 403) {
-                    window.location.href = err.response.data.redirect_path;
-                } else {
-                    console.log("Unable to contact server.")
-                }
-            })
     }
     
     renderEventList() {
@@ -53,7 +33,7 @@ class ClientHomepage extends Component {
             tableData.map((event, i) => {
                 rows.push(
                     <TableRow key={i}>
-                        <TableCell align="center">
+                        <TableCell>
                             <b><Link to={{
                                 pathname: "/client/event/" + event.eventId
                             }}>{event.event}</Link></b>
@@ -83,7 +63,7 @@ class ClientHomepage extends Component {
                                     <Table aria-label="simple table">
                                         <TableHead style={{ backgroundColor: '#3498DB' }}>
                                             <TableRow>
-                                                <TableCell>Event</TableCell>
+                                                <TableCell align="center">Event</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
