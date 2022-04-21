@@ -49,7 +49,7 @@ class EventsController < ApplicationController
       if @event.save
         render :show, status: 201, location: @event
       else
-        render json: {@event.errors}, status: 400
+        render json: @event.errors, status: 400
       end
     else
       render json: {redirect_path: '/'}, status: 403
