@@ -1,10 +1,12 @@
 class HomeController < ApplicationController
+  # GET /
   def index
     if session.key?(:userEmail) and session.key?(:userType) and session.key?(:userName)
       redirect_to get_redirect_path
     end
   end
   
+  # POST /home/signup
   def signup
     if new_user?(params[:email])
       create_user(params)
@@ -19,6 +21,7 @@ class HomeController < ApplicationController
     end
   end
   
+  # POST /home/login
   def login
     if correct_user?(params)
       currentUser = get_user(params[:email], params[:password])
