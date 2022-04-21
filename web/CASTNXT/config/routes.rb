@@ -19,5 +19,4 @@ Rails.application.routes.draw do
   root 'home#index'
   match '/home/login', :controller => 'home', :action => 'login', :via => :post
   match '/home/signup', :controller => 'home', :action => 'signup', :via => :post
-  
 end
