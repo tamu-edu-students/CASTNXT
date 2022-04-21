@@ -1,32 +1,35 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: %i[ show edit update destroy ]
 
   # GET /events or /events.json
   def index
-    @events = Event.all
+    if is_user_logged_in?
+      if "ADMIN".casecmp? session[:userType]
+        tableData = []
+        eventIds = Producer.find_by(:_id => session[:userId]).event_ids
+        eventIds.each do |eventId|
+          event = Event.find_by(:_id => eventId)
+          object = {
+            id: eventId,
+            title: event.title,
+            status: event.status
+          }
+          tableData << object
+        end
+        render json: {tableData: tableData}, status: 200
+      elsif "USER".casecmp? session[:userType]
+        # perform user action
+      else
+        # perform client action
+      end
+    else
+      render json: {redirect_path: '/'}, status: 403
+    end
   end
 
   # GET /events/1 or /events/1.json
   def show
-    if is_user_logged_in?
-      tableData = []
-      forms = Form.all
-      forms.each do |form|
-        event = Event.find_by(:_id => form.event_id)
-        formData = JSON.parse(form.data)
-        object = {
-          event: formData['title'],
-          eventId: form.event_id,
-          status: event.status
-        }
-        form.event_id
-          
-        tableData << object
-      end
-      render json: {tableData: tableData}, status: 200
-    else
-      render json: {redirect_path: '/'}, status: 403
-    end
+    @event = Event.find_by(:_id => params[:_id])
+    # add properties to save
   end
 
   # GET /events/new
@@ -40,18 +43,16 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
-    authenticate_user!('admin')
-    
-    @event = Event.new(event_params)
-
-    respond_to do |format|
+    # only admin allowed to create a new event
+    if is_user_logged_in? and "ADMIN".casecmp? session[:userType]
+      @event = Event.new(event_params)
       if @event.save
-        format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
-        format.json { render :show, status: :created, location: @event }
+        render :show, status: 201, location: @event
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+        render json: {@event.errors}, status: 400
       end
+    else
+      render json: {redirect_path: '/'}, status: 403
     end
   end
 
