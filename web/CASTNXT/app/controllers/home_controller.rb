@@ -14,7 +14,7 @@ class HomeController < ApplicationController
       session[:userEmail] = currentUser.email
       session[:userType] = currentUser.user_type
       session[:userName] = currentUser.name
-      session[:userId] = currentUser._id
+      session[:userId] = currentUser._id.to_str
       render json: {redirect_path: get_redirect_path}, status: 201
     else
       render json: {comment: "Email already exists!"}, status: 400
@@ -28,7 +28,7 @@ class HomeController < ApplicationController
       session[:userEmail] = currentUser.email
       session[:userType] = currentUser.user_type
       session[:userName] = currentUser.name
-      session[:userId] = currentUser._id
+      session[:userId] = currentUser._id.to_str
       render json: {redirect_path: get_redirect_path}, status: 200
     else
       render json: {comment: "User not found!"}, status: 400
@@ -59,17 +59,19 @@ class HomeController < ApplicationController
   
   def create_user params
     user = Auth.create(name:params[:name], email:params[:email], password:params[:password], user_type:params[:type])
-    if params[:type] == 'admin'
-      Producer.create(_id:user._id, name:user.name, email:user.email)
-    elsif params[:type] == 'client'
-      Client.create(_id:user._id, name:user.name, email:user.email)
+    if "ADMIN".casecmp? params[:userType]
+      Producer.create(_id:user._id.to_str, name:user.name, email:user.email)
+    elsif "CLIENT".casecmp? params[:userType]
+      Client.create(_id:user._id.to_str, name:user.name, email:user.email)
+    else
+      User.create(_id:user._id.to_str, name:user.name, email:user.email)
     end
   end
 
   def get_redirect_path
-    if session[:userType] == 'admin'
+    if "ADMIN".casecmp? session[:userType]
       return '/admin'
-    elsif session[:userType] == 'client'
+    elsif "CLIENT".casecmp? session[:userType]
       return '/client'
     else
       return '/user'

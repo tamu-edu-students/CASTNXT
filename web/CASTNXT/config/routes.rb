@@ -8,9 +8,14 @@ Rails.application.routes.draw do
   get '/admin', to: 'admin#index'
   get '/client', to: 'client#index'
   
-  namespace :admin do 
+  scope :admin do 
     # TODO: update the except block based on actions configured
     resources :events, :except => [:update] 
+  end
+  
+  scope :user do 
+    # TODO: update the except block based on actions configured
+    resources :events, :except => [:delete] 
   end
   
   # resources :events
