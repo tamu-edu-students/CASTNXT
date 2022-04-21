@@ -1,29 +1,56 @@
 class EventsController < ApplicationController
-  # GET /user/events/:id
-  # GET /admin/events/:id
-  # GET /client/events/:id
-  def show
-    if session[:userType] == 'admin'
-      
-    elsif session[:userType] == 'client'
-      
+
+  # GET /events or /events.json
+  def index
+    if is_user_logged_in?
+      if "ADMIN".casecmp? session[:userType]
+        tableData = []
+        eventIds = Producer.find_by(:_id => session[:userId]).event_ids
+        eventIds.each do |eventId|
+          event = Event.find_by(:_id => eventId)
+          object = {
+            id: eventId,
+            title: event.title,
+            status: event.status
+          }
+          tableData << object
+        end
+        render json: {tableData: tableData}, status: 200
+      elsif "USER".casecmp? session[:userType]
+        # perform user action
+      else
+        # perform client action
+      end
     else
       user_event
     end
   end
-    
-  # GET /admin/events/new
-  def new
-    authenticate_user!('admin')
-    
-    @properties = {name: session[:userName]}
+
+  # GET /events/1 or /events/1.json
+  def show
+    @event = Event.find_by(:_id => params[:_id])
+    # add properties to save
   end
-  
-  # POST /admin/events
+
+  # GET /events/new
+  def new
+    @event = Event.new
+  end
+
+  # GET /events/1/edit
+  def edit
+  end
+
+  # POST /events or /events.json
   def create
-    if is_user_logged_in?
-      
-      render json: {redirect_path: '/user'}, status: 201
+    # only admin allowed to create a new event
+    if is_user_logged_in? and "ADMIN".casecmp? session[:userType]
+      @event = Event.new(event_params)
+      if @event.save
+        render :show, status: 201, location: @event
+      else
+        render json: {@event.errors}, status: 400
+      end
     else
       render json: {redirect_path: '/'}, status: 403
     end
