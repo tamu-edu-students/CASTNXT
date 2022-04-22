@@ -43,7 +43,7 @@ class EventsController < ApplicationController
     @event = Event.new
     clientsInfo = []
     formIds = []
-    clients = Clients.all.to_a
+    clients = Client.all.to_a
     clients.each do |client|
       data = {
         id: client._id,
