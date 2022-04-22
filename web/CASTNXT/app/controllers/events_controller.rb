@@ -67,23 +67,25 @@ class EventsController < ApplicationController
   def create
     # only admin allowed to create a new event
     if is_user_logged_in?('ADMIN')
-      @event = Event.new(event_params)
+      Rails.logger.debug('event_params')
+      Rails.logger.debug(event_params)
+      @event = Event.new(form_id:params[:form_id], producer_id:params[:producer_id], client_ids:params[:client_ids], status:params[:status], title:params[:title], description:params[:description])
       if @event.save
-        # add event to producer
-        @producer = Producer.find_by(:_id => params[:producer_id])
-        @producer.eventIds << @event._id.to_str
-        @producer.save
         
-        # add event to client
-        params[:client_ids].each do |clientId|
-          @client = Client.find_by(:_id => clientId)
-          @client.eventIds << @event._id.to_str
-          @client.save
-        end
+        # add event to producer
+        Rails.logger.debug('Finding producer')
+        @producer = Producer.find_by(:_id => params[:producer_id])
+        Rails.logger.debug(@producer)
+        @producer.event_ids << @event._id
+        @producer.save
+        Rails.logger.debug(@event)
+        
+        # add event to client - due to MANY:MANY relationship
         
         # add event to form
+        Rails.logger.debug('Finding forms')
         @form = Form.find_by(:_id => params[:form_id])
-        @form.event_ids << @event._id.to_str
+        @form.event_ids << @event._id
         @form.save
         
         #render
@@ -149,5 +151,10 @@ class EventsController < ApplicationController
     end
     
     return false
+  end
+  
+  # Only allow a list of trusted parameters through.
+  def event_params
+    params.fetch(:event, {})
   end
 end
