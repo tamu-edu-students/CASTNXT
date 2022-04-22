@@ -16,39 +16,13 @@ class AdminHomepage extends Component {
         super(props)
 
         this.state = {
-            tableData: properties.tableData
+            tableData: properties.tableData !== undefined ? properties.tableData : []
         }
-    }
-    
-    componentDidMount() {
-        this.getEvents()
-    }
-    
-    getEvents() {
-        axios.get("/user/events")
-            .then((res) => {
-                this.setState({
-                    tableData: res.data.tableData
-                })
-            })
-            .catch((err) => {
-                if (err.response.status == 403) {
-                    window.location.href = err.response.data.redirect_path;
-                } else {
-                    console.log("Unable to contact server.")
-                }
-            })
     }
     
     renderEventList = () => {
         const { tableData } = this.state
         let rows = []
-        
-        // tableData.push({
-        //     eventId: 1,
-        //     event: 'Fashion Show',
-        //     status: 'Registration Open'
-        // })
         
         if (!tableData.length) {
             rows.push(
@@ -74,7 +48,7 @@ class AdminHomepage extends Component {
     }
     
     createEventRedirection = () => {
-        window.location.href = 'admin/events/new'
+        window.location.href = '/admin/events/new'
     }
 
     render() {

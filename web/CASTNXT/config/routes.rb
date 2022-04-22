@@ -15,7 +15,9 @@ Rails.application.routes.draw do
   
   scope :user do 
     # TODO: update the except block based on actions configured
-    resources :events, :except => [:delete] 
+    resources :events do
+      resources :slides
+    end
   end
   
   # resources :events

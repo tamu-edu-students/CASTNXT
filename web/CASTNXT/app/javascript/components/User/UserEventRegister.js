@@ -1,72 +1,48 @@
 import React, {Component} from 'react'
 import { withRouter, Link } from 'react-router-dom';
 import Form from '@rjsf/core';
-
-let testForm = {
-  "schema": {
-    "type": "object",
-    "title": "Fall event 22",
-    "description": "Some form description",
-    "properties": {
-      "Personal details": {
-        "title": "Personal details",
-        "type": "object",
-        "description": "Enter your personal details in this section",
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "DOB": {
-            "format": "date",
-            "title": "DOB",
-            "type": "string"
-          },
-          "gender": {
-            "title": "Gender",
-            "type": "string"
-          },
-        },
-        "dependencies": {},
-        "required": [
-          "DOB"
-        ]
-      }
-    },
-    "dependencies": {},
-    "required": []
-  },
-  "uischema": {
-    "Personal details": {
-      "ui:order": [
-        "name",
-        "DOB",
-        "gender"
-      ]
-    },
-    "ui:order": [
-      "Personal details"
-    ]
-  }
-}
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import axios from 'axios';
 
 class UserEventRegister extends Component {
     constructor(props) {
         super(props)
         
         console.log(properties)
-        console.log(props)
 
         this.state = {
-            eventId: props.location.state.eventId,
-            schema: testForm.schema,
-            uischema: testForm.uischema,
-            formData: {}
+            eventId: properties.data.id,
+            title: properties.data.title,
+            description: properties.data.description,
+            schema: properties.data.schema,
+            uischema: properties.data.uischema,
+            formData: properties.data.formData !== undefined ? properties.data.formData : {},
+            registerStatus: ''
         }
     }
     
     submitForm = () => {
-        console.log("Form data", this.state.formData)
+        console.log(this.state.formData)
+        const baseURL = window.location.href
+
+        axios.post(baseURL + "/slides", {
+            formData: JSON.stringify(this.state.formData)
+        })
+        .then((res) => {
+            console.log("Success", res.data)
+            
+            this.setState({
+                registerStatus: 204
+            })
+            
+            setTimeout(() => {
+                window.location.href = "/user"
+            }, 2500)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }
 
     render() {
@@ -79,6 +55,8 @@ class UserEventRegister extends Component {
                         <br />
                         
                         <div className="form-preview">
+                            <h3>{this.state.title}</h3>
+                            <span>{this.state.description}</span>
                             <Form
                               schema={this.state.schema}
                               uiSchema={this.state.uischema}
@@ -90,12 +68,24 @@ class UserEventRegister extends Component {
                               })}
                               formData={this.state.formData}
                               onSubmit={this.submitForm}
-                              submitButtonMessage={"Message"}
                             />
                         </div>
                         
-                        <br />
-                        <button><Link to={{pathname: '/user', state: {}}}>Back</Link></button>
+                        {(this.state.registerStatus !== '' && this.state.registerStatus===204) &&
+                            <div>
+                                <br />
+                                <Alert severity="success">Succesfully registered for the event</Alert>
+                            </div>
+                        }
+                        
+                        {(this.state.registerStatus !== '' && this.state.registerStatus!==204) &&
+                            <div>
+                                <br />
+                                <Alert severity="error">Error: Could not register for the event due to an error</Alert>
+                            </div>
+                        }
+                        
+                        <Button variant="outlined"><Link to={{pathname: '/user', state: {}}}>Back</Link></Button>
                     </div>
                 </div>
             </div>

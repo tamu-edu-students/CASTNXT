@@ -21,17 +21,18 @@ class SlidesController < ApplicationController
 
   # POST /slides or /slides.json
   def create
-    @slide = Slide.new(slide_params)
+    Rails.logger.debug(params)
+    # @slide = Slide.new(slide_params)
 
-    respond_to do |format|
-      if @slide.save
-        format.html { redirect_to slide_url(@slide), notice: "Slide was successfully created." }
-        format.json { render :show, status: :created, location: @slide }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @slide.errors, status: :unprocessable_entity }
-      end
-    end
+    # respond_to do |format|
+    #   if @slide.save
+    #     format.html { redirect_to slide_url(@slide), notice: "Slide was successfully created." }
+    #     format.json { render :show, status: :created, location: @slide }
+    #   else
+    #     format.html { render :new, status: :unprocessable_entity }
+    #     format.json { render json: @slide.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /slides/1 or /slides/1.json
