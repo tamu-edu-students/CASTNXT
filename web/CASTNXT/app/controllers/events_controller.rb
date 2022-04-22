@@ -5,6 +5,7 @@ class EventsController < ApplicationController
     if is_user_logged_in?
       if "ADMIN".casecmp? session[:userType]
         tableData = []
+        
         eventIds = Producer.find_by(:_id => session[:userId]).event_ids
         eventIds.each do |eventId|
           event = Event.find_by(:_id => eventId)
@@ -107,16 +108,15 @@ class EventsController < ApplicationController
     
     event = get_event(eventId)
     form = get_form(event.form_id)
-    slides = get_slides(eventId)
-    
+      
     data = JSON.parse(form.data)
     data["id"] = eventId
+    data["title"] = event.title
+    data["description"] = event.description
     
-    slides.each do |slide|
-      if slide.submission.talent_id.to_str.casecmp? session[:userId]
-        data["formData"] = JSON.parse(slide.submission.data)
-        break
-      end
+    if user_slide_exists?(eventId, session[:userId])
+      slide = get_slide(eventId, session[:userId])
+      data["formData"] = JSON.parse(slide.data)
     end
     
     @properties = {name: session[:userName], data: data}
@@ -139,7 +139,15 @@ class EventsController < ApplicationController
     return Form.find_by(:_id => formId)
   end
   
-  def get_slides eventId
-    return Slide.where(:event_id => eventId)
+  def get_slide eventId, userId
+    return Slide.find_by(:event_id => eventId, :talent_id => userId)
+  end
+  
+  def user_slide_exists? eventId, userId
+    if Slide.where(:event_id => eventId, :talent_id => userId).present?
+      return true
+    end
+    
+    return false
   end
 end
