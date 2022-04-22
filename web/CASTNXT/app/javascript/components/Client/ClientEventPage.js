@@ -57,6 +57,10 @@ class ClientEventPage extends Component {
             })
     }
     
+    back = () => {
+        window.location.href = "/client"
+    }
+    
     render() {
         return(
             <div>
@@ -67,6 +71,8 @@ class ClientEventPage extends Component {
                 <div className="container">
                     <div className="user-events">
                         <h2> Event Title </h2>
+                        
+                        <Button variant="outlined" style={{float: 'right'}} onClick={this.back}>Back</Button>
                         
                         <div>
                             <Box sx={{ width: '100%' }}>

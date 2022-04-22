@@ -54,6 +54,10 @@ class AdminEventPage extends Component {
             tabValue: newValue
         })
     }
+    
+    back = () => {
+        window.location.href = "/admin"
+    }
 
     render() {
         return(
@@ -65,6 +69,8 @@ class AdminEventPage extends Component {
                 <div className="container">
                     <div className="user-events">
                         <h2> Event Title </h2>
+                        
+                        <Button variant="outlined" style={{float: 'right'}} onClick={this.back}>Back</Button>
 
                         <div>
                             <Box sx={{ width: '100%' }}>
