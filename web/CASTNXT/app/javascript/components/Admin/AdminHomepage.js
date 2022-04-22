@@ -44,11 +44,11 @@ class AdminHomepage extends Component {
         const { tableData } = this.state
         let rows = []
         
-        tableData.push({
-            eventId: 1,
-            event: 'Fashion Show',
-            status: 'Registration Open'
-        })
+        // tableData.push({
+        //     eventId: 1,
+        //     event: 'Fashion Show',
+        //     status: 'Registration Open'
+        // })
         
         if (!tableData.length) {
             rows.push(

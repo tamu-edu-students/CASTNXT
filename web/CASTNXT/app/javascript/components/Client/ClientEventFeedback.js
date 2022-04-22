@@ -14,7 +14,7 @@ import axios from 'axios';
 import FormBuilderContainer from '../Forms/FormBuilder.js'
 import Form from '@rjsf/core';
 import TextField from '@mui/material/TextField';
-import {curatedData, formSchema} from '../Admin/data';
+// import {curatedData, formSchema} from '../Admin/data';
 
 class ClientEventFeedback extends Component {
     constructor(props) {
@@ -24,10 +24,10 @@ class ClientEventFeedback extends Component {
             tableData: [],
             tabValue: 0,
             redirect: "",
-            schema: formSchema.schema,
-            uischema: formSchema.uischema,
-            formData: formSchema.formData,
-            entries: curatedData.entries,
+            schema: [],//formSchema.schema,
+            uischema: [],//formSchema.uischema,
+            formData: [],//formSchema.formData,
+            entries: [],//curatedData.entries,
             curatedStack: [],
             showStack: false,
             client: '',

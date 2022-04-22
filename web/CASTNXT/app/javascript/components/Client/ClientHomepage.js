@@ -41,11 +41,11 @@ class ClientHomepage extends Component {
     renderEventList() {
         const { tableData } = this.state
         
-        tableData.push({
-            eventId: 1,
-            event: 'Fashion Show',
-            status: 'Registration Open'
-        })
+        // tableData.push({
+        //     eventId: 1,
+        //     event: 'Fashion Show',
+        //     status: 'Registration Open'
+        // })
         
         let rows = []
         if (!tableData.length) {

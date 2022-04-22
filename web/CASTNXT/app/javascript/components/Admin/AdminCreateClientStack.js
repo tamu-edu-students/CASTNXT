@@ -15,7 +15,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import Button from '@mui/material/Button';
 import { MultiSelect } from "react-multi-select-component";
-import {curatedData, formSchema} from './data';
+// import {curatedData, formSchema} from './data';
 
 class AdminCreateClientStack extends Component {
     constructor(props) {
@@ -23,16 +23,16 @@ class AdminCreateClientStack extends Component {
 
         this.state = {
             redirect: "",
-            schema: formSchema.schema,
-            uischema: formSchema.uischema,
-            formData: formSchema.formData,
-            entries: curatedData.entries,
+            schema: [],//formSchema.schema,
+            uischema: [],//formSchema.uischema,
+            formData: [],//formSchema.formData,
+            entries: [],//curatedData.entries,
             curatedStack: [],
             showStack: false,
             clients: [],
             page:0,
             rowsPerPage: 1,
-            clientOptions: [{label: 'client 1', value: 'client1'}, {label: 'client 2', value: 'client2'}],
+            clientOptions: [],//[{label: 'client 1', value: 'client1'}, {label: 'client 2', value: 'client2'}],
             clientSelections: [],
         }
     }

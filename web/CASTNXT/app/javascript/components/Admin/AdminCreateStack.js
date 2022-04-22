@@ -14,7 +14,7 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import Button from '@mui/material/Button';
-import {formTestData, formSchema} from './data';
+// import {formTestData, formSchema} from './data';
 
 class AdminCreateStack extends Component {
     constructor(props) {
@@ -22,10 +22,10 @@ class AdminCreateStack extends Component {
 
         this.state = {
             redirect: "",
-            schema: formSchema.schema,
-            uischema: formSchema.uischema,
-            formData: formSchema.formData,
-            entries: formTestData.entries,
+            schema: [],//formSchema.schema,
+            uischema: [],//formSchema.uischema,
+            formData: [],//formSchema.formData,
+            entries: [],//formTestData.entries,
             curatedStack: [],
             showStack: false,
             client: '',
