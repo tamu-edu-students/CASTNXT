@@ -56,7 +56,6 @@ class EventsController < ApplicationController
       formIds << form._id.to_str
     end
     @properties = {formIds: formIds, clientsInfo: clientsInfo}
-    render json: {redirect_path: '/admin/events/new'}, status: 200
   end
 
   # GET /events/1/edit
