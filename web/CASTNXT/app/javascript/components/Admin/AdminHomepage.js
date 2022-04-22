@@ -16,7 +16,7 @@ class AdminHomepage extends Component {
         super(props)
 
         this.state = {
-            tableData: []
+            tableData: properties.tableData
         }
     }
     
@@ -74,7 +74,7 @@ class AdminHomepage extends Component {
     }
     
     createEventRedirection = () => {
-        window.location.href = 'admin/create-event'
+        window.location.href = 'admin/events/new'
     }
 
     render() {
@@ -100,8 +100,8 @@ class AdminHomepage extends Component {
                                     <Table aria-label="simple table">
                                         <TableHead style={{ backgroundColor: '#3498DB' }}>
                                             <TableRow>
-                                                <TableCell>Event</TableCell>
-                                                <TableCell>Status</TableCell>
+                                                <TableCell align="center">Event</TableCell>
+                                                <TableCell align="center">Status</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
