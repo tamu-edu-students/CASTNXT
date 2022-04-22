@@ -80,7 +80,7 @@ class EventsController < ApplicationController
         @producer.save
         Rails.logger.debug(@event)
         
-        # add event to client - due to MANY:MANY relationship
+        # add event to client - No update needed due to MANY:MANY relationship (added automatically)
         
         # add event to form
         Rails.logger.debug('Finding forms')

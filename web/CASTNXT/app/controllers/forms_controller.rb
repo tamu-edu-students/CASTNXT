@@ -21,6 +21,9 @@ class FormsController < ApplicationController
   # POST /forms or /forms.json
   def create
     @form = Form.create(producer_id:params[:producer_id], data:params[:data])
+    @producer = Producer.find_by(:_id => params[:producer_id])
+    @producer.form_ids << @form._id
+    @producer.save
     render json: {formId:  @form._id.to_str}, status: 201
   end
 
