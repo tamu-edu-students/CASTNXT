@@ -16,10 +16,10 @@ class EventsController < ApplicationController
           tableData << object
         end
         render json: {tableData: tableData}, status: 200
-      elsif "USER".casecmp? session[:userType]
-        # perform user action
-      else
+      elsif "CLIENT".casecmp? session[:userType]
         # perform client action
+      else
+        # perform user action
       end
     else
       user_event
@@ -28,8 +28,13 @@ class EventsController < ApplicationController
 
   # GET /events/1 or /events/1.json
   def show
-    @event = Event.find_by(:_id => params[:_id])
-    # add properties to save
+    if "ADMIN".casecmp? session[:userType]
+      # perform admin action
+    elsif "CLIENT".casecmp? session[:userType]
+      # perform client action
+    else
+      user_event
+    end
   end
 
   # GET /events/new
@@ -61,7 +66,7 @@ class EventsController < ApplicationController
   # POST /events or /events.json
   def create
     # only admin allowed to create a new event
-    if is_user_logged_in? and "ADMIN".casecmp? session[:userType]
+    if is_user_logged_in?('ADMIN')
       @event = Event.new(event_params)
       if @event.save
         # add event to producer
@@ -94,7 +99,7 @@ class EventsController < ApplicationController
   private
   
   def user_event
-    authenticate_user!('user')
+    authenticate_user!('USER')
     
     eventId = params[:id]
     if unknown_event?(eventId)
@@ -105,10 +110,10 @@ class EventsController < ApplicationController
     slides = get_slides(eventId)
     
     data = JSON.parse(form.data)
-    data["eventId"] = eventId
+    data["id"] = eventId
     
     slides.each do |slide|
-      if slide.submission.talent_id == session[:userId]
+      if slide.submission.talent_id.to_str.casecmp? session[:userId]
         data["formData"] = JSON.parse(slide.submission.data)
         break
       end
