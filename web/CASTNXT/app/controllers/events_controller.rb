@@ -39,8 +39,23 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
-    
+    authenticate_user!('admin')
     @event = Event.new
+    clientsInfo = []
+    formIds = []
+    clients = Clients.all.to_a
+    clients.each do |client|
+      data = {
+        id: client._id,
+        name: client.name
+      }
+      clientsInfo << data
+    end
+    forms = Form.where(:producer_id => session[:userId])
+    forms.each do |form|
+      formIds << form._id.to_str
+    end
+    @properties = {formIds: formIds, clientsInfo: clientsInfo}
   end
 
   # GET /events/1/edit
@@ -53,6 +68,24 @@ class EventsController < ApplicationController
     if is_user_logged_in?('ADMIN')
       @event = Event.new(event_params)
       if @event.save
+        # add event to producer
+        @producer = Producer.find_by(:_id => params[:producer_id])
+        @producer.eventIds << @event._id.to_str
+        @producer.save
+        
+        # add event to client
+        params[:client_ids].each do |clientId|
+          @client = Client.find_by(:_id => clientId)
+          @client.eventIds << @event._id.to_str
+          @client.save
+        end
+        
+        # add event to form
+        @form = Form.find_by(:_id => params[:form_id])
+        @form.event_ids << @event._id.to_str
+        @form.save
+        
+        #render
         render :show, status: 201, location: @event
       else
         render json: @event.errors, status: 400
