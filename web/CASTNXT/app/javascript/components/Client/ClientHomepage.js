@@ -40,6 +40,13 @@ class ClientHomepage extends Component {
     
     renderEventList() {
         const { tableData } = this.state
+        
+        tableData.push({
+            eventId: 1,
+            event: 'Fashion Show',
+            status: 'Registration Open'
+        })
+        
         let rows = []
         if (!tableData.length) {
             rows.push(
@@ -53,10 +60,8 @@ class ClientHomepage extends Component {
             tableData.map((event, i) => {
                 rows.push(
                     <TableRow key={i}>
-                        <TableCell align="center">
-                            <b><Link to={{
-                                pathname: "/client/event/" + event.eventId
-                            }}>{event.event}</Link></b>
+                        <TableCell align="center" onClick={() => {window.location.href="/client/event/"+event.eventId}}>
+                            <b><a href={"/client/event/"+event.eventId}>{event.event}</a></b>
                         </TableCell>
                     </TableRow>
                 )

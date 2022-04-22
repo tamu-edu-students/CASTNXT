@@ -9,6 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
 class AdminHomepage extends Component {
     constructor(props) {
@@ -39,9 +40,16 @@ class AdminHomepage extends Component {
             })
     }
     
-    renderEventList() {
+    renderEventList = () => {
         const { tableData } = this.state
         let rows = []
+        
+        tableData.push({
+            eventId: 1,
+            event: 'Fashion Show',
+            status: 'Registration Open'
+        })
+        
         if (!tableData.length) {
             rows.push(
                  <TableRow key={0}>
@@ -54,10 +62,8 @@ class AdminHomepage extends Component {
             tableData.map((event, i) => {
                 rows.push(
                     <TableRow key={i}>
-                        <TableCell align="center">
-                            <b><Link to={{
-                                pathname: "/admin/event/" + event.eventId
-                            }}>{event.event}</Link></b>
+                        <TableCell align="center" onClick={() => {window.location.href="/admin/event/"+event.eventId}}>
+                            <b><a href={"/admin/event/"+event.eventId}>{event.event}</a></b>
                         </TableCell>
                         <TableCell>{event.status}</TableCell>
                     </TableRow>
