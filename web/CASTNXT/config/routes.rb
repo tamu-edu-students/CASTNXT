@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   
   scope :admin do 
     # TODO: update the except block based on actions configured
-    resources :events, :except => [:update] 
+    resources :events, :except => [:update]
+    resources :forms, :except => [:show, :edit, :update]
   end
   
   scope :user do 
