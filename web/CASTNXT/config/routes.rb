@@ -2,7 +2,6 @@ Rails.application.routes.draw do
 
   resources :forms
   resources :slides
-  resources :submissions
 
   get '/user', to: 'user#index'
   get '/admin', to: 'admin#index'
