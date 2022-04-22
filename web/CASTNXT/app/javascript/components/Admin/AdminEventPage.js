@@ -70,7 +70,7 @@ class AdminEventPage extends Component {
                     <div className="user-events">
                         <h2> Event Title </h2>
                         
-                        <Button variant="outlined" style={{float: 'right'}} onClick={this.back}>Back</Button>
+                        <Button variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back</Button>
 
                         <div>
                             <Box sx={{ width: '100%' }}>

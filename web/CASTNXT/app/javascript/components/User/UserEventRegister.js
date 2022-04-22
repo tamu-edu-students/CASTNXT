@@ -15,10 +15,11 @@ class UserEventRegister extends Component {
             eventId: properties.data.id,
             title: properties.data.title,
             description: properties.data.description,
-            schema: properties.data.schema,
-            uischema: properties.data.uischema,
+            schema: properties.data.schema !== undefined ? properties.data.schema : {},
+            uischema: properties.data.uischema !== undefined ? properties.data.uischema : {},
             formData: properties.data.formData !== undefined ? properties.data.formData : {},
-            registerStatus: ''
+            registerStatus: '',
+            registerMessage: ''
         }
     }
     
@@ -30,10 +31,11 @@ class UserEventRegister extends Component {
             formData: JSON.stringify(this.state.formData)
         })
         .then((res) => {
-            console.log("Success", res.data)
+            console.log("Success", res)
             
             this.setState({
-                registerStatus: 204
+                registerStatus: res.status,
+                registerMessage: res.data.comment
             })
             
             setTimeout(() => {
@@ -42,7 +44,20 @@ class UserEventRegister extends Component {
         })
         .catch((err) => {
             console.log(err)
+            
+            this.setState({
+                registerStatus: err.response.status,
+                registerMessage: err.response.data.comment
+            })
+            
+            if(err.response.status === 403) {
+                window.location.href = err.response.data.redirect_path
+            }
         })
+    }
+    
+    back = () => {
+        window.location.href = "/user"
     }
 
     render() {
@@ -51,6 +66,7 @@ class UserEventRegister extends Component {
             <div className="container user-events">
                 <div className="row">
                     <div className="col-md-6 offset-md-3">
+                        <Button variant="outlined" onClick={this.back} style={{float: 'right', marginTop: "1%"}}>Back</Button>
                         <h3>Event Registration</h3>
                         <br />
                         
@@ -71,21 +87,38 @@ class UserEventRegister extends Component {
                             />
                         </div>
                         
-                        {(this.state.registerStatus !== '' && this.state.registerStatus===204) &&
+                        {(this.state.registerStatus !== '' && this.state.registerStatus===200) &&
                             <div>
                                 <br />
-                                <Alert severity="success">Succesfully registered for the event</Alert>
+                                <Alert severity="success">{this.state.registerMessage}</Alert>
+                                <br />
                             </div>
                         }
                         
-                        {(this.state.registerStatus !== '' && this.state.registerStatus!==204) &&
+                        {(this.state.registerStatus !== '' && this.state.registerStatus===201) &&
                             <div>
                                 <br />
-                                <Alert severity="error">Error: Could not register for the event due to an error</Alert>
+                                <Alert severity="success">{this.state.registerMessage}</Alert>
+                                <br />
                             </div>
                         }
                         
-                        <Button variant="outlined"><Link to={{pathname: '/user', state: {}}}>Back</Link></Button>
+                        {(this.state.registerStatus !== '' && this.state.registerStatus===400) &&
+                            <div>
+                                <br />
+                                <Alert severity="error">Error: {this.state.registerMessage}</Alert>
+                                <br />
+                            </div>
+                        }
+                        
+                        {(this.state.registerStatus !== '' && this.state.registerStatus===403) &&
+                            <div>
+                                <br />
+                                <Alert severity="error">Error: {this.state.registerMessage}</Alert>
+                                <br />
+                            </div>
+                        }
+                        
                     </div>
                 </div>
             </div>
