@@ -22,8 +22,8 @@ class SlidesController < ApplicationController
   # POST /slides or /slides.json
   def create
     if is_user_logged_in?('USER')
-      event = Event.find_by(:_id => params[:event_id])
-      user = Talent.find_by(:_id => session[:userId])
+      event = get_event(params[:event_id])
+      user = get_user(session[:userId])
       if "ACCEPTING".casecmp? event.status
         if is_new_slide?(event, user)
           create_slide(event, user, params)
@@ -95,9 +95,7 @@ class SlidesController < ApplicationController
     end
     
     def update_slide event, user, params
-      Slide.update_one(
-        { event_id: event._id, talent_id: user._id },
-        '$set' => { data: params[:formData]}
-      )
+      slide = Slide.find_by(:event_id => event._id, :talent_id => user._id)
+      slide.update(:data => params[:formData])
     end
 end
