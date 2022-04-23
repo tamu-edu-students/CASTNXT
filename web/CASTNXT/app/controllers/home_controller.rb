@@ -59,12 +59,12 @@ class HomeController < ApplicationController
   
   def create_user params
     user = Auth.create(name:params[:name], email:params[:email], password:params[:password], user_type:params[:type])
-    if "ADMIN".casecmp? params[:userType]
+    if "ADMIN".casecmp? params[:type]
       Producer.create(_id:user._id.to_str, name:user.name, email:user.email)
-    elsif "CLIENT".casecmp? params[:userType]
+    elsif "CLIENT".casecmp? params[:type]
       Client.create(_id:user._id.to_str, name:user.name, email:user.email)
     else
-      User.create(_id:user._id.to_str, name:user.name, email:user.email)
+      Talent.create(_id:user._id.to_str, name:user.name, email:user.email)
     end
   end
 
