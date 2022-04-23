@@ -7,6 +7,12 @@ class FormsController < ApplicationController
 
   # GET /forms/1 or /forms/1.json
   def show
+    form =  Form.find_by(:_id => params["id"])
+    formData = {
+        id: form._id.to_str,
+        data: form.data
+      }
+    render json: {formData:  formData}, status: 201
   end
 
   # GET /forms/new
@@ -20,7 +26,8 @@ class FormsController < ApplicationController
 
   # POST /forms or /forms.json
   def create
-    Form.create(producer_id:params[:producer_id], data:params[:data])
+    @form = Form.create(producer_id:params[:producer_id], data:params[:data])
+    render json: {formId:  @form._id.to_str}, status: 201
   end
 
   # DELETE /forms/1 or /forms/1.json

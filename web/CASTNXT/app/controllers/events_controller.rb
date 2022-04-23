@@ -67,27 +67,13 @@ class EventsController < ApplicationController
   def create
     # only admin allowed to create a new event
     if is_user_logged_in?('ADMIN')
-      @event = Event.new(event_params)
+      Rails.logger.debug('event_params')
+      Rails.logger.debug(event_params)
+      @event = Event.new(form_id:params[:form_id], producer_id:params[:producer_id], client_ids:params[:client_ids], status:params[:status], title:params[:title], description:params[:description])
       if @event.save
-        # add event to producer
-        @producer = Producer.find_by(:_id => params[:producer_id])
-        @producer.eventIds << @event._id.to_str
-        @producer.save
-        
-        # add event to client
-        params[:client_ids].each do |clientId|
-          @client = Client.find_by(:_id => clientId)
-          @client.eventIds << @event._id.to_str
-          @client.save
-        end
-        
-        # add event to form
-        @form = Form.find_by(:_id => params[:form_id])
-        @form.event_ids << @event._id.to_str
-        @form.save
-        
         #render
-        render :show, status: 201, location: @event
+        # render :show, status: 201, location: @event
+        render json: {redirect_path: '/admin'}, status: 201
       else
         render json: @event.errors, status: 400
       end
@@ -149,5 +135,10 @@ class EventsController < ApplicationController
     end
     
     return false
+  end
+  
+  # Only allow a list of trusted parameters through.
+  def event_params
+    params.fetch(:event, {})
   end
 end
