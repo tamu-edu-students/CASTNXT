@@ -56,7 +56,7 @@ class EventsController < ApplicationController
     forms.each do |form|
       formIds << form._id.to_str
     end
-    @properties = {formIds: formIds, clientsInfo: clientsInfo}
+    @properties = {name: session[:userName], formIds: formIds, clientsInfo: clientsInfo}
   end
 
   # GET /events/1/edit
