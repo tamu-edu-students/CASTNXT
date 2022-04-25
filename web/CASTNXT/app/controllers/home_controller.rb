@@ -15,7 +15,7 @@ class HomeController < ApplicationController
       session[:userType] = currentUser.user_type
       session[:userName] = currentUser.name
       session[:userId] = currentUser._id.to_str
-      render json: {redirect_path: get_redirect_path}, status: 201
+      render json: {redirect_path: get_redirect_path, userId: currentUser._id.to_str}, status: 201
     else
       render json: {comment: "Email already exists!"}, status: 400
     end
@@ -29,7 +29,7 @@ class HomeController < ApplicationController
       session[:userType] = currentUser.user_type
       session[:userName] = currentUser.name
       session[:userId] = currentUser._id.to_str
-      render json: {redirect_path: get_redirect_path}, status: 200
+      render json: {redirect_path: get_redirect_path, userId: currentUser._id.to_str}, status: 200
     else
       render json: {comment: "User not found!"}, status: 400
     end
@@ -59,12 +59,12 @@ class HomeController < ApplicationController
   
   def create_user params
     user = Auth.create(name:params[:name], email:params[:email], password:params[:password], user_type:params[:type])
-    if "ADMIN".casecmp? params[:userType]
+    if "ADMIN".casecmp? params[:type]
       Producer.create(_id:user._id.to_str, name:user.name, email:user.email)
-    elsif "CLIENT".casecmp? params[:userType]
+    elsif "CLIENT".casecmp? params[:type]
       Client.create(_id:user._id.to_str, name:user.name, email:user.email)
     else
-      User.create(_id:user._id.to_str, name:user.name, email:user.email)
+      Talent.create(_id:user._id.to_str, name:user.name, email:user.email)
     end
   end
 

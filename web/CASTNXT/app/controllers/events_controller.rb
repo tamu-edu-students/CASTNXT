@@ -56,7 +56,7 @@ class EventsController < ApplicationController
     forms.each do |form|
       formIds << form._id.to_str
     end
-    @properties = {formIds: formIds, clientsInfo: clientsInfo}
+    @properties = {name: session[:userName], formIds: formIds, clientsInfo: clientsInfo}
   end
 
   # GET /events/1/edit
@@ -72,7 +72,8 @@ class EventsController < ApplicationController
       @event = Event.new(form_id:params[:form_id], producer_id:params[:producer_id], client_ids:params[:client_ids], status:params[:status], title:params[:title], description:params[:description])
       if @event.save
         #render
-        render :show, status: 201, location: @event
+        # render :show, status: 201, location: @event
+        render json: {redirect_path: '/admin'}, status: 201
       else
         render json: @event.errors, status: 400
       end
