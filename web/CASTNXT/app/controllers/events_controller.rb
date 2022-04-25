@@ -141,12 +141,11 @@ class EventsController < ApplicationController
   end
   
   def build_admin_event_clients event
-    clientsList = []
+    clientsObject = {}
     event.client_ids.each do |clientId|
       client = get_client(clientId)
       
       clientObject = {}
-      clientObject['id'] = clientId.to_str
       clientObject['name'] = client.name
       clientObject['slideIds'] = []
       
@@ -156,10 +155,10 @@ class EventsController < ApplicationController
         end
       end
       
-      clientsList << clientObject
+      clientsObject[clientId.to_str] = clientObject
     end
     
-    return clientsList
+    return clientsObject
   end
   
   def build_admin_event_slides event
