@@ -30,7 +30,7 @@ class EventsController < ApplicationController
   # GET /events/1 or /events/1.json
   def show
     if "ADMIN".casecmp? session[:userType]
-      # perform admin action
+      admin_event
     elsif "CLIENT".casecmp? session[:userType]
       # perform client action
     else
@@ -101,8 +101,43 @@ class EventsController < ApplicationController
     data["description"] = event.description
     
     if user_slide_exists?(eventId, session[:userId])
-      slide = get_slide(eventId, session[:userId])
+      slide = get_user_slide(eventId, session[:userId])
       data["formData"] = JSON.parse(slide.data)
+    end
+    
+    @properties = {name: session[:userName], data: data}
+  end
+  
+  def admin_event
+    authenticate_user!('ADMIN')
+    
+    eventId = params[:id]
+    if unknown_event?(eventId)
+      return
+    end
+    
+    event = get_event(eventId)
+    
+    data = {}
+    data["id"] = eventId
+    data["title"] = event.title
+    data["description"] = event.description
+    data["status"] = event.status
+    
+    data["clients"] = build_admin_event_clients(event)
+    data["slides"] = build_admin_event_slides(event)
+    
+    data["slides"] = {}
+    event.slide_ids.each do |slideId|
+      slide = get_slide(slideId)
+      talent = get_talent(slide.talent_id)
+      
+      slideObject = {}
+      slideObject['talentName'] = talent.name
+      slideObject['formData'] = JSON.parse(slide.data)
+      slideObject['curated'] = slide.curated
+      
+      data["slides"][slideId.to_str] = slideObject
     end
     
     @properties = {name: session[:userName], data: data}
@@ -117,6 +152,42 @@ class EventsController < ApplicationController
     end
   end
   
+  def build_admin_event_clients event
+    clientsObject = {}
+    event.client_ids.each do |clientId|
+      client = get_event(clientId)
+      
+      clientObject = {}
+      clientObject['name'] = client.name
+      clientObject['slideIds'] = []
+      
+      client.slide_ids.each do |slideId|
+        clientObject['slideIds'] << slideId.to_str
+      end
+      
+      clientsObject[clientId.to_str] = clientObject
+    end
+    
+    return clientsObject
+  end
+  
+  def build_admin_event_slides event
+    slidesObject = {}
+    event.slide_ids.each do |slideId|
+      slide = get_slide(slideId)
+      talent = get_talent(slide.talent_id)
+      
+      slideObject = {}
+      slideObject['talentName'] = talent.name
+      slideObject['formData'] = JSON.parse(slide.data)
+      slideObject['curated'] = slide.curated
+      
+      slidesObject[slideId.to_str] = slideObject
+    end
+    
+    return slidesObject
+  end
+  
   def get_event eventId
     return Event.find_by(:_id => eventId)
   end
@@ -125,7 +196,19 @@ class EventsController < ApplicationController
     return Form.find_by(:_id => formId)
   end
   
-  def get_slide eventId, userId
+  def get_client clientId
+    return Client.find_by(:_id => clientId)
+  end
+  
+  def get_talent talentId
+    return Talent.find_by(:_id => talentId)
+  end
+  
+  def get_slide slideId
+    return Slide.find_by(:_id => slideId)
+  end
+  
+  def get_user_slide eventId, userId
     return Slide.find_by(:event_id => eventId, :talent_id => userId)
   end
   
