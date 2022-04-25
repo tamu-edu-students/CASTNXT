@@ -127,19 +127,6 @@ class EventsController < ApplicationController
     data["clients"] = build_admin_event_clients(event)
     data["slides"] = build_admin_event_slides(event)
     
-    data["slides"] = {}
-    event.slide_ids.each do |slideId|
-      slide = get_slide(slideId)
-      talent = get_talent(slide.talent_id)
-      
-      slideObject = {}
-      slideObject['talentName'] = talent.name
-      slideObject['formData'] = JSON.parse(slide.data)
-      slideObject['curated'] = slide.curated
-      
-      data["slides"][slideId.to_str] = slideObject
-    end
-    
     @properties = {name: session[:userName], data: data}
   end
   
@@ -153,22 +140,25 @@ class EventsController < ApplicationController
   end
   
   def build_admin_event_clients event
-    clientsObject = {}
+    clientsList = []
     event.client_ids.each do |clientId|
       client = get_event(clientId)
       
       clientObject = {}
+      clientObject['id'] = clientId.to_str
       clientObject['name'] = client.name
       clientObject['slideIds'] = []
       
       client.slide_ids.each do |slideId|
-        clientObject['slideIds'] << slideId.to_str
+        if event_slide_exists?(event._id, slideId)
+          clientObject['slideIds'] << slideId.to_str
+        end
       end
       
-      clientsObject[clientId.to_str] = clientObject
+      clientsList << clientObject
     end
     
-    return clientsObject
+    return clientsList
   end
   
   def build_admin_event_slides event
@@ -214,6 +204,14 @@ class EventsController < ApplicationController
   
   def user_slide_exists? eventId, userId
     if Slide.where(:event_id => eventId, :talent_id => userId).present?
+      return true
+    end
+    
+    return false
+  end
+  
+  def event_slide_exists? eventId, slideId
+    if Slide.where(:event_id => eventId, :_id => slideId).present?
       return true
     end
     
