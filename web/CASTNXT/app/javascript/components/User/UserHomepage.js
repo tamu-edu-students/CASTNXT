@@ -44,7 +44,7 @@ class UserHomepage extends Component {
             acceptingTableData.map((event, i) => {
                 rows.push(
                     <TableRow key={i}>
-                        <TableCell align="center">
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
                             <b><a href={"/user/events/" + event.id}>{event.title}</a></b>
                         </TableCell>
                     </TableRow>
@@ -71,7 +71,7 @@ class UserHomepage extends Component {
                 if (event.accepting) {
                     rows.push(
                         <TableRow key={i}>
-                            <TableCell align="center">
+                            <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
                                 <b><a href={"/user/events/" + event.id}>{event.title}</a></b>
                             </TableCell>
                             <TableCell align="center">

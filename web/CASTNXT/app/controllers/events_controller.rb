@@ -117,8 +117,9 @@ class EventsController < ApplicationController
     end
     
     event = get_event(eventId)
+    form = get_form(event.form_id)
     
-    data = {}
+    data = JSON.parse(form.data)
     data["id"] = eventId
     data["title"] = event.title
     data["description"] = event.description
@@ -142,7 +143,7 @@ class EventsController < ApplicationController
   def build_admin_event_clients event
     clientsList = []
     event.client_ids.each do |clientId|
-      client = get_event(clientId)
+      client = get_client(clientId)
       
       clientObject = {}
       clientObject['id'] = clientId.to_str
