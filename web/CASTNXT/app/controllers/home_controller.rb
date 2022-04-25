@@ -37,6 +37,10 @@ class HomeController < ApplicationController
   
   private
   
+  def get_user email, password
+    return Auth.find_by(:email => email, :password => password)
+  end
+  
   def new_user? email
     if Auth.where(:email => email).blank?
       return true
@@ -51,10 +55,6 @@ class HomeController < ApplicationController
     end
     
     return false
-  end
-  
-  def get_user email, password
-    return Auth.find_by(:email => email, :password => password)
   end
   
   def create_user params

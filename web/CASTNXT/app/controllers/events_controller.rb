@@ -100,8 +100,8 @@ class EventsController < ApplicationController
     data["title"] = event.title
     data["description"] = event.description
     
-    if user_slide_exists?(eventId, session[:userId])
-      slide = get_user_slide(eventId, session[:userId])
+    if talent_slide_exists?(eventId, session[:userId])
+      slide = get_talent_slide(eventId, session[:userId])
       data["formData"] = JSON.parse(slide.data)
     end
     
@@ -120,13 +120,13 @@ class EventsController < ApplicationController
     form = get_form(event.form_id)
     
     data = JSON.parse(form.data)
-    data["id"] = eventId
-    data["title"] = event.title
-    data["description"] = event.description
-    data["status"] = event.status
+    data[:id] = eventId
+    data[:title] = event.title
+    data[:description] = event.description
+    data[:status] = event.status
     
-    data["clients"] = build_admin_event_clients(event)
-    data["slides"] = build_admin_event_slides(event)
+    data[:clients] = build_admin_event_clients(event)
+    data[:slides] = build_admin_event_slides(event)
     
     @properties = {name: session[:userName], data: data}
   end
@@ -142,16 +142,18 @@ class EventsController < ApplicationController
   
   def build_admin_event_clients event
     clientsObject = {}
+    eventSlideIds = get_event_slide_ids(event)
+    
     event.client_ids.each do |clientId|
       client = get_client(clientId)
       
       clientObject = {}
-      clientObject['name'] = client.name
-      clientObject['slideIds'] = []
+      clientObject[:name] = client.name
+      clientObject[:slideIds] = []
       
       client.slide_ids.each do |slideId|
-        if event_slide_exists?(event._id, slideId)
-          clientObject['slideIds'] << slideId.to_str
+        if eventSlideIds.include? slideId.to_str
+          clientObject[:slideIds] << slideId.to_str
         end
       end
       
@@ -168,14 +170,24 @@ class EventsController < ApplicationController
       talent = get_talent(slide.talent_id)
       
       slideObject = {}
-      slideObject['talentName'] = talent.name
-      slideObject['formData'] = JSON.parse(slide.data)
-      slideObject['curated'] = slide.curated
+      slideObject[:talentName] = talent.name
+      slideObject[:formData] = JSON.parse(slide.data)
+      slideObject[:curated] = slide.curated
       
       slidesObject[slideId.to_str] = slideObject
     end
     
     return slidesObject
+  end
+  
+  def get_event_slide_ids event
+    eventSlideIds = []
+    
+    event.slide_ids.each do |slideId|
+      eventSlideIds << slideId.to_str
+    end
+    
+    return eventSlideIds
   end
   
   def get_event eventId
@@ -198,20 +210,12 @@ class EventsController < ApplicationController
     return Slide.find_by(:_id => slideId)
   end
   
-  def get_user_slide eventId, userId
-    return Slide.find_by(:event_id => eventId, :talent_id => userId)
+  def get_talent_slide eventId, talentId
+    return Slide.find_by(:event_id => eventId, :talent_id => talentId)
   end
   
-  def user_slide_exists? eventId, userId
-    if Slide.where(:event_id => eventId, :talent_id => userId).present?
-      return true
-    end
-    
-    return false
-  end
-  
-  def event_slide_exists? eventId, slideId
-    if Slide.where(:event_id => eventId, :_id => slideId).present?
+  def talent_slide_exists? eventId, talentId
+    if Slide.where(:event_id => eventId, :talent_id => talentId).present?
       return true
     end
     
