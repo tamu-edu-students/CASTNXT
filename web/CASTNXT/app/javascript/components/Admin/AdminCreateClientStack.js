@@ -15,55 +15,80 @@ import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import Button from '@mui/material/Button';
 import { MultiSelect } from "react-multi-select-component";
-// import {curatedData, formSchema} from './data';
+import Alert from '@mui/material/Alert';
+import axios from 'axios';
 
 class AdminCreateClientStack extends Component {
     constructor(props) {
         super(props)
+        
+        console.log("Rails properties", properties)
 
         this.state = {
             redirect: "",
-            schema: [],//formSchema.schema,
-            uischema: [],//formSchema.uischema,
-            formData: [],//formSchema.formData,
-            entries: [],//curatedData.entries,
+            title: properties.data.title,
+            description: properties.data.description,
+            schema: properties.data.schema !== undefined ? properties.data.schema : [],
+            uiSchema: properties.data.uischema !== undefined ? properties.data.uischema : [],
+            formData: [],
+            entries: [],
             curatedStack: [],
             showStack: false,
             clients: [],
             page:0,
             rowsPerPage: 1,
-            clientOptions: [],//[{label: 'client 1', value: 'client1'}, {label: 'client 2', value: 'client2'}],
+            clientOptions: [],
             clientSelections: [],
+            stackCreateSuccess: "",
+            responseMessage: ""
         }
     }
     
     componentDidMount() {
-        let entries = this.state.entries
+        let entries = []
+        let slides = properties.data.slides
+        let schema = this.state.schema
+        let clientOptions = []
+        let clients = properties.data.clients
+  
+        schema['title'] = properties.data.title
+        schema['description'] = properties.data.description
+      
+        for(var key in slides) {
+          entries.push({
+            ...slides[key],
+            id: key,
+            clients: []
+          }) 
+        }
 
         entries = entries.filter(row => row['curated'] === true)
         
+        
+        for(var key in clients) {
+          clientOptions.push({
+            label: clients[key].name,
+            value: key
+          }) 
+        }
+        
         this.setState({
             entries: entries,
+            clientOptions: clientOptions
         })
         
     }
     
-    handleChange = (e) => {
-      this.setState({
-        [e.target.name]: e.target.value
-      })
-    }
+    // handleChange = (e) => {
+    //   this.setState({
+    //     [e.target.name]: e.target.value
+    //   })
+    // }
     
     back = () => {
         this.setState({
             redirect: 'admin'
         })
-    }
-    
-    updateClients = () => {
-      this.setState({
-        entries: this.state.entries
-      })
     }
     
     handleClientChange = (clients, row) => {
@@ -75,6 +100,7 @@ class AdminCreateClientStack extends Component {
           entries[i]['clients'] = clients
         }
       }
+      console.log(entries)
       
       this.setState({
         entries: entries,
@@ -94,8 +120,42 @@ class AdminCreateClientStack extends Component {
       })
     }
     
-    handleSelect(selectedItems) {
-      this.setState({ selectedItems: selectedItems });
+    // handleSelect(selectedItems) {
+    //   this.setState({ selectedItems: selectedItems });
+    // }
+    
+    updateClients = () => {
+      let entries = this.state.entries
+      let clients = properties.data.clients
+      
+      for(var i=0; i<entries.length; i++) {
+        let entry_clients = entries[i].clients
+        
+        for(var j=0; j<entry_clients.length; j++) {
+          clients[entry_clients[j].value].slideIds.push(entries[i].id)
+        }
+      }
+      
+      const payload = {
+        clients: clients,
+        slides: properties.data.slides
+      }
+      
+      axios.post(baseURL+"/slides/", payload)
+      .then((res) => {
+        console.log("Success")
+        
+        this.setState({
+          stackCreateSuccess: true 
+        })
+      })
+      .catch((err) => {
+        console.log("Failure")
+        
+        this.setState({
+          stackCreateSuccess: false 
+        })
+      })
     }
 
     render() {
@@ -123,14 +183,14 @@ class AdminCreateClientStack extends Component {
                                       .map((row, index) => {
                                         return(
                                           <TableRow
-                                            key={row.id}
+                                            key={index}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                           >
 
                                             <TableCell>
                                               <Form
                                                 schema={this.state.schema}
-                                                uiSchema={this.state.uischema}
+                                                uiSchema={this.state.uiSchema}
                                                 formData={row.formData}
                                                 children={true}
                                               />
@@ -173,6 +233,22 @@ class AdminCreateClientStack extends Component {
                         <br />
 
                         <Button variant="contained" onClick={this.updateClients}>Update</Button><br />
+                        
+                        {(this.state.stackCreateSuccess !== "" && this.state.stackCreateSuccess) && 
+                          <div className="col-md-6 offset-md-3">
+                            <br />
+                            <Alert severity="success">{this.state.responseMessage}</Alert>
+                            <br />
+                          </div>
+                        }
+                        
+                        {(this.state.stackCreateSuccess !== "" && !this.state.stackCreateSuccess) &&
+                            <div className="col-md-6 offset-md-3">
+                              <br />
+                              <Alert severity="error">Error: {this.state.responseMessage}</Alert>
+                              <br />
+                            </div>
+                        }
                         
                     </div>
                 </div>

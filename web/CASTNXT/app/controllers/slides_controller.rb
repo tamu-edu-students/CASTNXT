@@ -89,6 +89,8 @@ class SlidesController < ApplicationController
   
   def create_admin_slide
     if is_user_logged_in?('ADMIN')
+      Rails.logger.debug("HERE")
+      Rails.logger.debug(params[:data])
       data = JSON.parse(params[:data])
       eventId = params[:event_id]
       event = get_event(eventId)
@@ -153,7 +155,8 @@ class SlidesController < ApplicationController
     return Client.find_by(:_id => clientId)
   end
   
-  def create_slide event, talent, data
+  def create_slide eventId, talentId, data
+    Rails.logger.debug("In create_slide")
     Slide.create(:event_id => eventId, :talent_id => talentId, :curated => false, :submission_status => 'UNDER REVIEW', :data => data)
   end
   

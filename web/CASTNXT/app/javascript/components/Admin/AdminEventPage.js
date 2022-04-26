@@ -21,7 +21,7 @@ class AdminEventPage extends Component {
     constructor(props) {
         super(props)
         
-        console.log("Props", props)
+        // console.log("Rails properties", properties)
 
         this.state = {
             tableData: [],
@@ -30,7 +30,7 @@ class AdminEventPage extends Component {
     }
     
     componentDidMount() {
-        this.getEvents()
+        // this.getEvents()
     }
     
     getEvents() {
