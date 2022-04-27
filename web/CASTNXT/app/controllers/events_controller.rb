@@ -32,7 +32,7 @@ class EventsController < ApplicationController
     if "ADMIN".casecmp? session[:userType]
       admin_event
     elsif "CLIENT".casecmp? session[:userType]
-      # perform client action
+      client_event
     else
       user_event
     end
@@ -131,6 +131,27 @@ class EventsController < ApplicationController
     @properties = {name: session[:userName], data: data}
   end
   
+  def client_event
+    authenticate_user!('CLIENT')
+    
+    eventId = params[:id]
+    if unknown_event?(eventId)
+      return
+    end
+    
+    event = get_event(eventId)
+    client = get_client(session[:userId])
+    form = get_form(event.form_id)
+      
+    data = JSON.parse(form.data)
+    data[:id] = eventId
+    data[:title] = event.title
+    data[:description] = event.description
+    data[:status] = event.status
+    
+    data[:slides] = build_client_event_slides(client)
+  end
+  
   def unknown_event? eventId
     if Event.where(:_id => eventId).blank?
       render :file => "#{Rails.root}/public/404.html",  layout: false, status: :not_found
@@ -173,6 +194,23 @@ class EventsController < ApplicationController
       slideObject[:talentName] = talent.name
       slideObject[:formData] = JSON.parse(slide.data)
       slideObject[:curated] = slide.curated
+      
+      slidesObject[slideId.to_str] = slideObject
+    end
+    
+    return slidesObject
+  end
+  
+  def build_client_event_slides event, client
+    slidesObject = {}
+    
+    (event.slide_ids & client.slide_ids).each do |slideId|
+      slide = get_slide(slideId)
+      talent = get_talent(slide.talent_id)
+      
+      slideObject = {}
+      slideObject[:talentName] = talent.name
+      slideObject[:formData] = JSON.parse(slide.data)
       
       slidesObject[slideId.to_str] = slideObject
     end

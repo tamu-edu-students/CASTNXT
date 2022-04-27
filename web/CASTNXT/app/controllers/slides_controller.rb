@@ -89,14 +89,11 @@ class SlidesController < ApplicationController
   
   def create_admin_slide
     if is_user_logged_in?('ADMIN')
-      Rails.logger.debug("HERE")
-      Rails.logger.debug(params[:data])
-      data = JSON.parse(params[:data])
       eventId = params[:event_id]
       event = get_event(eventId)
       
-      update_event_clients(event, data[:clients])
-      update_event_slides(event, data[:slides])
+      update_event_clients(event, params[:clients])
+      update_event_slides(params[:slides])
       
       render json: {comment: 'Updated slides!'}, status: 200
     else
@@ -104,10 +101,10 @@ class SlidesController < ApplicationController
     end
   end
     
-  def update_event_slides event, data
+  def update_event_slides data
     data.keys.each do |slideId|
       slide = get_slide(slideId)
-      slide.update(:curated => data[slideId][:curated])
+      slide.update(:curated => data[slideId][:curated], :data => data[slideId][:formData])
     end
   end
   
