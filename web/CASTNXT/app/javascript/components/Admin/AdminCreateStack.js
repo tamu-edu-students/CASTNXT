@@ -15,6 +15,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import Slide from '../Forms/Slide';
 import axios from 'axios';
 
 class AdminCreateStack extends Component {
@@ -24,11 +25,12 @@ class AdminCreateStack extends Component {
         // console.log("Rails properties", properties)
 
         this.state = {
+            properties: props.properties,
             redirect: "",
-            title: properties.data.title,
-            description: properties.data.description,
-            schema: properties.data.schema !== undefined ? properties.data.schema : [],
-            uiSchema: properties.data.uischema !== undefined ? properties.data.uischema : [],
+            title: props.properties.data.title,
+            description: props.properties.data.description,
+            schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
+            uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             formData: [],
             entries: [],
             curatedStack: [],
@@ -43,11 +45,11 @@ class AdminCreateStack extends Component {
     
     componentDidMount() {
       let entries = []
-      let slides = properties.data.slides
+      let slides = this.props.properties.data.slides
       let schema = this.state.schema
 
-      schema['title'] = properties.data.title
-      schema['description'] = properties.data.description
+      schema['title'] = this.props.properties.data.title
+      schema['description'] = this.props.properties.data.description
       
       for(var key in slides) {
         entries.push({
@@ -120,8 +122,8 @@ class AdminCreateStack extends Component {
       let curatedStack = this.state.curatedStack
       
       for(var i=0; i<curatedStack.length; i++) {
-        console.log(properties.data.slides[curatedStack[i].id])
-        properties.data.slides[curatedStack[i].id]['curated'] = true
+        // console.log(properties.data.slides[curatedStack[i].id])
+        this.props.properties.data.slides[curatedStack[i].id]['curated'] = true
         
       }
       
@@ -129,8 +131,8 @@ class AdminCreateStack extends Component {
       console.log(baseURL)
       
       const payload = {
-        clients: properties.data.clients,
-        slides: properties.data.slides
+        clients: this.props.properties.data.clients,
+        slides: this.props.properties.data.slides
       }
       
       axios.post(baseURL+"/slides/", payload)
@@ -138,14 +140,16 @@ class AdminCreateStack extends Component {
         console.log("Success")
         
         this.setState({
-          stackCreateSuccess: true 
+          stackCreateSuccess: true,
+          responseMessage: res.data.comment
         })
       })
       .catch((err) => {
         console.log("Failure")
         
         this.setState({
-          stackCreateSuccess: false 
+          stackCreateSuccess: false,
+          responseMessage: 'An error occured when making master deck'
         })
       })
     }
@@ -174,7 +178,7 @@ class AdminCreateStack extends Component {
                                           >
 
                                             <TableCell>
-                                              <Form
+                                              <Slide
                                                 schema={this.state.schema}
                                                 uiSchema={this.state.uiSchema}
                                                 formData={row.formData}

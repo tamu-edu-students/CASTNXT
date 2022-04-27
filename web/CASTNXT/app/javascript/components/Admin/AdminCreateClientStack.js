@@ -16,20 +16,22 @@ import TableFooter from '@mui/material/TableFooter';
 import Button from '@mui/material/Button';
 import { MultiSelect } from "react-multi-select-component";
 import Alert from '@mui/material/Alert';
+import Slide from '../Forms/Slide';
 import axios from 'axios';
 
 class AdminCreateClientStack extends Component {
     constructor(props) {
         super(props)
         
-        console.log("Rails properties", properties)
+        console.log("Rails properties", props.properties)
 
         this.state = {
+            properties: props.properties,
             redirect: "",
-            title: properties.data.title,
-            description: properties.data.description,
-            schema: properties.data.schema !== undefined ? properties.data.schema : [],
-            uiSchema: properties.data.uischema !== undefined ? properties.data.uischema : [],
+            title: props.properties.data.title,
+            description: props.properties.data.description,
+            schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
+            uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             formData: [],
             entries: [],
             curatedStack: [],
@@ -46,13 +48,13 @@ class AdminCreateClientStack extends Component {
     
     componentDidMount() {
         let entries = []
-        let slides = properties.data.slides
+        let slides = this.props.properties.data.slides
         let schema = this.state.schema
         let clientOptions = []
-        let clients = properties.data.clients
+        let clients = this.props.properties.data.clients
   
-        schema['title'] = properties.data.title
-        schema['description'] = properties.data.description
+        schema['title'] = this.props.properties.data.title
+        schema['description'] = this.props.properties.data.description
       
         for(var key in slides) {
           entries.push({
@@ -70,6 +72,18 @@ class AdminCreateClientStack extends Component {
             label: clients[key].name,
             value: key
           }) 
+          
+          for(var i=0; i<clients[key].slideIds.length; i++) {
+            // console.log(clients[key].slideIds[i])
+            for(var j=0; j<entries.length; j++) {
+              if(entries[j].id === clients[key].slideIds[i]) {
+                entries[j].clients.push({
+                  label: clients[key].name,
+                  value: key
+                })
+              }
+            }
+          }
         }
         
         this.setState({
@@ -85,11 +99,11 @@ class AdminCreateClientStack extends Component {
     //   })
     // }
     
-    back = () => {
-        this.setState({
-            redirect: 'admin'
-        })
-    }
+    // back = () => {
+    //     this.setState({
+    //         redirect: 'admin'
+    //     })
+    // }
     
     handleClientChange = (clients, row) => {
       
@@ -126,7 +140,7 @@ class AdminCreateClientStack extends Component {
     
     updateClients = () => {
       let entries = this.state.entries
-      let clients = properties.data.clients
+      let clients = this.props.properties.data.clients
       
       for(var i=0; i<entries.length; i++) {
         let entry_clients = entries[i].clients
@@ -138,8 +152,11 @@ class AdminCreateClientStack extends Component {
       
       const payload = {
         clients: clients,
-        slides: properties.data.slides
+        slides: this.props.properties.data.slides
       }
+      
+      const baseURL = window.location.href.split('#')[0]
+      console.log(baseURL)
       
       axios.post(baseURL+"/slides/", payload)
       .then((res) => {
@@ -160,9 +177,9 @@ class AdminCreateClientStack extends Component {
 
     render() {
         
-        if(this.state.redirect === "admin") {
-            return <Redirect to='/admin'/>;
-        }
+        // if(this.state.redirect === "admin") {
+        //     return <Redirect to='/admin'/>;
+        // }
         
         return(
             <div>
@@ -174,6 +191,7 @@ class AdminCreateClientStack extends Component {
                     <div>
 
                         <div className="col-md-8 offset-md-2">
+                        
                           <Paper>
                             <TableContainer>
                               <Table size="medium">
@@ -188,7 +206,7 @@ class AdminCreateClientStack extends Component {
                                           >
 
                                             <TableCell>
-                                              <Form
+                                              <Slide
                                                 schema={this.state.schema}
                                                 uiSchema={this.state.uiSchema}
                                                 formData={row.formData}
