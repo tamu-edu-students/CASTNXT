@@ -14,36 +14,60 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import Button from '@mui/material/Button';
-// import {formTestData, formSchema} from './data';
+import Alert from '@mui/material/Alert';
+import Slide from '../Forms/Slide';
+import axios from 'axios';
 
 class AdminCreateStack extends Component {
     constructor(props) {
         super(props)
+        
+        // console.log("Rails properties", properties)
 
         this.state = {
+            properties: props.properties,
             redirect: "",
-            schema: [],//formSchema.schema,
-            uischema: [],//formSchema.uischema,
-            formData: [],//formSchema.formData,
-            entries: [],//formTestData.entries,
+            title: props.properties.data.title,
+            description: props.properties.data.description,
+            schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
+            uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
+            formData: [],
+            entries: [],
             curatedStack: [],
             showStack: false,
             client: '',
             page:0,
-            rowsPerPage: 1
+            rowsPerPage: 1,
+            stackCreateSuccess: "",
+            responseMessage: ""
         }
+    }
+    
+    componentDidMount() {
+      let entries = []
+      let slides = this.props.properties.data.slides
+      let schema = this.state.schema
+
+      schema['title'] = this.props.properties.data.title
+      schema['description'] = this.props.properties.data.description
+      
+      for(var key in slides) {
+        entries.push({
+          ...slides[key],
+          id: key
+        }) 
+      }
+      
+      this.setState({
+        entries: entries,
+        schema: schema,
+      })
     }
     
     handleChange = (e) => {
       this.setState({
         [e.target.name]: e.target.value
       })
-    }
-    
-    back = () => {
-        this.setState({
-            redirect: 'admin'
-        })
     }
     
     addToStack = (row) => {
@@ -93,12 +117,44 @@ class AdminCreateStack extends Component {
         rowsPerPage: event.target.value
       })
     }
+    
+    makeMasterStack = () => {
+      let curatedStack = this.state.curatedStack
+      
+      for(var i=0; i<curatedStack.length; i++) {
+        // console.log(properties.data.slides[curatedStack[i].id])
+        this.props.properties.data.slides[curatedStack[i].id]['curated'] = true
+        
+      }
+      
+      const baseURL = window.location.href.split('#')[0]
+      console.log(baseURL)
+      
+      const payload = {
+        clients: this.props.properties.data.clients,
+        slides: this.props.properties.data.slides
+      }
+      
+      axios.post(baseURL+"/slides/", payload)
+      .then((res) => {
+        console.log("Success")
+        
+        this.setState({
+          stackCreateSuccess: true,
+          responseMessage: res.data.comment
+        })
+      })
+      .catch((err) => {
+        console.log("Failure")
+        
+        this.setState({
+          stackCreateSuccess: false,
+          responseMessage: 'An error occured when making master deck'
+        })
+      })
+    }
 
     render() {
-        
-        if(this.state.redirect === "admin") {
-            return <Redirect to='/admin'/>;
-        }
         
         return(
             <div>
@@ -117,14 +173,14 @@ class AdminCreateStack extends Component {
                                       .map((row, index) => {
                                         return(
                                           <TableRow
-                                            key={row.id}
+                                            key={index}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                           >
 
                                             <TableCell>
-                                              <Form
+                                              <Slide
                                                 schema={this.state.schema}
-                                                uiSchema={this.state.uischema}
+                                                uiSchema={this.state.uiSchema}
                                                 formData={row.formData}
                                                 children={true}
                                               />
@@ -172,17 +228,18 @@ class AdminCreateStack extends Component {
                       <br /><br />
                       
                       {this.state.showStack &&
-                        <div tabindex="-1" id="curated">
+                        <div tabIndex="-1" id="curated">
                         <hr />
                           <table>
                             <thead>
                               <tr><td>Current Stack</td></tr>
                             </thead>
                             <tbody>
-                              {this.state.curatedStack.map((row) => {
+                              {this.state.curatedStack.map((row, index) => {
+                              console.log(row)
                                   return(
-                                    <tr key={row.id}>
-                                      <td>{row['formData']['Personal details']['name']}</td>
+                                    <tr key={index}>
+                                      <td>{row.talentName}</td>
                                     </tr>
                                   )
                                 })
@@ -191,9 +248,25 @@ class AdminCreateStack extends Component {
                           </table>
                           <br />
                           
-                          <Button variant="contained">Submit</Button><br /><br />
+                          <Button variant="contained" onClick={this.makeMasterStack}>Submit</Button><br /><br />
                           <hr />
                         </div>
+                      }
+                      
+                      {(this.state.stackCreateSuccess !== "" && this.state.stackCreateSuccess) && 
+                          <div className="col-md-6 offset-md-3">
+                            <br />
+                            <Alert severity="success">{this.state.responseMessage}</Alert>
+                            <br />
+                          </div>
+                      }
+                      
+                      {(this.state.stackCreateSuccess !== "" && !this.state.stackCreateSuccess) &&
+                          <div className="col-md-6 offset-md-3">
+                            <br />
+                            <Alert severity="error">Error: {this.state.responseMessage}</Alert>
+                            <br />
+                          </div>
                       }
                         
                     </div>

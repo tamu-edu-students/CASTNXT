@@ -16,12 +16,13 @@ import Box from '@mui/material/Box';
 
 import AdminCreateStack from './AdminCreateStack';
 import AdminCreateClientStack from './AdminCreateClientStack';
+import AdminClientDecks from './AdminClientDecks';
 
 class AdminEventPage extends Component {
     constructor(props) {
         super(props)
         
-        console.log("Props", props)
+        // console.log("Rails properties", properties)
 
         this.state = {
             tableData: [],
@@ -30,7 +31,7 @@ class AdminEventPage extends Component {
     }
     
     componentDidMount() {
-        this.getEvents()
+        // this.getEvents()
     }
     
     getEvents() {
@@ -86,19 +87,19 @@ class AdminEventPage extends Component {
                               
                               {this.state.tabValue === 0 &&
                                   <div>
-                                    <AdminCreateStack />
+                                    <AdminCreateStack properties={properties} />
                                   </div>
                               }
                               
                               {this.state.tabValue === 1 &&
                                   <div>
-                                    <AdminCreateClientStack />
+                                    <AdminCreateClientStack properties={properties} />
                                   </div>
                               }
                               
                               {this.state.tabValue === 2 &&
                                   <div>
-                                    Client Decks
+                                    <AdminClientDecks properties={properties} />
                                   </div>
                               }
                               

@@ -18,9 +18,7 @@ class Slide extends Component {
     let fieldsCopy = Object.assign({}, state.fields)
     let schemaCopy = Object.assign({}, props.schema)
     Object.keys(props.formData).forEach(key => {
-      console.log("Key: ",key, props.formData[key])
       if(props.formData && typeof props.formData[key] === 'string' && props.formData[key].includes("data:image")) {
-        console.log("Image found",key);
         let fieldIndex = uiSchemaCopy['ui:order'].indexOf(key)
         let uiOrder = [
           ...uiSchemaCopy['ui:order'].slice(0, fieldIndex+1),
@@ -57,7 +55,6 @@ class Slide extends Component {
   }
   
   render() {
-    console.log('inside slide: ', this.state)
     const { onFormDataChange, onSubmit, ...restProps} = this.props
     return (
         <div className="container" style={{ backgroundColor: 'white', height: '100%'}}>

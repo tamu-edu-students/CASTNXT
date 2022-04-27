@@ -38,8 +38,8 @@ class ClientHomepage extends Component {
             tableData.map((event, i) => {
                 rows.push(
                     <TableRow key={i}>
-                        <TableCell align="center" onClick={() => {window.location.href="/client/event/"+event.id}}>
-                            <b><a href={"/client/event/"+event.id}>{event.title}</a></b>
+                        <TableCell align="center" onClick={() => {window.location.href="/client/events/"+event.id}}>
+                            <b><a href={"/client/events/"+event.id}>{event.title}</a></b>
                         </TableCell>
                     </TableRow>
                 )

@@ -36,8 +36,8 @@ class AdminHomepage extends Component {
             tableData.map((event, i) => {
                 rows.push(
                     <TableRow key={i}>
-                        <TableCell align="center" onClick={() => {window.location.href="/admin/event/"+event.id}}>
-                            <b><a href={"/admin/event/"+event.id}>{event.title}</a></b>
+                        <TableCell align="center" onClick={() => {window.location.href="/admin/events/"+event.id}}>
+                            <b><a href={"/admin/events/"+event.id}>{event.title}</a></b>
                         </TableCell>
                         <TableCell>{event.status}</TableCell>
                     </TableRow>

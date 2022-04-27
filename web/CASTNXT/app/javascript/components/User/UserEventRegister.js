@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import Form from '@rjsf/core';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import Slide from '../Forms/Slide';
 import axios from 'axios';
 
 class UserEventRegister extends Component {
@@ -72,10 +73,10 @@ class UserEventRegister extends Component {
                             <div className="form-preview">
                                 <h3>{this.state.title}</h3>
                                 <span>{this.state.description}</span>
-                                <Form
+                                <Slide
                                   schema={this.state.schema}
                                   uiSchema={this.state.uischema}
-                                  onChange={(newFormData) => this.setState((prevState) => {
+                                  onFormDataChange={(newFormData) => this.setState((prevState) => {
                                       return {
                                           ...prevState,
                                           formData: newFormData.formData

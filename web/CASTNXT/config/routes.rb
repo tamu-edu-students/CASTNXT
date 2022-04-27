@@ -9,7 +9,9 @@ Rails.application.routes.draw do
   
   scope :admin do 
     # TODO: update the except block based on actions configured
-    resources :events, :except => [:update]
+    resources :events do
+      resources :slides
+    end
     resources :forms, :except => [:edit, :update]
   end
   
@@ -35,7 +37,7 @@ Rails.application.routes.draw do
   match '/admin/create-event', :controller => 'admin', :action => 'create_event', :via => :get
   match '/admin/create-master-stack', :controller => 'admin', :action => 'index', :via => :get
   match '/admin/create-client-stack', :controller => 'admin', :action => 'index', :via => :get
-  match '/admin/event/:id', :controller => 'admin', :action => 'index', :via => :get
+  # match '/admin/event/:id', :controller => 'admin', :action => 'index', :via => :get
   
   get '/client', to: 'client#index'
   match '/client/events', :controller => 'client', :action => 'events', :via => :get
