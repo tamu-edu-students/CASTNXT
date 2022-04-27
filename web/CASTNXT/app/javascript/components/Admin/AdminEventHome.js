@@ -12,8 +12,8 @@ class AdminEventHome extends Component {
         super(props)
 
         this.state = {
-            redirect: "",
-            status: properties.data.status,
+            properties: props.properties,
+            status: props.properties.data.status,
             responseMessage: "",
             eventStatusUpdateSuccess: "",
         }
