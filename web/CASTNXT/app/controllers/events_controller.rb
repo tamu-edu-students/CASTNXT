@@ -62,6 +62,20 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
   end
+  
+  # PUT /events/1/
+  def update
+    if is_user_logged_in?('ADMIN')
+      eventId = params[:id]
+      event = get_event(eventId)
+      
+      update_event_status(event, params[:status])
+      
+      render json: {comment: 'Updated Event Status!'}, status: 200
+    else
+      render json: {redirect_path: '/'}, status: 403
+    end
+  end
 
   # POST /events or /events.json
   def create
@@ -226,6 +240,10 @@ class EventsController < ApplicationController
     end
     
     return eventSlideIds
+  end
+  
+  def update_event_status event, status
+    event.update(:status => status)
   end
   
   def get_event eventId
