@@ -30,7 +30,7 @@ class AdminCreateStack extends Component {
             title: props.properties.data.title,
             description: props.properties.data.description,
             schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
-            uiSchema: props.properties.data.uiSchema !== undefined ? props.properties.data.uiSchema : [],
+            uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             formData: [],
             entries: [],
             curatedStack: [],
@@ -138,32 +138,26 @@ class AdminCreateStack extends Component {
     makeSlideChanges = () => {
       let entries = this.state.entries
       for(var i=0; i<entries.length; i++) {
+        this.props.properties.data.slides[entries[i].id].curated = entries[i].curated
         if(entries[i].updated === true)
           this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
       }
     }
     
     makeMasterStack = () => {
-      let curatedStack = this.state.curatedStack
-      
       this.makeSlideChanges()
       
-      for(var i=0; i<curatedStack.length; i++) {
-        // console.log(properties.data.slides[curatedStack[i].id])
-        this.props.properties.data.slides[curatedStack[i].id]['curated'] = true
-        
-      }
+      let slides = JSON.parse(JSON.stringify(this.props.properties.data.slides))
       
-      for(var key in this.properties.data.slides) {
-        this.properties.data.slides[key].formData = JSON.stringify(this.properties.data.slides[key].formData)
+      for(var key in slides) {
+        slides[key].formData = JSON.stringify(slides[key].formData)
       }
       
       const baseURL = window.location.href.split('#')[0]
-      console.log(baseURL)
       
       const payload = {
         clients: this.props.properties.data.clients,
-        slides: this.props.properties.data.slides
+        slides: slides
       }
       
       axios.post(baseURL+"/slides/", payload)
@@ -186,7 +180,6 @@ class AdminCreateStack extends Component {
     }
 
     render() {
-        
         return(
             <div>
 

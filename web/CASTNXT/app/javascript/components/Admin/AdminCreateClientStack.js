@@ -122,9 +122,35 @@ class AdminCreateClientStack extends Component {
       })
     }
     
+    updateFormData = (newFormData, row) => {
+      let entries = this.state.entries
+      for(var i=0; i<entries.length; i++) {
+        if(row.id === entries[i].id) {
+          entries[i].formData = newFormData.formData
+          entries[i].updated = true
+        }
+      }
+      
+      this.setState({
+        entries: entries
+      })
+    }
+    
+    makeSlideChanges = () => {
+      let entries = this.state.entries
+      for(var i=0; i<entries.length; i++) {
+        if(entries[i].updated === true)
+          this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
+      }
+    }
+    
     updateClients = () => {
       let entries = this.state.entries
       let clients = this.props.properties.data.clients
+      
+      for (let i in clients) {
+        clients[i].slideIds = []
+      }
       
       for(var i=0; i<entries.length; i++) {
         let entry_clients = entries[i].clients
@@ -134,13 +160,16 @@ class AdminCreateClientStack extends Component {
         }
       }
       
-      for(var key in this.properties.data.slides) {
-        this.properties.data.slides[key].formData = JSON.stringify(this.properties.data.slides[key].formData)
+      this.makeSlideChanges()
+      let slides = JSON.parse(JSON.stringify(this.props.properties.data.slides))
+      
+      for(var key in slides) {
+        slides[key].formData = JSON.stringify(slides[key].formData)
       }
       
       const payload = {
         clients: clients,
-        slides: this.props.properties.data.slides
+        slides: slides
       }
       
       const baseURL = window.location.href.split('#')[0]
@@ -199,6 +228,7 @@ class AdminCreateClientStack extends Component {
                                                 uiSchema={this.state.uiSchema}
                                                 formData={row.formData}
                                                 children={true}
+                                                onFormDataChange={(newFormData) => this.updateFormData(newFormData, row)}
                                               />
                                               
                                               <br />
