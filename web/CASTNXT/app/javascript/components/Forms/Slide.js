@@ -58,6 +58,7 @@ class Slide extends Component {
   
   render() {
     console.log('inside slide: ', this.state)
+    const { onFormDataChange, onSubmit, ...restProps} = this.props
     return (
         <div className="container" style={{ backgroundColor: 'white', height: '100%'}}>
           <Form
@@ -67,6 +68,7 @@ class Slide extends Component {
               formData={this.state.formData}
               submitButtonMessage={"Submit"}
               onSubmit={this.props.onSubmit}
+              {...restProps}
             />
         </div>
     );
