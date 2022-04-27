@@ -31,7 +31,7 @@ class AdminCreateClientStack extends Component {
             title: props.properties.data.title,
             description: props.properties.data.description,
             schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
-            uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
+            uiSchema: props.properties.data.uiSchema !== undefined ? props.properties.data.uiSchema : [],
             formData: [],
             entries: [],
             curatedStack: [],
@@ -93,18 +93,6 @@ class AdminCreateClientStack extends Component {
         
     }
     
-    // handleChange = (e) => {
-    //   this.setState({
-    //     [e.target.name]: e.target.value
-    //   })
-    // }
-    
-    // back = () => {
-    //     this.setState({
-    //         redirect: 'admin'
-    //     })
-    // }
-    
     handleClientChange = (clients, row) => {
       
       let i, entries = this.state.entries
@@ -134,10 +122,6 @@ class AdminCreateClientStack extends Component {
       })
     }
     
-    // handleSelect(selectedItems) {
-    //   this.setState({ selectedItems: selectedItems });
-    // }
-    
     updateClients = () => {
       let entries = this.state.entries
       let clients = this.props.properties.data.clients
@@ -148,6 +132,10 @@ class AdminCreateClientStack extends Component {
         for(var j=0; j<entry_clients.length; j++) {
           clients[entry_clients[j].value].slideIds.push(entries[i].id)
         }
+      }
+      
+      for(var key in this.properties.data.slides) {
+        this.properties.data.slides[key].formData = JSON.stringify(this.properties.data.slides[key].formData)
       }
       
       const payload = {

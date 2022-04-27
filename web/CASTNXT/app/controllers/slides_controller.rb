@@ -104,8 +104,8 @@ class SlidesController < ApplicationController
   def update_event_slides data
     data.keys.each do |slideId|
       slide = get_slide(slideId)
-      formData = JSON.generate(data[slideId][:formData])
-      slide.update(:curated => data[slideId][:curated], :data => formData)
+      slide.update(:curated => data[slideId][:curated])
+      #slide.update(:curated => data[slideId][:curated], :data => data[slideId][:formData])
     end
   end
   

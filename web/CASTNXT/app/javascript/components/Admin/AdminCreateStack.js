@@ -22,7 +22,7 @@ class AdminCreateStack extends Component {
     constructor(props) {
         super(props)
         
-        // console.log("Rails properties", properties)
+        console.log("Rails properties", props.properties)
 
         this.state = {
             properties: props.properties,
@@ -30,7 +30,7 @@ class AdminCreateStack extends Component {
             title: props.properties.data.title,
             description: props.properties.data.description,
             schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
-            uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
+            uiSchema: props.properties.data.uiSchema !== undefined ? props.properties.data.uiSchema : [],
             formData: [],
             entries: [],
             curatedStack: [],
@@ -54,7 +54,8 @@ class AdminCreateStack extends Component {
       for(var key in slides) {
         entries.push({
           ...slides[key],
-          id: key
+          id: key,
+          updated: false
         }) 
       }
       
@@ -118,13 +119,43 @@ class AdminCreateStack extends Component {
       })
     }
     
+    updateFormData = (newFormData, row) => {
+      console.log(newFormData)
+      
+      let entries = this.state.entries
+      for(var i=0; i<entries.length; i++) {
+        if(row.id === entries[i].id) {
+          entries[i].formData = newFormData.formData
+          entries[i].updated = true
+        }
+      }
+      
+      this.setState({
+        entries: entries
+      })
+    }
+    
+    makeSlideChanges = () => {
+      let entries = this.state.entries
+      for(var i=0; i<entries.length; i++) {
+        if(entries[i].updated === true)
+          this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
+      }
+    }
+    
     makeMasterStack = () => {
       let curatedStack = this.state.curatedStack
+      
+      this.makeSlideChanges()
       
       for(var i=0; i<curatedStack.length; i++) {
         // console.log(properties.data.slides[curatedStack[i].id])
         this.props.properties.data.slides[curatedStack[i].id]['curated'] = true
         
+      }
+      
+      for(var key in this.properties.data.slides) {
+        this.properties.data.slides[key].formData = JSON.stringify(this.properties.data.slides[key].formData)
       }
       
       const baseURL = window.location.href.split('#')[0]
@@ -183,6 +214,7 @@ class AdminCreateStack extends Component {
                                                 uiSchema={this.state.uiSchema}
                                                 formData={row.formData}
                                                 children={true}
+                                                onFormDataChange={(newFormData) => this.updateFormData(newFormData, row)}
                                               />
                                               
                                               <br />
