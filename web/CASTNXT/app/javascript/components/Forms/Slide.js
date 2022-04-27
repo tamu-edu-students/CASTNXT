@@ -55,7 +55,8 @@ class Slide extends Component {
   }
   
   render() {
-    const { onFormDataChange, onSubmit, ...restProps} = this.props
+    // schema and uiSchema are to be used from state and not props since image preview is being added in state
+    const { onFormDataChange, onSubmit, schema, uiSchema, ...restProps} = this.props
     return (
         <div className="container" style={{ backgroundColor: 'white', height: '100%'}}>
           <Form
