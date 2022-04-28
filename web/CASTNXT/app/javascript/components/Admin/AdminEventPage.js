@@ -14,6 +14,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
+import AdminEventHome from './AdminEventHome';
 import AdminCreateStack from './AdminCreateStack';
 import AdminCreateClientStack from './AdminCreateClientStack';
 import AdminClientDecks from './AdminClientDecks';
@@ -25,29 +26,11 @@ class AdminEventPage extends Component {
         // console.log("Rails properties", properties)
 
         this.state = {
+            title: properties.data.title,
+            description: properties.data.description,
             tableData: [],
             tabValue: 0
         }
-    }
-    
-    componentDidMount() {
-        // this.getEvents()
-    }
-    
-    getEvents() {
-        // axios.get("/client/events")
-        //     .then((res) => {
-        //         this.setState({
-        //             tableData: res.data.tableData
-        //         })
-        //     })
-        //     .catch((err) => {
-        //         if (err.response.status == 403) {
-        //             window.location.href = err.response.data.redirect_path;
-        //         } else {
-        //             console.log("Unable to contact server.")
-        //         }
-        //     })
     }
     
     handleTabChange = (e, newValue) => {
@@ -69,7 +52,8 @@ class AdminEventPage extends Component {
                 
                 <div className="container">
                     <div className="user-events">
-                        <h2> Event Title </h2>
+                        <h2> {this.state.title} </h2>
+                        <h6> {this.state.description} </h6>
                         
                         <Button variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back</Button>
 
@@ -77,6 +61,7 @@ class AdminEventPage extends Component {
                             <Box sx={{ width: '100%' }}>
                               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange} centered>
+                                  <Tab label="Home" />
                                   <Tab label="Event Submissions" />
                                   <Tab label="Master Deck" />
                                   <Tab label="Client Decks" />
@@ -87,29 +72,35 @@ class AdminEventPage extends Component {
                               
                               {this.state.tabValue === 0 &&
                                   <div>
-                                    <AdminCreateStack properties={properties} />
+                                    <AdminEventHome properties={properties} />
                                   </div>
                               }
                               
                               {this.state.tabValue === 1 &&
                                   <div>
-                                    <AdminCreateClientStack properties={properties} />
+                                    <AdminCreateStack properties={properties} />
                                   </div>
                               }
                               
                               {this.state.tabValue === 2 &&
                                   <div>
-                                    <AdminClientDecks properties={properties} />
+                                    <AdminCreateClientStack properties={properties} />
                                   </div>
                               }
                               
                               {this.state.tabValue === 3 &&
                                   <div>
-                                    Finalized candidates
+                                    <AdminClientDecks properties={properties} />
                                   </div>
                               }
                               
                               {this.state.tabValue === 4 &&
+                                  <div>
+                                    Finalized candidates
+                                  </div>
+                              }
+                              
+                              {this.state.tabValue === 5 &&
                                   <div>
                                     Summary
                                   </div>

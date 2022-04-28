@@ -22,6 +22,11 @@ Rails.application.routes.draw do
     end
   end
   
+  scope :client do 
+    # TODO: update the except block based on actions configured
+    resources :events
+  end
+  
   # resources :events
   get '/logout', to: 'application#logout'
   

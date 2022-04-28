@@ -22,7 +22,7 @@ class AdminCreateStack extends Component {
     constructor(props) {
         super(props)
         
-        // console.log("Rails properties", properties)
+        console.log("Rails properties", props.properties)
 
         this.state = {
             properties: props.properties,
@@ -54,7 +54,8 @@ class AdminCreateStack extends Component {
       for(var key in slides) {
         entries.push({
           ...slides[key],
-          id: key
+          id: key,
+          updated: false
         }) 
       }
       
@@ -100,7 +101,6 @@ class AdminCreateStack extends Component {
         curatedStack: stack,
         showStack: true
       }, () => {
-        // document.getElementById('curated').focus()
         window.location.hash = "#curated"
       })
     }
@@ -118,21 +118,45 @@ class AdminCreateStack extends Component {
       })
     }
     
-    makeMasterStack = () => {
-      let curatedStack = this.state.curatedStack
+    updateFormData = (newFormData, row) => {
+      console.log(newFormData)
       
-      for(var i=0; i<curatedStack.length; i++) {
-        // console.log(properties.data.slides[curatedStack[i].id])
-        this.props.properties.data.slides[curatedStack[i].id]['curated'] = true
-        
+      let entries = this.state.entries
+      for(var i=0; i<entries.length; i++) {
+        if(row.id === entries[i].id) {
+          entries[i].formData = newFormData.formData
+          entries[i].updated = true
+        }
+      }
+      
+      this.setState({
+        entries: entries
+      })
+    }
+    
+    makeSlideChanges = () => {
+      let entries = this.state.entries
+      for(var i=0; i<entries.length; i++) {
+        this.props.properties.data.slides[entries[i].id].curated = entries[i].curated
+        if(entries[i].updated === true)
+          this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
+      }
+    }
+    
+    makeMasterStack = () => {
+      this.makeSlideChanges()
+      
+      let slides = JSON.parse(JSON.stringify(this.props.properties.data.slides))
+      
+      for(var key in slides) {
+        slides[key].formData = JSON.stringify(slides[key].formData)
       }
       
       const baseURL = window.location.href.split('#')[0]
-      console.log(baseURL)
       
       const payload = {
         clients: this.props.properties.data.clients,
-        slides: this.props.properties.data.slides
+        slides: slides
       }
       
       axios.post(baseURL+"/slides/", payload)
@@ -143,6 +167,10 @@ class AdminCreateStack extends Component {
           stackCreateSuccess: true,
           responseMessage: res.data.comment
         })
+        
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
       })
       .catch((err) => {
         console.log("Failure")
@@ -155,7 +183,6 @@ class AdminCreateStack extends Component {
     }
 
     render() {
-        
         return(
             <div>
 
@@ -169,37 +196,38 @@ class AdminCreateStack extends Component {
                             <Table size="medium">
                               <TableBody>
                                 {this.state.entries
-                                      .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                                      .map((row, index) => {
-                                        return(
-                                          <TableRow
-                                            key={index}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                          >
+                                    .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                                    .map((row) => {
+                                      return(
+                                        <TableRow
+                                          key={row.id}
+                                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
 
-                                            <TableCell>
-                                              <Slide
-                                                schema={this.state.schema}
-                                                uiSchema={this.state.uiSchema}
-                                                formData={row.formData}
-                                                children={true}
-                                              />
-                                              
-                                              <br />
-                                              
-                                              <div style={{textAlign: 'right'}}>
-                                                {!row.curated? (
-                                                  <Button onClick={() => this.addToStack(row)} variant="contained" color="success">Add</Button>
-                                                ) : (
-                                                  <Button onClick={() => this.addToStack(row)} variant="contained" color="error">Remove</Button>
-                                                )}
-                                              </div>
-                                              
-                                            </TableCell>
+                                          <TableCell>
+                                            <Slide
+                                              schema={this.state.schema}
+                                              uiSchema={this.state.uiSchema}
+                                              formData={row.formData}
+                                              children={true}
+                                              onFormDataChange={(newFormData) => this.updateFormData(newFormData, row)}
+                                            />
                                             
-                                          </TableRow>
-                                        )
-                                    })
+                                            <br />
+                                            
+                                            <div style={{textAlign: 'right'}}>
+                                              {!row.curated? (
+                                                <Button onClick={() => this.addToStack(row)} variant="contained" color="success">Add</Button>
+                                              ) : (
+                                                <Button onClick={() => this.addToStack(row)} variant="contained" color="error">Remove</Button>
+                                              )}
+                                            </div>
+                                            
+                                          </TableCell>
+                                          
+                                        </TableRow>
+                                      )
+                                  })
                                 }
                               </TableBody>
                               

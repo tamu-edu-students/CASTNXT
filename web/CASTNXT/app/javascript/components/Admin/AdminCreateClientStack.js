@@ -93,18 +93,6 @@ class AdminCreateClientStack extends Component {
         
     }
     
-    // handleChange = (e) => {
-    //   this.setState({
-    //     [e.target.name]: e.target.value
-    //   })
-    // }
-    
-    // back = () => {
-    //     this.setState({
-    //         redirect: 'admin'
-    //     })
-    // }
-    
     handleClientChange = (clients, row) => {
       
       let i, entries = this.state.entries
@@ -134,13 +122,35 @@ class AdminCreateClientStack extends Component {
       })
     }
     
-    // handleSelect(selectedItems) {
-    //   this.setState({ selectedItems: selectedItems });
-    // }
+    updateFormData = (newFormData, row) => {
+      let entries = this.state.entries
+      for(var i=0; i<entries.length; i++) {
+        if(row.id === entries[i].id) {
+          entries[i].formData = newFormData.formData
+          entries[i].updated = true
+        }
+      }
+      
+      this.setState({
+        entries: entries
+      })
+    }
+    
+    makeSlideChanges = () => {
+      let entries = this.state.entries
+      for(var i=0; i<entries.length; i++) {
+        if(entries[i].updated === true)
+          this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
+      }
+    }
     
     updateClients = () => {
       let entries = this.state.entries
       let clients = this.props.properties.data.clients
+      
+      for (let i in clients) {
+        clients[i].slideIds = []
+      }
       
       for(var i=0; i<entries.length; i++) {
         let entry_clients = entries[i].clients
@@ -150,9 +160,16 @@ class AdminCreateClientStack extends Component {
         }
       }
       
+      this.makeSlideChanges()
+      let slides = JSON.parse(JSON.stringify(this.props.properties.data.slides))
+      
+      for(var key in slides) {
+        slides[key].formData = JSON.stringify(slides[key].formData)
+      }
+      
       const payload = {
         clients: clients,
-        slides: this.props.properties.data.slides
+        slides: slides
       }
       
       const baseURL = window.location.href.split('#')[0]
@@ -165,6 +182,10 @@ class AdminCreateClientStack extends Component {
         this.setState({
           stackCreateSuccess: true 
         })
+        
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
       })
       .catch((err) => {
         console.log("Failure")
@@ -176,10 +197,6 @@ class AdminCreateClientStack extends Component {
     }
 
     render() {
-        
-        // if(this.state.redirect === "admin") {
-        //     return <Redirect to='/admin'/>;
-        // }
         
         return(
             <div>
@@ -198,10 +215,10 @@ class AdminCreateClientStack extends Component {
                                 <TableBody>
                                   {this.state.entries
                                       .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                                      .map((row, index) => {
+                                      .map((row) => {
                                         return(
                                           <TableRow
-                                            key={index}
+                                            key={row.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                           >
 
@@ -211,6 +228,7 @@ class AdminCreateClientStack extends Component {
                                                 uiSchema={this.state.uiSchema}
                                                 formData={row.formData}
                                                 children={true}
+                                                onFormDataChange={(newFormData) => this.updateFormData(newFormData, row)}
                                               />
                                               
                                               <br />

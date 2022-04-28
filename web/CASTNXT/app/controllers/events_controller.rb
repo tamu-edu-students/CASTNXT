@@ -163,7 +163,9 @@ class EventsController < ApplicationController
     data[:description] = event.description
     data[:status] = event.status
     
-    data[:slides] = build_client_event_slides(client)
+    data[:slides] = build_client_event_slides(event, client)
+    
+    @properties = {name: session[:userName], data: data}
   end
   
   def unknown_event? eventId

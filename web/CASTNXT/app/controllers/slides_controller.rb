@@ -104,8 +104,7 @@ class SlidesController < ApplicationController
   def update_event_slides data
     data.keys.each do |slideId|
       slide = get_slide(slideId)
-      formData = JSON.generate(data[slideId][:formData])
-      slide.update(:curated => data[slideId][:curated], :data => formData)
+      slide.update(:curated => data[slideId][:curated], :data => data[slideId][:formData])
     end
   end
   
@@ -154,7 +153,6 @@ class SlidesController < ApplicationController
   end
   
   def create_slide eventId, talentId, data
-    Rails.logger.debug("In create_slide")
     Slide.create(:event_id => eventId, :talent_id => talentId, :curated => false, :submission_status => 'UNDER REVIEW', :data => data)
   end
   
