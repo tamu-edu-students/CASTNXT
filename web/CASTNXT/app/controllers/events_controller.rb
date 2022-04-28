@@ -181,9 +181,8 @@ class EventsController < ApplicationController
     clientsObject = {}
     eventSlideIds = get_event_slide_ids(event)
     
-    event.client_ids.each do |clientId|
-      client = get_client(clientId)
-      
+    clients = Client.all
+    clients.each do |client|
       clientObject = {}
       clientObject[:name] = client.name
       clientObject[:slideIds] = []
@@ -194,7 +193,7 @@ class EventsController < ApplicationController
         end
       end
       
-      clientsObject[clientId.to_str] = clientObject
+      clientsObject[client._id.to_str] = clientObject
     end
     
     return clientsObject

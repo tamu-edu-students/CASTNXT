@@ -29,7 +29,7 @@ class ClientHomepage extends Component {
         if (!tableData.length) {
             rows.push(
                  <TableRow key={0}>
-                    <TableCell align="center">
+                    <TableCell colSpan={2} align="center">
                         No ongoing Events right now.
                     </TableCell>
                  </TableRow>
@@ -41,6 +41,7 @@ class ClientHomepage extends Component {
                         <TableCell align="center" onClick={() => {window.location.href="/client/events/"+event.id}}>
                             <b><a href={"/client/events/"+event.id}>{event.title}</a></b>
                         </TableCell>
+                        <TableCell align="center">{event.status}</TableCell>
                     </TableRow>
                 )
             });
@@ -67,6 +68,7 @@ class ClientHomepage extends Component {
                                         <TableHead style={{ backgroundColor: '#3498DB' }}>
                                             <TableRow>
                                                 <TableCell align="center">Event</TableCell>
+                                                <TableCell align="center">Status</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>

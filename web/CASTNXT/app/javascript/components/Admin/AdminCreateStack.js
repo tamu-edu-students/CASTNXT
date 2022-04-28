@@ -167,10 +167,6 @@ class AdminCreateStack extends Component {
           stackCreateSuccess: true,
           responseMessage: res.data.comment
         })
-        
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
       })
       .catch((err) => {
         console.log("Failure")
