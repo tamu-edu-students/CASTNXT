@@ -31,7 +31,7 @@ class AdminCreateClientStack extends Component {
             title: props.properties.data.title,
             description: props.properties.data.description,
             schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
-            uiSchema: props.properties.data.uiSchema !== undefined ? props.properties.data.uiSchema : [],
+            uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             formData: [],
             entries: [],
             curatedStack: [],
@@ -182,6 +182,10 @@ class AdminCreateClientStack extends Component {
         this.setState({
           stackCreateSuccess: true 
         })
+        
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
       })
       .catch((err) => {
         console.log("Failure")
@@ -193,10 +197,6 @@ class AdminCreateClientStack extends Component {
     }
 
     render() {
-        
-        // if(this.state.redirect === "admin") {
-        //     return <Redirect to='/admin'/>;
-        // }
         
         return(
             <div>
@@ -215,10 +215,10 @@ class AdminCreateClientStack extends Component {
                                 <TableBody>
                                   {this.state.entries
                                       .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                                      .map((row, index) => {
+                                      .map((row) => {
                                         return(
                                           <TableRow
-                                            key={index}
+                                            key={row.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                           >
 

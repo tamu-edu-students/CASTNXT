@@ -101,7 +101,6 @@ class AdminCreateStack extends Component {
         curatedStack: stack,
         showStack: true
       }, () => {
-        // document.getElementById('curated').focus()
         window.location.hash = "#curated"
       })
     }
@@ -168,6 +167,10 @@ class AdminCreateStack extends Component {
           stackCreateSuccess: true,
           responseMessage: res.data.comment
         })
+        
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
       })
       .catch((err) => {
         console.log("Failure")
@@ -193,38 +196,38 @@ class AdminCreateStack extends Component {
                             <Table size="medium">
                               <TableBody>
                                 {this.state.entries
-                                      .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                                      .map((row, index) => {
-                                        return(
-                                          <TableRow
-                                            key={index}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                          >
+                                    .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                                    .map((row) => {
+                                      return(
+                                        <TableRow
+                                          key={row.id}
+                                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
 
-                                            <TableCell>
-                                              <Slide
-                                                schema={this.state.schema}
-                                                uiSchema={this.state.uiSchema}
-                                                formData={row.formData}
-                                                children={true}
-                                                onFormDataChange={(newFormData) => this.updateFormData(newFormData, row)}
-                                              />
-                                              
-                                              <br />
-                                              
-                                              <div style={{textAlign: 'right'}}>
-                                                {!row.curated? (
-                                                  <Button onClick={() => this.addToStack(row)} variant="contained" color="success">Add</Button>
-                                                ) : (
-                                                  <Button onClick={() => this.addToStack(row)} variant="contained" color="error">Remove</Button>
-                                                )}
-                                              </div>
-                                              
-                                            </TableCell>
+                                          <TableCell>
+                                            <Slide
+                                              schema={this.state.schema}
+                                              uiSchema={this.state.uiSchema}
+                                              formData={row.formData}
+                                              children={true}
+                                              onFormDataChange={(newFormData) => this.updateFormData(newFormData, row)}
+                                            />
                                             
-                                          </TableRow>
-                                        )
-                                    })
+                                            <br />
+                                            
+                                            <div style={{textAlign: 'right'}}>
+                                              {!row.curated? (
+                                                <Button onClick={() => this.addToStack(row)} variant="contained" color="success">Add</Button>
+                                              ) : (
+                                                <Button onClick={() => this.addToStack(row)} variant="contained" color="error">Remove</Button>
+                                              )}
+                                            </div>
+                                            
+                                          </TableCell>
+                                          
+                                        </TableRow>
+                                      )
+                                  })
                                 }
                               </TableBody>
                               

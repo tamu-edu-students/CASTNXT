@@ -26,7 +26,7 @@ class AdminClientDecks extends Component {
             clientDecks: {},
             slides: props.properties.data.slides,
             schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
-            uiSchema: props.properties.data.uiSchema !== undefined ? props.properties.data.uiSchema : [],
+            uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             page:0,
             rowsPerPage: 1,
         }
@@ -37,6 +37,10 @@ class AdminClientDecks extends Component {
         let clients = this.state.clientList
         let slides = this.state.slides
         let clientDecks = {}
+        let schema = this.state.schema
+        
+        schema['title'] = this.props.properties.data.title
+        schema['description'] = this.props.properties.data.description
         
         for(var key in clients) {
             clientOptions.push(
@@ -44,16 +48,18 @@ class AdminClientDecks extends Component {
             )
             
             clientDecks[key] = []
-            console.log(clients[key].slideIds)
-            
+
             for(var i=0; i<clients[key].slideIds.length; i++) {
-                // console.log(slides[clients[key].slideIds][i])
-                clientDecks[key].push(this.state.slides[clients[key].slideIds[i]])
+                clientDecks[key].push({
+                  ...this.state.slides[clients[key].slideIds[i]],
+                  id: clients[key].slideIds[i]
+                })
             }
         }
 
         
         this.setState({
+            schema: schema,
             clientOptions: clientOptions,
             clientDecks: clientDecks,
         }, () => {
@@ -62,7 +68,6 @@ class AdminClientDecks extends Component {
     }
     
     handleClientChange = (clientSelection) => {
-        console.log(clientSelection)
         this.setState({
             client: clientSelection.target.value
         })
@@ -75,7 +80,6 @@ class AdminClientDecks extends Component {
     };
     
     handleChangeRowsPerPage = (event, num) => {
-      console.log(event.target.value)
       this.setState({
         rowsPerPage: event.target.value
       })
@@ -111,11 +115,10 @@ class AdminClientDecks extends Component {
                                 <TableBody>
                                   {this.state.clientDecks[this.state.client]
                                       .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                                      .map((row, index) => {
-                                        console.log(row)
+                                      .map((row) => {
                                         return(
                                           <TableRow
-                                            key={index}
+                                            key={row.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                           >
 
