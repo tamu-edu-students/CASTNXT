@@ -182,10 +182,6 @@ class AdminCreateClientStack extends Component {
         this.setState({
           stackCreateSuccess: true 
         })
-        
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
       })
       .catch((err) => {
         console.log("Failure")
@@ -238,6 +234,7 @@ class AdminCreateClientStack extends Component {
                                                 options={this.state.clientOptions}
                                                 value={row['clients']}
                                                 onChange={(option) => this.handleClientChange(option, row)}
+                                                style={{width: '80%'}}
                                               />
                                               
                                             </TableCell>

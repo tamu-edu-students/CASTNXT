@@ -39,7 +39,7 @@ class AdminHomepage extends Component {
                         <TableCell align="center" onClick={() => {window.location.href="/admin/events/"+event.id}}>
                             <b><a href={"/admin/events/"+event.id}>{event.title}</a></b>
                         </TableCell>
-                        <TableCell>{event.status}</TableCell>
+                        <TableCell align="center">{event.status}</TableCell>
                     </TableRow>
                 )
             });

@@ -82,10 +82,10 @@ class UserHomepage extends Component {
                 } else {
                     rows.push(
                         <TableRow key={i}>
-                            <TableCell>
-                                <b>{event.event}</b>
+                            <TableCell align="center">
+                                <b>{event.title}</b>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                                 {event.status}
                             </TableCell>
                         </TableRow>

@@ -55,17 +55,17 @@ class AdminEventPage extends Component {
                         <h2> {this.state.title} </h2>
                         <h6> {this.state.description} </h6>
                         
-                        <Button variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back</Button>
+                        <Button variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back to Forms</Button>
 
                         <div>
-                            <Box sx={{ width: '100%' }}>
+                            <Box sx={{ width: '100%', marginRight: '-2%' }}>
                               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange} centered>
                                   <Tab label="Home" />
-                                  <Tab label="Event Submissions" />
-                                  <Tab label="Master Deck" />
+                                  <Tab label="Submitted Docs" />
+                                  <Tab label="Selected Docs" />
                                   <Tab label="Client Decks" />
-                                  <Tab label="Finalized Candidates" />
+                                  <Tab label="Finalized Selections" />
                                   <Tab label="Summary" />
                                 </Tabs>
                               </Box>
@@ -96,7 +96,7 @@ class AdminEventPage extends Component {
                               
                               {this.state.tabValue === 4 &&
                                   <div>
-                                    Finalized candidates
+                                    Finalized Selections
                                   </div>
                               }
                               
