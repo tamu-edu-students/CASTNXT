@@ -95,7 +95,7 @@ class SlidesController < ApplicationController
       update_event_clients(event, params[:clients])
       update_event_slides(params[:slides])
       
-      render json: {comment: 'Updated slides!'}, status: 200
+      render json: {comment: 'Updated event decks!'}, status: 200
     else
       render json: {redirect_path: '/'}, status: 403
     end
