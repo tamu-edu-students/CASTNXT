@@ -67,8 +67,9 @@ class UserEventRegister extends Component {
                     <div className="row">
                         <div className="col-md-6 offset-md-3">
                             <h2>Event Registration</h2>
-                            <Button variant="outlined" onClick={this.back}>Back</Button>
-                            <br /><br /><br />
+                            <hr />
+                            <Button variant="outlined" onClick={this.back}>Back to Homepage</Button>
+                            <br /><br />
                             
                             <div className="form-preview">
                                 <h3>{this.state.title}</h3>

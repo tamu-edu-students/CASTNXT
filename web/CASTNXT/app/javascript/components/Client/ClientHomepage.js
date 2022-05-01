@@ -13,6 +13,8 @@ class ClientHomepage extends Component {
     constructor(props) {
         super(props)
         
+        console.log(properties)
+        
         this.state = {
             tableData: properties.tableData !== undefined ? properties.tableData : []
         }

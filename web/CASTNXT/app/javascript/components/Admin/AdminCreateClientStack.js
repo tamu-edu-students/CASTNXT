@@ -234,6 +234,7 @@ class AdminCreateClientStack extends Component {
                                                 options={this.state.clientOptions}
                                                 value={row['clients']}
                                                 onChange={(option) => this.handleClientChange(option, row)}
+                                                style={{width: '80%'}}
                                               />
                                               
                                             </TableCell>
