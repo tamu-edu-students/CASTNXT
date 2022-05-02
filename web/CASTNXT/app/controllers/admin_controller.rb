@@ -1,10 +1,12 @@
 class AdminController < ApplicationController
   # GET /admin
   def index
-    authenticate_user!('ADMIN')
+    unless is_user_logged_in?('ADMIN')
+      return redirect_to root_path
+    end
     
     tableData = []
-
+    
     eventIds = get_admin_events(session[:userId])
     eventIds.each do |eventId|
       event = get_event(eventId)

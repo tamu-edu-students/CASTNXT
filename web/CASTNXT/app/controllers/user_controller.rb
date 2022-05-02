@@ -1,27 +1,23 @@
 class UserController < ApplicationController
   # GET /user
   def index
-    authenticate_user!('USER')
+    unless is_user_logged_in?('USER')
+      return redirect_to root_path
+    end
     
     acceptingTableData = []
     submittedTableData = []
     
     events = Event.all
     events.each do |event|
-      submittedFlag = 0
-      
       object = {
         title: event.title,
         id: event._id.to_str
       }
       
-      if user_slide_exists?(event._id.to_str, session[:userId])
-        slide = get_slide(event._id.to_str, session[:userId])
-        submittedFlag = 1
-      end
+      submittedFlag = user_slide_exists?(event._id.to_str, session[:userId])
       
-      
-      if submittedFlag == 0
+      if submittedFlag
         if "ACCEPTING".casecmp? event.status
           acceptingTableData << object
         end
