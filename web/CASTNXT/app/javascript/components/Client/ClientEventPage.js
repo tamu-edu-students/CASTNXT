@@ -22,7 +22,6 @@ class ClientEventPage extends Component {
     constructor(props) {
         super(props)
         
-        // console.log("Props", props)
         console.log("properties", properties)
 
         this.state = {
