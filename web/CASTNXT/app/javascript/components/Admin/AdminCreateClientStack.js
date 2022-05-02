@@ -270,7 +270,7 @@ class AdminCreateClientStack extends Component {
                         {(this.state.stackCreateSuccess !== "" && this.state.stackCreateSuccess) && 
                           <div className="col-md-6 offset-md-3">
                             <br />
-                            <Alert severity="success">{this.state.responseMessage}</Alert>
+                            <Alert severity="success">Succesfully updated client stacks</Alert>
                             <br />
                           </div>
                         }

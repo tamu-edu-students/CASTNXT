@@ -63,6 +63,7 @@ class ClientHomepage extends Component {
                         <div className="row">
                             <h2> FashioNXT Events </h2>
                         </div>
+                        <hr />
                         <div className="row">
                             <div className="col-md-6 offset-md-3">
                                 <TableContainer component={Paper}>

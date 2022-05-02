@@ -1,32 +1,5 @@
 class EventsController < ApplicationController
 
-  # GET /events or /events.json
-  def index
-    if is_user_logged_in?
-      if "ADMIN".casecmp? session[:userType]
-        tableData = []
-        
-        eventIds = Producer.find_by(:_id => session[:userId]).event_ids
-        eventIds.each do |eventId|
-          event = Event.find_by(:_id => eventId)
-          object = {
-            id: eventId,
-            title: event.title,
-            status: event.status
-          }
-          tableData << object
-        end
-        render json: {tableData: tableData}, status: 200
-      elsif "CLIENT".casecmp? session[:userType]
-        # perform client action
-      else
-        # perform user action
-      end
-    else
-      user_event
-    end
-  end
-
   # GET /events/1 or /events/1.json
   def show
     if "ADMIN".casecmp? session[:userType]
@@ -40,7 +13,10 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
-    authenticate_user!('admin')
+    unless is_user_logged_in?('ADMIN')
+      return redirect_to root_path
+    end
+    
     @event = Event.new
     clientsInfo = []
     formIds = []
@@ -99,7 +75,9 @@ class EventsController < ApplicationController
   private
   
   def user_event
-    authenticate_user!('USER')
+    unless is_user_logged_in?('USER')
+      return redirect_to root_path
+    end
     
     eventId = params[:id]
     if unknown_event?(eventId)
@@ -123,7 +101,9 @@ class EventsController < ApplicationController
   end
   
   def admin_event
-    authenticate_user!('ADMIN')
+    unless is_user_logged_in?('ADMIN')
+      return redirect_to root_path
+    end
     
     eventId = params[:id]
     if unknown_event?(eventId)
@@ -146,7 +126,9 @@ class EventsController < ApplicationController
   end
   
   def client_event
-    authenticate_user!('CLIENT')
+    unless is_user_logged_in?('CLIENT')
+      return redirect_to root_path
+    end
     
     eventId = params[:id]
     if unknown_event?(eventId)

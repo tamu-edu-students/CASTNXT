@@ -55,7 +55,7 @@ class AdminEventPage extends Component {
                         <h2> {this.state.title} </h2>
                         <h6> {this.state.description} </h6>
                         
-                        <Button variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back to Forms</Button>
+                        <Button size="small" variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back to Forms</Button>
 
                         <div>
                             <Box sx={{ width: '100%', marginRight: '-2%' }}>

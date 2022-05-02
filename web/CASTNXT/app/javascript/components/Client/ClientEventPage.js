@@ -22,11 +22,11 @@ class ClientEventPage extends Component {
     constructor(props) {
         super(props)
         
-        console.log("Props", props)
         console.log("properties", properties)
 
         this.state = {
             properties: properties,
+            title: properties.data.title,
             tableData: [],
             tabValue: 0,
             redirect: "",
@@ -52,9 +52,9 @@ class ClientEventPage extends Component {
                 
                 <div className="container">
                     <div className="user-events">
-                        <h2> Event Title </h2>
+                        <h2> {this.state.title} </h2>
                         
-                        <Button variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back to Homepage</Button>
+                        <Button size="small" variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back to Homepage</Button>
                         
                         <div>
                             <Box sx={{ width: '100%' }}>
