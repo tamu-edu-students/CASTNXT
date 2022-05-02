@@ -2,14 +2,10 @@ class ApplicationController < ActionController::Base
     protect_from_forgery with: :null_session
     skip_before_action :verify_authenticity_token
     
-    def authenticate_user! userType
-        unless is_user_logged_in?(userType)
-            redirect_to '/'
-        end
-    end
-    
     def is_user_logged_in? userType
-        flag = session.key?(:userEmail) and session.key?(:userType) and session.key?(:userName) and userType.casecmp? session[:userType]
+        flag = session.key?(:userEmail) && session.key?(:userType) && session.key?(:userName)
+        flag = flag && !session[:userEmail].nil? && !session[:userType].nil? && !session[:userName].nil?
+        flag = flag && ( userType.casecmp? session[:userType] )
         return flag
     end
     

@@ -1,7 +1,9 @@
 class ClientController < ApplicationController
   # GET /client
   def index
-    authenticate_user!('CLIENT')
+    unless is_user_logged_in?('CLIENT')
+      return redirect_to root_path
+    end
     
     tableData = []
     
