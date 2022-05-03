@@ -7,4 +7,5 @@ class Client
   
   has_and_belongs_to_many :events
   has_and_belongs_to_many :slides
+  has_many :negotiations
 end

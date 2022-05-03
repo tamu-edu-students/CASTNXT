@@ -168,11 +168,20 @@ class EventsController < ApplicationController
       clientObject = {}
       clientObject[:name] = client.name
       clientObject[:slideIds] = []
+      clientObject[:finalizedIds] = []
+      clientObject[:preferenceSubmitted] = false
       
       client.slide_ids.each do |slideId|
         if eventSlideIds.include? slideId.to_str
           clientObject[:slideIds] << slideId.to_str
         end
+      end
+      
+      if negotiation_exists?(client, event)
+        negotiation = get_negotiation(client, event)
+        clientObject[:slideIds] = negotiation.intermediateSlides
+        clientObject[:finalizedIds] = negotiation.finalSlides
+        clientObject[:preferenceSubmitted] = true
       end
       
       clientsObject[client._id.to_str] = clientObject
@@ -212,6 +221,15 @@ class EventsController < ApplicationController
       slidesObject[slideId.to_str] = slideObject
     end
     
+    if negotiation_exists?(client, event)
+      negotiation = get_negotiation(client, event)
+      orderedSlidesObject = {}
+      negotiation.intermediateSlides.each do |slideId|
+        orderedSlidesObject[slideId] = slidesObject[slideId]
+      end
+      slidesObject = orderedSlidesObject
+    end
+    
     return slidesObject
   end
   
@@ -247,6 +265,18 @@ class EventsController < ApplicationController
   
   def get_slide slideId
     return Slide.find_by(:_id => slideId)
+  end
+  
+  def negotiation_exists? clientId, eventId
+    if Negotiation.where(:event_id => eventId, :client_id => clientId).present?
+      return true
+    end
+    
+    return false
+  end
+  
+  def get_negotiation clientId, eventId
+    return Negotiation.find_by(:event_id => eventId, :client_id => clientId)
   end
   
   def get_talent_slide eventId, talentId
