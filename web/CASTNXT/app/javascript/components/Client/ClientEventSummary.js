@@ -13,6 +13,7 @@ class ClientEventSummary extends Component {
             properties: props.properties,
             slides: props.properties.data.slides,
             summaryRows: [],
+            status: props.properties.data.status
         }
     }
     
@@ -111,7 +112,9 @@ class ClientEventSummary extends Component {
                             </DragDropContext>
                         </Table>
                         <br /><br />
-                        <Button size="small" variant="contained" onClick={this.updatePreferences}>Update Preferences</Button>
+                        {this.state.status !== "FINALIZED" &&
+                            <Button size="small" variant="contained" onClick={this.updatePreferences}>Update Preferences</Button>
+                        }
                     </div>
                 </div>
             </div>

@@ -18,6 +18,8 @@ import AdminEventHome from './AdminEventHome';
 import AdminCreateStack from './AdminCreateStack';
 import AdminCreateClientStack from './AdminCreateClientStack';
 import AdminClientDecks from './AdminClientDecks';
+import AdminEventSummary from './AdminEventSummary';
+import AdminFinalizedCandidates from './AdminFinalizedCandidates';
 
 class AdminEventPage extends Component {
     constructor(props) {
@@ -96,13 +98,13 @@ class AdminEventPage extends Component {
                               
                               {this.state.tabValue === 4 &&
                                   <div>
-                                    Finalized Selections
+                                    <AdminFinalizedCandidates properties={properties} />
                                   </div>
                               }
                               
                               {this.state.tabValue === 5 &&
                                   <div>
-                                    Summary
+                                    <AdminEventSummary properties={properties} />
                                   </div>
                               }
                             </Box>
