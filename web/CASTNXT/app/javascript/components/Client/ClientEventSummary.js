@@ -3,6 +3,7 @@ import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { Ref } from 'semantic-ui-react'
 import Button from '@mui/material/Button';
+import axios from 'axios';
 
 
 class ClientEventSummary extends Component {
@@ -13,7 +14,8 @@ class ClientEventSummary extends Component {
             properties: props.properties,
             slides: props.properties.data.slides,
             summaryRows: [],
-            status: props.properties.data.status
+            status: props.properties.data.status,
+            eventId: props.properties.data.id
         }
     }
     
@@ -57,6 +59,26 @@ class ClientEventSummary extends Component {
     
     updatePreferences = () => {
         console.log("Updated talent preferences")
+        
+        let preferences = []
+        
+        for(var i=0; i<this.state.summaryRows.length; i++) {
+            preferences.push(this.state.summaryRows[i].id)
+        }
+        
+        const payload = {
+            client_id: sessionStorage.getItem('userId'),
+            event_id: this.state.eventId,
+            intermediateSlides: preferences
+        }
+        
+        axios.post('/client/negotiations', payload)
+            .then((res) => {
+                
+            })
+            .catch((err) => {
+                
+            })
     }
     
     render() {
