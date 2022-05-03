@@ -58,13 +58,11 @@ class AdminCreateEvent extends Component {
             redirect: "",
             selectedTab: 0,
             selectedFormNo: null,
-            selectedClients: [],
             schema: '{}',
             uischema: '{}',
             title: '',
             description: '',
             formIds: [],
-            clients: [],
             formData: null,
             newFormData: {},
             newFormId:''
@@ -158,7 +156,6 @@ class AdminCreateEvent extends Component {
               })
               return axios.post(`/admin/events`, {
                 producer_id: producerId,
-                client_ids: this.state.clients.map(client => client.id),
                 form_id: res.data.formId,
                 title: this.state.title,
                 description: this.state.description,
@@ -179,7 +176,6 @@ class AdminCreateEvent extends Component {
       this.setState((prevState) => {
         return {
           ...prevState,
-          clients: properties.clientsInfo.map(client => ({id: client.id["$oid"], name: client.name})),
           formIds: properties.formIds
         }
       })
@@ -205,35 +201,14 @@ class AdminCreateEvent extends Component {
                     <h2>Create New Event</h2>
                     
                     <div className="container" style={{ backgroundColor: 'white', height: '100%', width: '50vw', paddingTop: '1%' }}>
-                        <p>Use this page to create a new event by choosing the clients and the form that need to be used</p>
+                        <p>Use this page to create a new event by choosing the form that need to be used</p>
                         <p>Step 1</p>
                         <div className="input-fields">
                           <TextField id="outlined-basic" label="Event title" variant="outlined" onChange={this.onTitleChange} value={this.state.title} />
                           <TextField id="outlined-basic" label="Event description" variant="outlined" onChange={this.onDescriptionChange} value={this.state.description} style={{marginTop: '20px', marginBottom: '20px'}}/>
                         </div>
+                        <br/>
                         <p>Step 2</p>
-                        <FormControl fullWidth>
-                          <InputLabel id="demo-simple-select-label">Select Clients for this event</InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Select Clients for this event"
-                            multiple
-                            value={this.state.selectedClients}
-                            onChange={(event)=>{this.setState((state) => {
-                                    return {selectedClients: event.target.value};
-                                  });
-                                  }}
-                          >
-                            {this.state.clients.map(client => {
-                              return (
-                                <MenuItem value={client.id}>{client.name}</MenuItem>
-                              )
-                            })}
-                          </Select>
-                        </FormControl>
-                        <br/><br/>
-                        <p>Step 3</p>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                           <Tabs value={this.state.selectedTab} onChange={this.handleTabChange} aria-label="basic tabs example">
                             <Tab label="Choose from existing forms" {...a11yProps(0)} />

@@ -18,25 +18,17 @@ class EventsController < ApplicationController
     end
     
     @event = Event.new
-    clientsInfo = []
     formIds = []
-    clients = Client.all.to_a
-    clients.each do |client|
-      data = {
-        id: client._id,
-        name: client.name
-      }
-      clientsInfo << data
-    end
     forms = Form.where(:producer_id => session[:userId])
     forms.each do |form|
       formIds << form._id.to_str
     end
-    @properties = {name: session[:userName], formIds: formIds, clientsInfo: clientsInfo}
+    @properties = {name: session[:userName], formIds: formIds}
   end
 
   # GET /events/1/edit
   def edit
+    
   end
   
   # PUT /events/1/
@@ -57,9 +49,7 @@ class EventsController < ApplicationController
   def create
     # only admin allowed to create a new event
     if is_user_logged_in?('ADMIN')
-      Rails.logger.debug('event_params')
-      Rails.logger.debug(event_params)
-      @event = Event.new(form_id:params[:form_id], producer_id:params[:producer_id], client_ids:params[:client_ids], status:params[:status], title:params[:title], description:params[:description])
+      @event = Event.new(form_id:params[:form_id], producer_id:params[:producer_id], status:params[:status], title:params[:title], description:params[:description])
       if @event.save
         #render
         # render :show, status: 201, location: @event
