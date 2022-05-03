@@ -1,17 +1,19 @@
 class NegotiationsController < ApplicationController
   # GET /negotiations
   def index
-    Rails.logger.debug("Inside GET index")
-    Rails.logger.debug(params)
-    existingNegotiation = Negotiation.find_by(:event_id => params["event_id"], :client_id => params["client_id"])
-    Rails.logger.debug(existingNegotiation)
-    negotiationObject = {
-        event_id: existingNegotiation.event_id.to_str,
-        client_id: existingNegotiation.client_id.to_str,
-        finalSlides: existingNegotiation.finalSlides,
-        intermediateSlides: existingNegotiation.intermediateSlides
-      }
-    render json: {negotiation: negotiationObject}, status: 200
+    if is_user_logged_in?('ADMIN') || is_user_logged_in?('CLIENT')
+      existingNegotiation = Negotiation.find_by(:event_id => params["event_id"], :client_id => params["client_id"])
+      Rails.logger.debug(existingNegotiation)
+      negotiationObject = {
+          event_id: existingNegotiation.event_id.to_str,
+          client_id: existingNegotiation.client_id.to_str,
+          finalSlides: existingNegotiation.finalSlides,
+          intermediateSlides: existingNegotiation.intermediateSlides
+        }
+      render json: {negotiation: negotiationObject}, status: 200
+    else
+      render json: {redirect_path: '/'}, status: 403
+    end
   end
   
   # PUT
@@ -45,6 +47,7 @@ class NegotiationsController < ApplicationController
 
   # POST /negotiations
   def create
+    if is_user_logged_in?('ADMIN') || is_user_logged_in?('CLIENT')
         Negotiation.create(
             :event_id => params["event_id"],
             :client_id => params["client_id"],
@@ -52,6 +55,9 @@ class NegotiationsController < ApplicationController
             :finalSlides => params["finalSlides"]
           )
         render json: {comments: 'Created negotiations'}, status: 201
+    else
+      render json: {redirect_path: '/'}, status: 403
+    end
   end
 
   private
