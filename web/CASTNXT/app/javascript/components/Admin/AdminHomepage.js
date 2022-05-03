@@ -18,12 +18,6 @@ class AdminHomepage extends Component {
         this.state = {
             tableData: properties.tableData !== undefined ? properties.tableData : []
         }
-        axios.get(`/admin/negotiations?event_id=6261e33fdf6b277037686e2a&client_id=6261e33fdf6b277037686e23`)
-        axios.post(`/admin/negotiations`, {
-            event_id: '6261e33fdf6b277037686e2a',
-            client_id: '6261e33fdf6b277037686e23',
-            intermediateSlides: [1,2,3]
-          })
     }
     
     renderEventList = () => {
