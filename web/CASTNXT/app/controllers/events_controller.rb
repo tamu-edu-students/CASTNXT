@@ -212,6 +212,22 @@ class EventsController < ApplicationController
       slidesObject[slideId.to_str] = slideObject
     end
     
+    Rails.logger.debug("***********")
+    Rails.logger.debug(slidesObject)
+    Rails.logger.debug(event)
+    # if negotiation_exists?(client, event)
+    #   negotiation = get_negotiation(client, event)
+    #   Rails.logger.debug(negotiation.intermediateSlides)
+    
+    #   orderedSlidesObject = {}
+    #   negotiation.intermediateSlides.each do |slideId|
+    #     orderedSlidesObject[slideId] = slidesObject[slideId]
+    #   end
+      
+    #   Rails.logger.debug("***********")
+    #   Rails.logger.debug(orderedSlidesObject)
+    # end
+    
     return slidesObject
   end
   
@@ -247,6 +263,18 @@ class EventsController < ApplicationController
   
   def get_slide slideId
     return Slide.find_by(:_id => slideId)
+  end
+  
+  def negotiation_exists? clientId, eventId
+    if Negotiation.where(:event_id => eventId, :client_id => clientId).present?
+      return true
+    end
+    
+    return false
+  end
+  
+  def get_negotiation clientId, eventId
+    return Negotiation.find_by(:event_id => eventId, :client_id => clientId)
   end
   
   def get_talent_slide eventId, talentId
