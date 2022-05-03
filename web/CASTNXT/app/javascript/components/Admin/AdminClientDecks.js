@@ -13,6 +13,7 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 
 class AdminClientDecks extends Component {
     constructor(props) {
@@ -21,6 +22,7 @@ class AdminClientDecks extends Component {
         console.log(props)
         
         this.state = {
+            eventId: props.properties.data.id,
             client: '',
             clientOptions: [],
             clientList: props.properties.data.clients,
@@ -40,7 +42,7 @@ class AdminClientDecks extends Component {
         let slides = this.state.slides
         let clientDecks = {}
         let schema = this.state.schema
-        
+
         schema['title'] = this.props.properties.data.title
         schema['description'] = this.props.properties.data.description
         
@@ -51,15 +53,19 @@ class AdminClientDecks extends Component {
             )
             
             clientDecks[key] = []
+            
+            console.log(clients[key])
+            clients[key].finalizedIds = clients[key].finalizedIds === null ? [] : clients[key].finalizedIds 
   
             for(var i=0; i<clients[key].slideIds.length; i++) {
-                clientDecks[key].push({
-                  ...this.state.slides[clients[key].slideIds[i]],
-                  id: clients[key].slideIds[i],
-                  finalized: false,
-                  preference: 'NA',
-                  comments: ''
-                })
+              clientDecks[key].push({
+                ...this.state.slides[clients[key].slideIds[i]],
+                slideId: clients[key].slideIds[i],
+                finalized: clients[key].finalizedIds.includes(clients[key].slideIds[i]),
+                preference: clients[key].preferenceSubmitted ? (i+1) : 'NA',
+                preferenceSubmitted: clients[key].preferenceSubmitted,
+                comments: ''
+              })
             } 
           }
         }
@@ -99,18 +105,48 @@ class AdminClientDecks extends Component {
       })
     }
     
+    updateFinalizedForClient = (client, clientDecks, finalizedSlides, intermediateSlides) => {
+      const payload = {
+        event_id: this.state.eventId,
+        client_id: client,
+        finalSlides: finalizedSlides,
+        intermediateSlides
+      }
+      
+      console.log("Payload", payload)
+      
+      axios.post('/admin/negotiations', payload)
+        .then((res) => {
+          console.log("Success", res)
+        })
+        .catch((err) => {
+          console.log("Error", err.response)
+        })
+    }
+    
     finalizeTalent = (talent) => {
       console.log(talent)
       let client = this.state.client
       let clientDecks = this.state.clientDecks
+      let finalizedSlides = []
+      let intermediateSlides = []
       
-      console.log(clientDecks)
+      // console.log(clientDecks)
 
       for(var i=0; i<clientDecks[client].length; i++) {
-        if(clientDecks[client][i].id === talent.id) {
+        if(clientDecks[client][i].slideId === talent.slideId) {
           clientDecks[client][i].finalized = !talent['finalized']
         }
+        
+        if(clientDecks[client][i].finalized) {
+          finalizedSlides.push(clientDecks[client][i].slideId)
+        }
+        else {
+          intermediateSlides.push(clientDecks[client][i].slideId)
+        }
       }
+      
+      this.updateFinalizedForClient(client, clientDecks, finalizedSlides, intermediateSlides)
       
       this.setState({
         clientDecks: clientDecks
@@ -149,6 +185,15 @@ class AdminClientDecks extends Component {
                 {this.state.client !== "" &&
                     <div>
                         <div className="col-md-8 offset-md-2">
+                        
+                            {this.state.clientDecks[this.state.client].preferenceSubmitted ? (
+                                <span>Client has indicated his preferences in the below order</span>
+                              ) : (
+                                <span>Client has not indicated his preference</span>
+                              )
+                            }
+                            
+                            <br />
                             
                             <TableContainer>
                               <Table size="medium" sx={{ minWidth: 200, width: 250 }}>
@@ -165,7 +210,7 @@ class AdminClientDecks extends Component {
                                   {this.state.clientDecks[this.state.client]
                                       .map((row) => {
                                         return(
-                                          <TableRow key={row.id} style={row.finalized ? selectStyle : {}}>
+                                          <TableRow key={row.slideId} style={row.finalized ? selectStyle : {}}>
                                               <TableCell align="center">{row.preference}</TableCell>
                                               <TableCell align="center">{row.talentName}</TableCell>
                                               {!row.finalized &&
@@ -207,7 +252,7 @@ class AdminClientDecks extends Component {
                             <br />
                             <Button variant="contained" onClick={this.updateTalentSelections}>Update Talent Status</Button><br /><br />
                             
-                            <Button variant="contained" onClick={this.expandSlides}>Expand Slides?</Button><br /><br />
+                            <Button hidden variant="contained" onClick={this.expandSlides}>Expand Slides?</Button><br /><br />
 
                             {this.state.expandSlides &&
                             <Paper>

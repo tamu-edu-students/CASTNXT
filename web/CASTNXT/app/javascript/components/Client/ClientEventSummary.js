@@ -3,6 +3,7 @@ import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { Ref } from 'semantic-ui-react'
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import axios from 'axios';
 
 
@@ -15,7 +16,8 @@ class ClientEventSummary extends Component {
             slides: props.properties.data.slides,
             summaryRows: [],
             status: props.properties.data.status,
-            eventId: props.properties.data.id
+            eventId: props.properties.data.id,
+            updateSuccess: ""
         }
     }
     
@@ -72,12 +74,22 @@ class ClientEventSummary extends Component {
             intermediateSlides: preferences
         }
         
+        console.log("Payload", payload)
+        
         axios.post('/client/negotiations', payload)
             .then((res) => {
+                console.log("Success", res)
                 
+                this.setState({
+                    updateSuccess: true
+                })
             })
             .catch((err) => {
+                console.log("Error", err)
                 
+                this.setState({
+                    updateSuccess: false
+                })
             })
     }
     
@@ -133,9 +145,25 @@ class ClientEventSummary extends Component {
                                   </Droppable>
                             </DragDropContext>
                         </Table>
-                        <br /><br />
+                        <br />
                         {this.state.status !== "FINALIZED" &&
                             <Button size="small" variant="contained" onClick={this.updatePreferences}>Update Preferences</Button>
+                        }
+                        
+                        {(this.state.updateSuccess !== '' && this.state.updateSuccess) &&
+                            <div>
+                                <br />
+                                <Alert severity="success">Succesfully sent preferences to the producer</Alert>
+                                <br />
+                            </div>
+                        }
+                        
+                        {(this.state.updateSuccess !== '' && !this.state.updateSuccess) &&
+                            <div>
+                                <br />
+                                <Alert severity="error">Error: Could not update preferences</Alert>
+                                <br />
+                            </div>
                         }
                     </div>
                 </div>
