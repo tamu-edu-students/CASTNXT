@@ -32,9 +32,33 @@ class AdminClientDecks extends Component {
             uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             page:0,
             rowsPerPage: 1,
-            expandSlides: false
+            expandSlides: false,
+            negotiations: []
         }
     } 
+    
+    // static getDerivedStateFromProps(props, state) {
+    //   // console.log("Payload", state.eventId)
+    //   let negotiations = []
+          
+    //   axios.get('/admin/negotiations', {
+    //     params: {
+    //       event_id: state.eventId
+    //     }
+    //   })
+    //     .then((res) => {
+    //       console.log("Success", res.data)
+    //       negotiations = res.data
+    //     })
+    //     .catch((err) => {
+    //       console.log("Error", "err")
+    //     })
+      
+    //   return {
+    //     ...state,
+    //     negotiations
+    //   }
+    // }
     
     componentDidMount = () => {
         let clientOptions = []
@@ -46,6 +70,8 @@ class AdminClientDecks extends Component {
         schema['title'] = this.props.properties.data.title
         schema['description'] = this.props.properties.data.description
         
+        let negotiations = []
+        
         for(var key in clients) {
           if(clients[key].slideIds.length > 0) {
             clientOptions.push(
@@ -54,7 +80,6 @@ class AdminClientDecks extends Component {
             
             clientDecks[key] = []
             
-            console.log(clients[key])
             clients[key].finalizedIds = clients[key].finalizedIds === null ? [] : clients[key].finalizedIds 
   
             for(var i=0; i<clients[key].slideIds.length; i++) {
@@ -68,6 +93,7 @@ class AdminClientDecks extends Component {
               })
             } 
           }
+          
         }
 
         
@@ -75,9 +101,25 @@ class AdminClientDecks extends Component {
             schema: schema,
             clientOptions: clientOptions,
             clientDecks: clientDecks,
+            negotiations: negotiations
         }, () => {
             console.log(this.state)
         })
+          
+      axios.get('/admin/negotiations', {
+        params: {
+          event_id: this.state.eventId
+        }
+      })
+      .then((res) => {
+        console.log("Success", res.data)
+        negotiations = res.data.adminNegotiations
+      })
+      .catch((err) => {
+        console.log("Error", "err")
+      })
+        
+        
     }
     
     handleClientChange = (clientSelection) => {
@@ -115,7 +157,7 @@ class AdminClientDecks extends Component {
       
       console.log("Payload", payload)
       
-      axios.post('/admin/negotiations', payload)
+      axios.put('/admin/negotiations/'+this.state.negotiations, payload)
         .then((res) => {
           console.log("Success", res)
         })
@@ -250,9 +292,9 @@ class AdminClientDecks extends Component {
                             </TableContainer>
 
                             <br />
-                            <Button variant="contained" onClick={this.updateTalentSelections}>Update Talent Status</Button><br /><br />
+                            <Button hidden variant="contained" onClick={this.updateTalentSelections}>Update Talent Status</Button><br /><br />
                             
-                            <Button hidden variant="contained" onClick={this.expandSlides}>Expand Slides?</Button><br /><br />
+                            <Button variant="contained" onClick={this.expandSlides}>Expand Slides?</Button><br /><br />
 
                             {this.state.expandSlides &&
                             <Paper>

@@ -76,7 +76,7 @@ class ClientEventSummary extends Component {
         
         console.log("Payload", payload)
         
-        axios.post('/client/negotiations', payload)
+        axios.put('/client/negotiations', payload)
             .then((res) => {
                 console.log("Success", res)
                 

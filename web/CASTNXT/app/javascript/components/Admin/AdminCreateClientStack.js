@@ -150,6 +150,8 @@ class AdminCreateClientStack extends Component {
       
       for (let i in clients) {
         clients[i].slideIds = []
+        clients[i].intermediateSlides = []
+        clients[i].finalSlides = []
       }
       
       for(var i=0; i<entries.length; i++) {
@@ -157,6 +159,7 @@ class AdminCreateClientStack extends Component {
         
         for(var j=0; j<entry_clients.length; j++) {
           clients[entry_clients[j].value].slideIds.push(entries[i].id)
+          clients[entry_clients[j].value].intermediateSlides.push(entries[i].id)
         }
       }
       
@@ -190,6 +193,14 @@ class AdminCreateClientStack extends Component {
           stackCreateSuccess: false 
         })
       })
+      
+      // axios.post('/admin/negotiations/'+this.state.negotiations, payload)
+      // .then((res) => {
+      //   console.log("Success", res)
+      // })
+      // .catch((err) => {
+      //   console.log("Error", err.response)
+      // })
     }
 
     render() {
