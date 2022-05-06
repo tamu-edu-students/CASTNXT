@@ -126,7 +126,18 @@ class SlidesController < ApplicationController
       clientEventIds.delete(event._id)
       if !data[clientId][:slideIds].empty?
         clientEventIds << event._id
+        
+        # create negotiation object if a slide associated with a client doesn't have a negotation yet
+        unless negotiation_exists?(clientId, event._id)
+          Negotiation.create(
+              :event_id => params["event_id"],
+              :client_id => params["client_id"],
+              :intermediateSlides => params["intermediateSlides"],
+              :finalSlides => params["finalSlides"]
+            )
+        end
       end
+      
       clientSlideIds = otherEventSlides + data[clientId][:slideIds]
       client.update(:slide_ids => clientSlideIds, :event_ids => clientEventIds)
     end
@@ -169,6 +180,14 @@ class SlidesController < ApplicationController
   
   def is_new_slide? eventId, talentId
     if Slide.where(:event_id => eventId, :talent_id => talentId).blank?
+      return true
+    end
+    
+    return false
+  end
+  
+  def negotiation_exists? clientId, eventId
+    if Negotiation.where(:event_id => eventId, :client_id => clientId).present?
       return true
     end
     
