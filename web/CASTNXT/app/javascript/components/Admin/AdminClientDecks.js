@@ -24,6 +24,7 @@ class AdminClientDecks extends Component {
         this.state = {
             eventId: props.properties.data.id,
             client: '',
+            negotiationId: "",
             clientOptions: [],
             clientList: props.properties.data.clients,
             clientDecks: {},
@@ -95,7 +96,7 @@ class AdminClientDecks extends Component {
           }
           
         }
-
+        console.log("clientOPTIONS", clientOptions)
         
         this.setState({
             schema: schema,
@@ -106,7 +107,9 @@ class AdminClientDecks extends Component {
             console.log(this.state)
         })
           
-      axios.get('/admin/negotiations', {
+      const baseURL = window.location.href.split('#')[0]
+      
+      axios.get(baseURL + '/negotiations', {
         params: {
           event_id: this.state.eventId
         }
@@ -123,9 +126,19 @@ class AdminClientDecks extends Component {
     }
     
     handleClientChange = (clientSelection) => {
+        let negotiationId = ""
+        let negotiations = this.state.negotiations
+        
+        for(var key in negotiations) {
+          if (negotiations[key]['client_id'] == clientSelection.target.value) {
+            negotiationId = key
+          }
+        }
+      
         this.setState({
             client: clientSelection.target.value,
-            expandSlides: false
+            expandSlides: false,
+            negotiationId: negotiationId
         })
     }
     
@@ -157,7 +170,9 @@ class AdminClientDecks extends Component {
       
       console.log("Payload", payload)
       
-      axios.put('/admin/negotiations/'+this.state.negotiations, payload)
+      const baseURL = window.location.href.split('#')[0]
+      
+      axios.put(baseURL + '/negotiations/'+ this.state.negotiationId, payload)
         .then((res) => {
           console.log("Success", res)
         })

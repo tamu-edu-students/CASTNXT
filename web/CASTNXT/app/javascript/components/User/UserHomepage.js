@@ -115,15 +115,15 @@ class UserHomepage extends Component {
                                         <Tab style={{focus: "color: #719ECE"}} label="Events" />
                                         <Tab label="Submissions" />
                                     </Tabs>
-                                    <hr style={{ color: 'black' }} />
+                                    <hr style={{ color: "black" }} />
                                 </div>
                             
                                 {this.state.tabValue === 0 &&
                                     <TableContainer component={Paper}>
                                         <Table aria-label="simple table">
-                                            <TableHead style={{ backgroundColor: '#3498DB' }}>
+                                            <TableHead style={{ backgroundColor: "#3498DB" }}>
                                                 <TableRow>
-                                                    <TableCell align="center" style={{fontSize: '12pt'}}>Events</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Events</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -136,10 +136,10 @@ class UserHomepage extends Component {
                                 {this.state.tabValue === 1 &&
                                     <TableContainer component={Paper}>
                                         <Table aria-label="simple table">
-                                            <TableHead style={{ backgroundColor: '#3498DB' }}>
+                                            <TableHead style={{ backgroundColor: "#3498DB" }}>
                                                 <TableRow>
-                                                    <TableCell align="center" style={{fontSize: '12pt'}}>Event</TableCell>
-                                                    <TableCell align="center" style={{fontSize: '12pt'}}>Status</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Event</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Status</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>

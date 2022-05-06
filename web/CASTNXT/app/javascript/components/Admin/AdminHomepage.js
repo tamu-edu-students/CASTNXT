@@ -48,7 +48,7 @@ class AdminHomepage extends Component {
     }
     
     createEventRedirection = () => {
-        window.location.href = '/admin/events/new'
+        window.location.href = "/admin/events/new"
     }
 
     render() {
@@ -72,7 +72,7 @@ class AdminHomepage extends Component {
                             <div className="col-md-6 offset-md-3">
                                 <TableContainer component={Paper}>
                                     <Table aria-label="simple table">
-                                        <TableHead style={{ backgroundColor: '#3498DB' }}>
+                                        <TableHead style={{ backgroundColor: "#3498DB" }}>
                                             <TableRow>
                                                 <TableCell align="center">Event</TableCell>
                                                 <TableCell align="center">Status</TableCell>

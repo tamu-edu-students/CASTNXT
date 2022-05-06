@@ -8,6 +8,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import Alert from '@mui/material/Alert';
 import axios from 'axios';
 
 class Homepage extends Component {
@@ -25,10 +26,11 @@ class Homepage extends Component {
             nameError: false,
             emailError: false,
             passwordError: false,
-            loginError: false,
             passwordErrorText: "",
             tabValue: 0,
-            signUpError: false
+            loginStatus: "",
+            loginMessage: "",
+            disableSubmit: false
         }
     }
 
@@ -77,8 +79,7 @@ class Homepage extends Component {
         // If there are no errors, call sign up api to add the new user
         if(!errors) {
             this.setState({
-                passwordError: false,
-                emailError: false
+                disableSubmit: true
             })
             
             let name = this.state.name
@@ -94,12 +95,18 @@ class Homepage extends Component {
                 type: role
             })
             .then((res) => {
-                sessionStorage.setItem('userId', res.data.userId);
+                this.setState({
+                    loginStatus: res.status,
+                    loginMessage: ""
+                })
+                
                 window.location.href = res.data.redirect_path;
             })
             .catch((err) => {
                 this.setState({
-                    signUpError: true
+                    disableSubmit: false,
+                    loginStatus: err.response.status,
+                    loginMessage: err.response.data.comment
                 })
                 
             })
@@ -110,20 +117,27 @@ class Homepage extends Component {
         let email = this.state.loginEmail
         let password = this.state.loginPassword
         
+        this.setState({
+            disableSubmit: true
+        })
+        
         axios.post("/home/login", {
                 email: email,
                 password: password
             })
             .then((res) => {
                 this.setState({
-                    loginError: false
+                    loginStatus: res.status,
+                    loginMessage: ""
                 })
-                sessionStorage.setItem('userId', res.data.userId);
+                
                 window.location.href = res.data.redirect_path;
             })
             .catch((err) => {
                 this.setState({
-                    loginError: true
+                    disableSubmit: false,
+                    loginStatus: err.response.status,
+                    loginMessage: err.response.data.comment
                 })
             })
     }
@@ -159,11 +173,12 @@ class Homepage extends Component {
                                         type="email" label="Email" value={this.state.loginEmail} onChange={this.handleChange} /><br /><br />
                                     <TextField focused style={{ width: '60%' }} name="loginPassword" 
                                         type="password" label="Password" value={this.state.loginPassword} onChange={this.handleChange} /><br /><br />
-                                    <Button variant="contained" onClick={this.login}>Login</Button>
-                                    {this.state.loginError && 
+                                    <Button disabled={this.state.disableSubmit} variant="contained" onClick={this.login}>Login</Button>
+                                    
+                                    {(this.state.loginStatus !== "" && (this.state.loginStatus===400 || this.state.loginStatus===500)) &&
                                         <div>
                                             <br />
-                                            <span style={{color: 'red'}}>The entered Username or Password is incorrect.</span>
+                                            <span style={{color: 'red'}}>{this.state.loginMessage}</span>
                                         </div>
                                     }
                                 </div>
@@ -203,12 +218,12 @@ class Homepage extends Component {
                                         error={this.state.passwordError} helperText={this.state.passwordError ? this.state.passwordErrorText : ""} 
                                         onChange={this.handleChange} /><br /><br />
                                     
-                                    <Button className="sign-up-button" variant="contained" onClick={this.signUp}>Sign Up</Button>
+                                    <Button disabled={this.state.disableSubmit} className="sign-up-button" variant="contained" onClick={this.signUp}>Sign Up</Button>
                                     
-                                    {this.state.signUpError &&
-                                        <div style={{color: 'red'}}>
+                                    {(this.state.loginStatus !== "" && (this.state.loginStatus===400 || this.state.loginStatus===500)) &&
+                                        <div>
                                             <br />
-                                            <span>An account with the given Email already exists.</span>
+                                            <span style={{color: 'red'}}>{this.state.loginMessage}</span>
                                         </div>
                                     }
                                 </div>

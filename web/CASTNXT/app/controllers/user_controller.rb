@@ -15,13 +15,7 @@ class UserController < ApplicationController
         id: event._id.to_str
       }
       
-      submittedFlag = user_slide_exists?(event._id.to_str, session[:userId])
-      
-      if submittedFlag
-        if "ACCEPTING".casecmp? event.status
-          acceptingTableData << object
-        end
-      else
+      if user_slide_exists?(event._id.to_str, session[:userId])
         if "ACCEPTING".casecmp? event.status
           object["accepting"] = true
           object["status"] = "SUBMITTED"
@@ -31,6 +25,11 @@ class UserController < ApplicationController
         end
         
         submittedTableData << object
+      else
+        if "ACCEPTING".casecmp? event.status
+          acceptingTableData << object
+        end
+        
       end
     end
     @properties = {name: session[:userName], acceptingTableData: acceptingTableData, submittedTableData: submittedTableData}

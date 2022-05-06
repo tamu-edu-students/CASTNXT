@@ -18,13 +18,22 @@ class UserEventRegister extends Component {
             schema: properties.data.schema !== undefined ? properties.data.schema : {},
             uischema: properties.data.uischema !== undefined ? properties.data.uischema : {},
             formData: properties.data.formData !== undefined ? properties.data.formData : {},
-            registerStatus: '',
-            registerMessage: ''
+            registerStatus: "",
+            registerMessage: "",
+            disableSubmit: false
         }
     }
     
     submitForm = () => {
         const baseURL = window.location.href
+        
+        if (this.state.disableSubmit) {
+            return
+        } else {
+            this.setState({
+                disableSubmit: true
+            })
+        }
 
         axios.post(baseURL + "/slides", {
             formData: JSON.stringify(this.state.formData)
@@ -42,7 +51,8 @@ class UserEventRegister extends Component {
         .catch((err) => {
             this.setState({
                 registerStatus: err.response.status,
-                registerMessage: err.response.data.comment
+                registerMessage: err.response.data.comment,
+                disableSubmit: false
             })
             
             if(err.response.status === 403) {
@@ -88,7 +98,7 @@ class UserEventRegister extends Component {
                                 />
                             </div>
                             
-                            {(this.state.registerStatus !== '' && this.state.registerStatus===200) &&
+                            {(this.state.registerStatus !== "" && (this.state.registerStatus===200 || this.state.registerStatus===201)) &&
                                 <div>
                                     <br />
                                     <Alert severity="success">{this.state.registerMessage}</Alert>
@@ -96,23 +106,7 @@ class UserEventRegister extends Component {
                                 </div>
                             }
                             
-                            {(this.state.registerStatus !== '' && this.state.registerStatus===201) &&
-                                <div>
-                                    <br />
-                                    <Alert severity="success">{this.state.registerMessage}</Alert>
-                                    <br />
-                                </div>
-                            }
-                            
-                            {(this.state.registerStatus !== '' && this.state.registerStatus===400) &&
-                                <div>
-                                    <br />
-                                    <Alert severity="error">Error: {this.state.registerMessage}</Alert>
-                                    <br />
-                                </div>
-                            }
-                            
-                            {(this.state.registerStatus !== '' && this.state.registerStatus===403) &&
+                            {(this.state.registerStatus !== "" && (this.state.registerStatus===400 || this.state.registerStatus===500)) &&
                                 <div>
                                     <br />
                                     <Alert severity="error">Error: {this.state.registerMessage}</Alert>
@@ -128,4 +122,4 @@ class UserEventRegister extends Component {
     }
 }
 
-export default withRouter(UserEventRegister)
+export default UserEventRegister

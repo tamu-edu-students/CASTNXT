@@ -130,10 +130,10 @@ class SlidesController < ApplicationController
         # create negotiation object if a slide associated with a client doesn't have a negotation yet
         unless negotiation_exists?(clientId, event._id)
           Negotiation.create(
-              :event_id => params["event_id"],
-              :client_id => params["client_id"],
-              :intermediateSlides => params["intermediateSlides"],
-              :finalSlides => params["finalSlides"]
+              :event_id => event._id,
+              :client_id => clientId,
+              :intermediateSlides => [],
+              :finalSlides => []
             )
         end
       end

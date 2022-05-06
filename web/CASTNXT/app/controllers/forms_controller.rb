@@ -7,12 +7,20 @@ class FormsController < ApplicationController
 
   # GET /forms/1 or /forms/1.json
   def show
-    form =  Form.find_by(:_id => params["id"])
-    formData = {
-        id: form._id.to_str,
-        data: form.data
-      }
-    render json: {formData:  formData}, status: 201
+    begin
+      if is_user_logged_in?('ADMIN')
+        form =  Form.find_by(:_id => params["id"])
+        formData = {
+          id: form._id.to_str,
+          data: form.data
+        }
+        render json: {formData:  formData}, status: 200
+      else
+        render json: {redirect_path: '/'}, status: 403
+      end
+    rescue Exception
+      render json: {comment: "Internal Error!"}, status: 500
+    end
   end
 
   # GET /forms/new
@@ -26,8 +34,16 @@ class FormsController < ApplicationController
 
   # POST /forms or /forms.json
   def create
-    @form = Form.create(producer_id:params[:producer_id], data:params[:data])
-    render json: {formId:  @form._id.to_str}, status: 201
+    begin
+      if is_user_logged_in?('ADMIN')
+        form = Form.create(producer_id:params[:producer_id], data:params[:data])
+        render json: {comment: "Form was successfully created!", formId:  form._id.to_str}, status: 201
+      else
+        render json: {redirect_path: '/'}, status: 403
+      end
+    rescue Exception
+      render json: {comment: "Internal Error!"}, status: 500
+    end
   end
 
   # DELETE /forms/1 or /forms/1.json

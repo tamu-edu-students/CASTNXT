@@ -13,8 +13,6 @@ class ClientHomepage extends Component {
     constructor(props) {
         super(props)
         
-        console.log(properties)
-        
         this.state = {
             tableData: properties.tableData !== undefined ? properties.tableData : []
         }
@@ -68,7 +66,7 @@ class ClientHomepage extends Component {
                             <div className="col-md-6 offset-md-3">
                                 <TableContainer component={Paper}>
                                     <Table aria-label="simple table">
-                                        <TableHead style={{ backgroundColor: '#3498DB' }}>
+                                        <TableHead style={{ backgroundColor: "#3498DB" }}>
                                             <TableRow>
                                                 <TableCell align="center">Event</TableCell>
                                                 <TableCell align="center">Status</TableCell>

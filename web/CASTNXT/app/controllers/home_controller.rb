@@ -1,37 +1,45 @@
 class HomeController < ApplicationController
   # GET /
   def index
-    if session.key?(:userEmail) and session.key?(:userType) and session.key?(:userName)
+    if is_session_valid?
       redirect_to get_redirect_path
     end
   end
   
   # POST /home/signup
   def signup
-    if new_user?(params[:email])
-      create_user(params)
-      currentUser = get_user(params[:email], params[:password])
-      session[:userEmail] = currentUser.email
-      session[:userType] = currentUser.user_type
-      session[:userName] = currentUser.name
-      session[:userId] = currentUser._id.to_str
-      render json: {redirect_path: get_redirect_path, userId: currentUser._id.to_str}, status: 201
-    else
-      render json: {comment: "Email already exists!"}, status: 400
+    begin
+      if new_user?(params[:email])
+        create_user(params)
+        currentUser = get_user(params[:email], params[:password])
+        session[:userEmail] = currentUser.email
+        session[:userType] = currentUser.user_type
+        session[:userName] = currentUser.name
+        session[:userId] = currentUser._id.to_str
+        render json: {redirect_path: get_redirect_path}, status: 201
+      else
+        render json: {comment: "An account with the given Email already exists!"}, status: 400
+      end
+    rescue Exception
+      render json: {comment: "Internal Error!"}, status: 500
     end
   end
   
   # POST /home/login
   def login
-    if correct_user?(params)
-      currentUser = get_user(params[:email], params[:password])
-      session[:userEmail] = currentUser.email
-      session[:userType] = currentUser.user_type
-      session[:userName] = currentUser.name
-      session[:userId] = currentUser._id.to_str
-      render json: {redirect_path: get_redirect_path, userId: currentUser._id.to_str}, status: 200
-    else
-      render json: {comment: "User not found!"}, status: 400
+    begin
+      if correct_user?(params)
+        currentUser = get_user(params[:email], params[:password])
+        session[:userEmail] = currentUser.email
+        session[:userType] = currentUser.user_type
+        session[:userName] = currentUser.name
+        session[:userId] = currentUser._id.to_str
+        render json: {redirect_path: get_redirect_path}, status: 200
+      else
+        render json: {comment: "The entered Username or Password is incorrect!"}, status: 400
+      end
+    rescue Exception
+      render json: {comment: "Internal Error!"}, status: 500
     end
   end
   
