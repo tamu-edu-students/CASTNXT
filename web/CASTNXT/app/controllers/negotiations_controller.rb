@@ -65,20 +65,5 @@ class NegotiationsController < ApplicationController
     end
   end
 
-  # POST /negotiations
-  def create
-    if is_user_logged_in?('ADMIN') || is_user_logged_in?('CLIENT')
-        Negotiation.create(
-            :event_id => params["event_id"],
-            :client_id => params["client_id"],
-            :intermediateSlides => params["intermediateSlides"],
-            :finalSlides => params["finalSlides"]
-          )
-        render json: {comments: 'Created negotiations'}, status: 201
-    else
-      render json: {redirect_path: '/'}, status: 403
-    end
-  end
-
   private
 end
