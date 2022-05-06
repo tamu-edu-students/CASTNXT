@@ -11,9 +11,9 @@ Rails.application.routes.draw do
     # TODO: update the except block based on actions configured
     resources :events do
       resources :slides
+      resources :negotiations
     end
     resources :forms, :except => [:edit, :update]
-    resources :negotiations
   end
   
   scope :user do 
@@ -25,8 +25,9 @@ Rails.application.routes.draw do
   
   scope :client do 
     # TODO: update the except block based on actions configured
-    resources :events
-    resources :negotiations
+    resources :events do
+      resources :negotiations
+    end
   end
   
   # resources :events
