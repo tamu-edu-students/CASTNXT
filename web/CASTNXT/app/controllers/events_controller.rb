@@ -169,7 +169,6 @@ class EventsController < ApplicationController
       
       if negotiation_exists?(client, event)
         negotiation = get_negotiation(client, event)
-        clientObject[:slideIds] = negotiation.intermediateSlides
         clientObject[:finalizedIds] = negotiation.finalSlides
         clientObject[:preferenceSubmitted] = true
       end

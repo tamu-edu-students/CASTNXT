@@ -96,41 +96,40 @@ class AdminClientDecks extends Component {
           }
           
         }
-        console.log("clientOPTIONS", clientOptions)
+        
+        const baseURL = window.location.href.split('#')[0]
+      
+        axios.get(baseURL + '/negotiations', {
+            params: {
+                event_id: this.state.eventId
+            }
+        })
+        .then((res) => {
+            console.log("Success", res.data)
+            this.setState({
+                negotiations: res.data.adminNegotiations
+            })
+        })
+        .catch((err) => {
+            console.log("Error", "err")
+        })
+        
+        console.log("Success", negotiations)
         
         this.setState({
             schema: schema,
             clientOptions: clientOptions,
-            clientDecks: clientDecks,
-            negotiations: negotiations
-        }, () => {
-            console.log(this.state)
+            clientDecks: clientDecks
         })
-          
-      const baseURL = window.location.href.split('#')[0]
-      
-      axios.get(baseURL + '/negotiations', {
-        params: {
-          event_id: this.state.eventId
-        }
-      })
-      .then((res) => {
-        console.log("Success", res.data)
-        negotiations = res.data.adminNegotiations
-      })
-      .catch((err) => {
-        console.log("Error", "err")
-      })
-        
-        
     }
     
     handleClientChange = (clientSelection) => {
         let negotiationId = ""
         let negotiations = this.state.negotiations
-        
+        console.log(negotiations)
         for(var key in negotiations) {
-          if (negotiations[key]['client_id'] == clientSelection.target.value) {
+          console.log(key)
+          if (negotiations[key]['client_id'] === clientSelection.target.value) {
             negotiationId = key
           }
         }

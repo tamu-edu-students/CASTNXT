@@ -128,11 +128,14 @@ class SlidesController < ApplicationController
         clientEventIds << event._id
         
         # create negotiation object if a slide associated with a client doesn't have a negotation yet
-        unless negotiation_exists?(clientId, event._id)
+        if negotiation_exists?(clientId, event._id)
+          negotiation = get_negotiation(clientId, event._id)
+          negotiation.update(:intermediateSlides => data[clientId][:slideIds])
+        else
           Negotiation.create(
               :event_id => event._id,
               :client_id => clientId,
-              :intermediateSlides => [],
+              :intermediateSlides => data[clientId][:slideIds],
               :finalSlides => []
             )
         end
@@ -184,6 +187,10 @@ class SlidesController < ApplicationController
     end
     
     return false
+  end
+  
+  def get_negotiation clientId, eventId
+    return Negotiation.find_by(:event_id => eventId, :client_id => clientId)
   end
   
   def negotiation_exists? clientId, eventId
