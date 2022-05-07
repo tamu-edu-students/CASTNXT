@@ -1,30 +1,28 @@
-import React, {Component} from 'react'
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Slide from '../Forms/Slide';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
-import TableFooter from '@mui/material/TableFooter';
-import Button from '@mui/material/Button';
-import axios from 'axios';
+import React, {Component} from "react"
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
+import TableFooter from "@mui/material/TableFooter";
+import Button from "@mui/material/Button";
+import axios from "axios";
+
+import Slide from "../Forms/Slide";
 
 class AdminClientDecks extends Component {
     constructor(props) {
         super(props)
         
-        console.log(props)
-        
         this.state = {
             eventId: props.properties.data.id,
-            client: '',
-            negotiationId: "",
+            client: "",
             clientOptions: [],
             clientList: props.properties.data.clients,
             clientDecks: {},
@@ -33,33 +31,9 @@ class AdminClientDecks extends Component {
             uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             page:0,
             rowsPerPage: 1,
-            expandSlides: false,
-            negotiations: []
+            expandSlides: false
         }
     } 
-    
-    // static getDerivedStateFromProps(props, state) {
-    //   // console.log("Payload", state.eventId)
-    //   let negotiations = []
-          
-    //   axios.get('/admin/negotiations', {
-    //     params: {
-    //       event_id: state.eventId
-    //     }
-    //   })
-    //     .then((res) => {
-    //       console.log("Success", res.data)
-    //       negotiations = res.data
-    //     })
-    //     .catch((err) => {
-    //       console.log("Error", "err")
-    //     })
-      
-    //   return {
-    //     ...state,
-    //     negotiations
-    //   }
-    // }
     
     componentDidMount = () => {
         let clientOptions = []
@@ -68,10 +42,8 @@ class AdminClientDecks extends Component {
         let clientDecks = {}
         let schema = this.state.schema
 
-        schema['title'] = this.props.properties.data.title
-        schema['description'] = this.props.properties.data.description
-        
-        let negotiations = []
+        schema["title"] = this.props.properties.data.title
+        schema["description"] = this.props.properties.data.description
         
         for(var key in clients) {
           if(clients[key].slideIds.length > 0) {
@@ -88,33 +60,13 @@ class AdminClientDecks extends Component {
                 ...this.state.slides[clients[key].slideIds[i]],
                 slideId: clients[key].slideIds[i],
                 finalized: clients[key].finalizedIds.includes(clients[key].slideIds[i]),
-                preference: clients[key].preferenceSubmitted ? (i+1) : 'NA',
-                preferenceSubmitted: clients[key].preferenceSubmitted,
-                comments: ''
+                preference: clients[key].preferenceSubmitted ? (i+1) : "N-A",
+                preferenceSubmitted: clients[key].preferenceSubmitted
               })
             } 
           }
           
         }
-        
-        const baseURL = window.location.href.split('#')[0]
-      
-        axios.get(baseURL + '/negotiations', {
-            params: {
-                event_id: this.state.eventId
-            }
-        })
-        .then((res) => {
-            console.log("Success", res.data)
-            this.setState({
-                negotiations: res.data.adminNegotiations
-            })
-        })
-        .catch((err) => {
-            console.log("Error", "err")
-        })
-        
-        console.log("Success", negotiations)
         
         this.setState({
             schema: schema,
@@ -124,20 +76,9 @@ class AdminClientDecks extends Component {
     }
     
     handleClientChange = (clientSelection) => {
-        let negotiationId = ""
-        let negotiations = this.state.negotiations
-        console.log(negotiations)
-        for(var key in negotiations) {
-          console.log(key)
-          if (negotiations[key]['client_id'] === clientSelection.target.value) {
-            negotiationId = key
-          }
-        }
-      
         this.setState({
             client: clientSelection.target.value,
-            expandSlides: false,
-            negotiationId: negotiationId
+            expandSlides: false
         })
     }
     
@@ -169,9 +110,9 @@ class AdminClientDecks extends Component {
       
       console.log("Payload", payload)
       
-      const baseURL = window.location.href.split('#')[0]
+      const baseURL = window.location.href.split("#")[0]
       
-      axios.put(baseURL + '/negotiations/'+ this.state.negotiationId, payload)
+      axios.put(baseURL + "/negotiations/"+ this.state.negotiationId, payload)
         .then((res) => {
           console.log("Success", res)
         })
@@ -187,11 +128,11 @@ class AdminClientDecks extends Component {
       let finalizedSlides = []
       let intermediateSlides = []
       
-      // console.log(clientDecks)
+      
 
       for(var i=0; i<clientDecks[client].length; i++) {
         if(clientDecks[client][i].slideId === talent.slideId) {
-          clientDecks[client][i].finalized = !talent['finalized']
+          clientDecks[client][i].finalized = !talent["finalized"]
         }
         
         if(clientDecks[client][i].finalized) {
@@ -209,13 +150,9 @@ class AdminClientDecks extends Component {
       })
     }
     
-    updateTalentSelections = () => {
-      
-    }
-    
     render() {
         let selectStyle = {
-          backgroundColor: '#B5DDA4'
+          backgroundColor: "#B5DDA4"
         }
       
         return(
@@ -253,12 +190,11 @@ class AdminClientDecks extends Component {
                             
                             <TableContainer>
                               <Table size="medium" sx={{ minWidth: 200, width: 250 }}>
-                                <TableHead style={{ backgroundColor: '#3498DB' }}>
+                                <TableHead style={{ backgroundColor: "#3498DB" }}>
                                   <TableRow>
                                     <TableCell align="center">Preference</TableCell>
                                     <TableCell align="center">Talent Name</TableCell>
                                     <TableCell align="center">Status</TableCell>
-                                    <TableCell align="center">Comments</TableCell>
                                     <TableCell align="center">Action</TableCell>
                                   </TableRow>
                                 </TableHead>
@@ -272,7 +208,6 @@ class AdminClientDecks extends Component {
                                               {!row.finalized &&
                                               <>
                                                 <TableCell align="center">Not Finalized</TableCell>
-                                                <TableCell align="center">{row.comments}</TableCell>
                                                 <TableCell>
                                                   <Button 
                                                     size="small" 
@@ -286,7 +221,6 @@ class AdminClientDecks extends Component {
                                               {row.finalized &&
                                               <>
                                                 <TableCell align="center">Finalized</TableCell>
-                                                <TableCell align="center">{row.comments}</TableCell>
                                                 <TableCell>
                                                   <Button 
                                                     size="small" 
@@ -306,8 +240,6 @@ class AdminClientDecks extends Component {
                             </TableContainer>
 
                             <br />
-                            <Button hidden variant="contained" onClick={this.updateTalentSelections}>Update Talent Status</Button><br /><br />
-                            
                             <Button variant="contained" onClick={this.expandSlides}>Expand Slides?</Button><br /><br />
 
                             {this.state.expandSlides &&
@@ -321,7 +253,7 @@ class AdminClientDecks extends Component {
                                           return(
                                             <TableRow
                                               key={row.id}
-                                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                                             >
   
                                               <TableCell>

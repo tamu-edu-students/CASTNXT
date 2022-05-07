@@ -125,12 +125,14 @@ class EventsController < ApplicationController
     event = get_event(eventId)
     client = get_client(session[:userId])
     form = get_form(event.form_id)
+    negotiation = get_negotiation(client._id, event._id)
       
     data = JSON.parse(form.data)
     data[:id] = eventId
     data[:title] = event.title
     data[:description] = event.description
     data[:status] = event.status
+    data[:negotiationId] = negotiation._id.to_str
     
     data[:slides] = build_client_event_slides(event, client)
     
@@ -148,7 +150,6 @@ class EventsController < ApplicationController
   
   def build_producer_event_clients event
     clientsObject = {}
-    eventSlideIds = get_event_slide_ids(event)
     
     clients = Client.all
     clients.each do |client|
@@ -156,17 +157,15 @@ class EventsController < ApplicationController
       clientObject[:name] = client.name
       clientObject[:slideIds] = []
       clientObject[:finalizedIds] = []
+      clientObject[:negotiationId] = ""
       clientObject[:preferenceSubmitted] = false
       
-      client.slide_ids.each do |slideId|
-        if eventSlideIds.include? slideId.to_str
-          clientObject[:slideIds] << slideId.to_str
-        end
-      end
-      
-      if negotiation_exists?(client, event)
+      if negotiation_exists?(client._id, event._id)
         negotiation = get_negotiation(client, event)
+        
+        clientObject[:negotiationId] = negotiation._id.to_str
         clientObject[:finalizedIds] = negotiation.finalSlides
+        clientObject[:slideIds] = negotiation.intermediateSlides
         clientObject[:preferenceSubmitted] = true
       end
       
@@ -208,28 +207,16 @@ class EventsController < ApplicationController
       slidesObject[slideId.to_str] = slideObject
     end
     
-    if negotiation_exists?(clientId, eventId)
-      negotiation = get_negotiation(clientId, eventId)
-      orderedSlidesObject = {}
-      
-      negotiation.intermediateSlides.each do |slideId|
-        orderedSlidesObject[slideId] = slidesObject[slideId]
-      end
-      
-      slidesObject = orderedSlidesObject
+    negotiation = get_negotiation(client._id, event._id)
+    orderedSlidesObject = {}
+    
+    negotiation.intermediateSlides.each do |slideId|
+      orderedSlidesObject[slideId] = slidesObject[slideId]
     end
+    
+    slidesObject = orderedSlidesObject
     
     return slidesObject
-  end
-  
-  def get_event_slide_ids event
-    eventSlideIds = []
-    
-    event.slide_ids.each do |slideId|
-      eventSlideIds << slideId.to_str
-    end
-    
-    return eventSlideIds
   end
   
   def update_event_status event, status

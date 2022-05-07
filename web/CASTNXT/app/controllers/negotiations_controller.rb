@@ -54,7 +54,7 @@ class NegotiationsController < ApplicationController
   def client_negotiation
     begin
       if is_user_logged_in?("CLIENT")
-        negotiation = get_negotiation(params[:event_id], params[:client_id])
+        negotiation = get_negotiation(params[:event_id], session[:userId])
         
         negotiationObject = {}
         negotiationObject[:negotiation_id] = negotiation._id.to_str
@@ -83,7 +83,7 @@ class NegotiationsController < ApplicationController
   def update_producer_negotiation
     begin
       if is_user_logged_in?("ADMIN")
-        negotiation = get_negotiation(params[:event_id], params[:client_id])
+        negotiation = get_negotiation(params[:event_id], session[:userId])
         update_negotiaton_finals(negotiation, params[:finalSlides])
         
         params[:finalSlides].each do |slideId|
@@ -91,7 +91,7 @@ class NegotiationsController < ApplicationController
           update_slide_status(slide, "ACCEPTED")
         end
         
-        render json: {comments: "Finalized Slide!"}, status: 200
+        render json: {comment: "Finalized Slide!"}, status: 200
       else
         render json: {redirect_path: "/"}, status: 403
       end
@@ -103,10 +103,10 @@ class NegotiationsController < ApplicationController
   def update_client_negotiation
     begin
       if is_user_logged_in?("CLIENT")
-        negotiation = get_negotiation(params[:event_id], params[:client_id])
+        negotiation = get_negotiation(params[:event_id], session[:userId])
         update_negotiaton_intermediates(negotiation, params[:intermediateSlides])
         
-        render json: {comments: "Updated Negotiation!"}, status: 200
+        render json: {comment: "Updated Negotiation!"}, status: 200
       else
         render json: {redirect_path: "/"}, status: 403
       end
@@ -123,7 +123,7 @@ class NegotiationsController < ApplicationController
     slide.update(:submission_status => status)
   end
   
-  def get_negotiation clientId, eventId
+  def get_negotiation eventId, clientId
     return Negotiation.find_by(:event_id => eventId, :client_id => clientId)
   end
   

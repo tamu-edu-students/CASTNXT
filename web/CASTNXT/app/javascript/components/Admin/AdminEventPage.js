@@ -20,7 +20,6 @@ class AdminEventPage extends Component {
         this.state = {
             title: properties.data.title,
             description: properties.data.description,
-            tableData: [],
             tabValue: 0
         }
     }

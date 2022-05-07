@@ -117,8 +117,6 @@ class AdminCreateStack extends Component {
     }
     
     updateFormData = (newFormData, row) => {
-      console.log(newFormData)
-      
       let entries = this.state.entries
       for(var i=0; i<entries.length; i++) {
         if(row.id === entries[i].id) {
