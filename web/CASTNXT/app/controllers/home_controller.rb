@@ -7,6 +7,7 @@ class HomeController < ApplicationController
   end
   
   # POST /home/signup
+  # POST /admin/signup
   def signup
     begin
       if new_user?(params[:email])
@@ -28,7 +29,7 @@ class HomeController < ApplicationController
   # POST /home/login
   def login
     begin
-      if correct_user?(params)
+      if correct_user?(params[:email], params[:password])
         currentUser = get_user(params[:email], params[:password])
         session[:userEmail] = currentUser.email
         session[:userType] = currentUser.user_type
@@ -57,8 +58,8 @@ class HomeController < ApplicationController
     return false
   end
   
-  def correct_user? params
-    if Auth.where(:email => params[:email], :password => params[:password]).present?
+  def correct_user? email, password
+    if Auth.where(:email => email, :password => password).present?
       return true
     end
     
@@ -66,23 +67,23 @@ class HomeController < ApplicationController
   end
   
   def create_user params
-    user = Auth.create(name:params[:name], email:params[:email], password:params[:password], user_type:params[:type])
+    user = Auth.create(:name => params[:name], :email => params[:email], :password => params[:password], :user_type => params[:type])
     if "ADMIN".casecmp? params[:type]
-      Producer.create(_id:user._id.to_str, name:user.name, email:user.email)
+      Producer.create(:_id => user._id.to_str, :name => user.name, :email => user.email)
     elsif "CLIENT".casecmp? params[:type]
-      Client.create(_id:user._id.to_str, name:user.name, email:user.email)
+      Client.create(:_id => user._id.to_str, :name => user.name, :email => user.email)
     else
-      Talent.create(_id:user._id.to_str, name:user.name, email:user.email)
+      Talent.create(:_id => user._id.to_str, :name => user.name, :email => user.email)
     end
   end
 
   def get_redirect_path
     if "ADMIN".casecmp? session[:userType]
-      return '/admin'
+      return "/admin"
     elsif "CLIENT".casecmp? session[:userType]
-      return '/client'
+      return "/client"
     else
-      return '/user'
+      return "/user"
     end
   end
 end

@@ -1,69 +1,141 @@
 class NegotiationsController < ApplicationController
-  # GET /negotiations
+  # GET /admin/events/:id/negotiations
+  # GET /client/events/:id/negotiations
   def index
-    Rails.logger.debug("Inside GET index")
-    Rails.logger.debug(params)
-    
-    if is_user_logged_in?('ADMIN')
-      allNegotiationsArray = []
-      negotiations = Negotiation.where(:event_id => params["event_id"])
-      Rails.logger.debug(negotiations)
-      # add each negotiation object to the array for admin
-      negotiations.each do |negotiation|
-        negotiationObject = {
-          negotiation_id: negotiation._id.to_str,
-          event_id: negotiation.event_id.to_str,
-          client_id: negotiation.client_id.to_str,
-          finalSlides: negotiation.finalSlides,
-          intermediateSlides: negotiation.intermediateSlides
-        }
-        allNegotiationsArray << negotiationObject
-      end
-      render json: {adminNegotiations: allNegotiationsArray}, status: 200
-    elsif is_user_logged_in?('CLIENT')
-      existingNegotiation = Negotiation.find_by(:event_id => params["event_id"], :client_id => params["client_id"])
-      Rails.logger.debug(existingNegotiation)
-      negotiationObject = {
-          negotiation_id: existingNegotiation._id.to_str,
-          event_id: existingNegotiation.event_id.to_str,
-          client_id: existingNegotiation.client_id.to_str,
-          finalSlides: existingNegotiation.finalSlides,
-          intermediateSlides: existingNegotiation.intermediateSlides
-      }
-      render json: {clientNegotiation: negotiationObject}, status: 200
+    if "ADMIN".casecmp? session[:userType]
+      producer_negotiation
+    elsif "CLIENT".casecmp? session[:userType]
+      client_negotiation
     else
-      render json: {redirect_path: '/'}, status: 403
+      user_negotiation
     end
   end
   
-  # PUT
+  # PUT /admin/events/:id/negotiations/:id
+  # PUT /client/events/:id/negotiations/:id
   def update
-    Rails.logger.debug("Inside negotiation/update index")
-    Rails.logger.debug(params)
-    
-    if is_user_logged_in?('ADMIN')
-      existingNegotiation = Negotiation.find_by(:event_id => params["event_id"], :client_id => params["client_id"])
-      Rails.logger.debug(existingNegotiation)
-      # update existing negotiation wrt changes in intermediate and final slides for a client
-      existingNegotiation.update(:intermediateSlides => params["intermediateSlides"], :finalSlides => params["finalSlides"])
-      # For any new updates in finalSlides, update the respective talent's form submission as "ACCEPTED"
-      params["finalSlides"].each do |slideId|
-        slide = Slide.find_by(:_id => slideId)
-        unless "ACCEPTED".casecmp? slide.submission_status
-          slide.update(:submission_status => 'ACCEPTED')
-        end
-      end
-      render json: {comments: 'Updated negotiation object wrt finalSlides'}, status: 200
-    elsif is_user_logged_in?('CLIENT')
-      existingNegotiation = Negotiation.find_by(:event_id => params["event_id"], :client_id => params["client_id"])
-      Rails.logger.debug(existingNegotiation)
-      # update existing negotiation wrt changes in intermediate and final slides for a client
-      existingNegotiation.update(:intermediateSlides => params["intermediateSlides"])
-      render json: {comments: 'Updated negotiation object wrt intermediateSlides'}, status: 200
+    if "ADMIN".casecmp? session[:userType]
+      update_producer_negotiation
+    elsif "CLIENT".casecmp? session[:userType]
+      update_client_negotiation
     else
-      render json: {redirect_path: '/'}, status: 403
+      update_user_negotiation
     end
   end
 
   private
+  
+  def producer_negotiation
+    begin
+      if is_user_logged_in?("ADMIN")
+        negotiationsList = []
+        negotiations = get_negotiations(params[:event_id])
+        
+        negotiations.each do |negotiation|
+          negotiationObject = {}
+          negotiationObject[:negotiation_id] = negotiation._id.to_str
+          negotiationObject[:event_id] = negotiation.event_id.to_str
+          negotiationObject[:client_id] = negotiation.client_id.to_str
+          negotiationObject[:finalSlides] = negotiation.finalSlides
+          negotiationObject[:intermediateSlides] = negotiation.intermediateSlides
+          
+          negotiationsList << negotiationObject
+        end
+        
+        render json: {negotiations: negotiationsList}, status: 200
+      else
+        render json: {redirect_path: "/"}, status: 403
+      end
+    rescue Exception
+      render json: {comment: "Internal Error!"}, status: 500
+    end
+  end
+  
+  def client_negotiation
+    begin
+      if is_user_logged_in?("CLIENT")
+        negotiation = get_negotiation(params[:event_id], params[:client_id])
+        
+        negotiationObject = {}
+        negotiationObject[:negotiation_id] = negotiation._id.to_str
+        negotiationObject[:event_id] = negotiation.event_id.to_str
+        negotiationObject[:client_id] = negotiation.client_id.to_str
+        negotiationObject[:finalSlides] = negotiation.finalSlides
+        negotiationObject[:intermediateSlides] = negotiation.intermediateSlides
+        
+        render json: {negotiation: negotiationObject}, status: 200
+      else
+        render json: {redirect_path: "/"}, status: 403
+      end
+    rescue Exception
+      render json: {comment: "Internal Error!"}, status: 500
+    end
+  end
+  
+  def user_negotiation
+    render json: {redirect_path: "/"}, status: 403
+  end
+  
+  def update_user_negotiation
+    render json: {redirect_path: "/"}, status: 403
+  end
+  
+  def update_producer_negotiation
+    begin
+      if is_user_logged_in?("ADMIN")
+        negotiation = get_negotiation(params[:event_id], params[:client_id])
+        update_negotiaton_finals(negotiation, params[:finalSlides])
+        
+        params[:finalSlides].each do |slideId|
+          slide = get_slide(slideId)
+          update_slide_status(slide, "ACCEPTED")
+        end
+        
+        render json: {comments: "Finalized Slide!"}, status: 200
+      else
+        render json: {redirect_path: "/"}, status: 403
+      end
+    rescue Exception
+      render json: {comment: "Internal Error!"}, status: 500
+    end
+  end
+  
+  def update_client_negotiation
+    begin
+      if is_user_logged_in?("CLIENT")
+        negotiation = get_negotiation(params[:event_id], params[:client_id])
+        update_negotiaton_intermediates(negotiation, params[:intermediateSlides])
+        
+        render json: {comments: "Updated Negotiation!"}, status: 200
+      else
+        render json: {redirect_path: "/"}, status: 403
+      end
+    rescue Exception
+      render json: {comment: "Internal Error!"}, status: 500
+    end
+  end
+  
+  def get_slide slideId
+    return Slide.find_by(:_id => slideId)
+  end
+  
+  def update_slide_status(slide, status)
+    slide.update(:submission_status => status)
+  end
+  
+  def get_negotiation clientId, eventId
+    return Negotiation.find_by(:event_id => eventId, :client_id => clientId)
+  end
+  
+  def get_negotiations eventId
+    return Negotiation.where(:event_id => eventId)
+  end
+  
+  def update_negotiaton_intermediates negotiation, intermediateSlideIds
+    negotiation.update(:intermediateSlides => intermediateSlideIds)
+  end
+  
+  def update_negotiaton_finals negotiation, finalSlides
+    negotiation.update(:finalSlides => finalSlides)
+  end
 end

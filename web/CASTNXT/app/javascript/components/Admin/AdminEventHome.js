@@ -13,9 +13,10 @@ class AdminEventHome extends Component {
 
         this.state = {
             properties: props.properties,
-            status: props.properties.data.status,
-            responseMessage: "",
-            eventStatusUpdateSuccess: "",
+            eventStatus: props.properties.data.status,
+            message: "",
+            status: "",
+            statusCounter: 0
         }
     }
     
@@ -27,15 +28,15 @@ class AdminEventHome extends Component {
       })
       .then((res) => {
         this.setState({
-          eventStatusUpdateSuccess: true,
-          status: e.target.value,
-          responseMessage: res.data.comment
+          status: true,
+          eventStatus: e.target.value,
+          message: res.data.comment
         })
       })
       .catch((err) => {
         this.setState({
-          eventStatusUpdateSuccess: false,
-          responseMessage: "Failed to update Event Status!"
+          status: false,
+          message: "Failed to update Event Status!"
         })
         
         if(err.response.status === 403) {
@@ -43,10 +44,20 @@ class AdminEventHome extends Component {
         }
       })
       .finally(()=> {
+        this.setState({
+          statusCounter: this.state.statusCounter + 1
+        })
+        
         setTimeout(() => {
-          this.setState({
-            eventStatusUpdateSuccess: ""
-          })
+          if (this.state.statusCounter == 1) {
+            this.setState({
+              status: ""
+            })
+          } else {
+            this.setState({
+              statusCounter: this.state.statusCounter - 1
+            })
+          }
         }, 2500)
       })
     }
@@ -63,7 +74,7 @@ class AdminEventHome extends Component {
                       <div className="col-md-8 offset-md-2">
                         <ToggleButtonGroup
                           color="success"
-                          value={this.state.status}
+                          value={this.state.eventStatus}
                           exclusive
                           onChange={this.handleChange}
                         >
@@ -73,18 +84,18 @@ class AdminEventHome extends Component {
                         </ToggleButtonGroup>
                       </div>
                         
-                      {(this.state.eventStatusUpdateSuccess !== "" && this.state.eventStatusUpdateSuccess) && 
+                      {(this.state.status !== "" && this.state.status) && 
                           <div className="col-md-6 offset-md-3">
                             <br />
-                            <Alert severity="success">{this.state.responseMessage}</Alert>
+                            <Alert severity="success">{this.state.message}</Alert>
                             <br />
                           </div>
                       }
                       
-                      {(this.state.eventStatusUpdateSuccess !== "" && !this.state.eventStatusUpdateSuccess) &&
+                      {(this.state.status !== "" && !this.state.status) &&
                           <div className="col-md-6 offset-md-3">
                             <br />
-                            <Alert severity="error">Error: {this.state.responseMessage}</Alert>
+                            <Alert severity="error">Error: {this.state.message}</Alert>
                             <br />
                           </div>
                       }

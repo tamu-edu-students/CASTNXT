@@ -1,19 +1,11 @@
 import React, {Component} from 'react'
-import Header from '../Navbar/Header';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
+import Header from '../Navbar/Header';
 import AdminEventHome from './AdminEventHome';
 import AdminCreateStack from './AdminCreateStack';
 import AdminCreateClientStack from './AdminCreateClientStack';
@@ -25,8 +17,6 @@ class AdminEventPage extends Component {
     constructor(props) {
         super(props)
         
-        // console.log("Rails properties", properties)
-
         this.state = {
             title: properties.data.title,
             description: properties.data.description,

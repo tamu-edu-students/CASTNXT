@@ -1,20 +1,20 @@
-import React, {Component} from 'react'
-import axios from 'axios';
-import Header from '../Navbar/Header';
-import FormBuilderContainer from '../Forms/FormBuilder.js'
-import Slide from '../Forms/Slide.js'
+import React, {Component} from "react"
+import axios from "axios";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import Alert from "@mui/material/Alert";
 
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Button from '@mui/material/Button';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import Alert from '@mui/material/Alert';
-import './Admin.css';
-import '../Forms/Forms.css';
+import Header from "../Navbar/Header";
+import FormBuilderContainer from "../Forms/FormBuilder.js"
+import Slide from "../Forms/Slide.js"
+import "./Admin.css";
+import "../Forms/Forms.css";
 
 class AdminCreateEvent extends Component {
     constructor(props) {
@@ -32,8 +32,8 @@ class AdminCreateEvent extends Component {
             newFormData: {},
             newFormId: "",
             disableSubmit: false,
-            createStatus: "",
-            createMessage: ""
+            status: "",
+            message: ""
             
         }
     }
@@ -88,8 +88,6 @@ class AdminCreateEvent extends Component {
     }
     
     onCreateEventClick = () => {
-        const producerId = sessionStorage.getItem("userId")
-        
         this.setState({
             disableSubmit: true
         })
@@ -98,8 +96,7 @@ class AdminCreateEvent extends Component {
             data:JSON.stringify({
                 schema: JSON.parse(this.state.schema),
                 uischema: JSON.parse(this.state.uischema)
-            }),
-            producer_id: producerId
+            })
         })
         .then((res) => {
             this.setState({
@@ -107,17 +104,15 @@ class AdminCreateEvent extends Component {
             })
             
             return axios.post("/admin/events", {
-                producer_id: producerId,
                 form_id: this.state.newFormId,
                 title: this.state.title,
-                description: this.state.description,
-                status: "ACCEPTING"
+                description: this.state.description
             })
         })
         .then((res) => {
             this.setState({
-                createStatus: res.status,
-                createMessage: res.data.comment
+                status: true,
+                message: res.data.comment
             })
             
             setTimeout(() => {
@@ -126,8 +121,8 @@ class AdminCreateEvent extends Component {
         })
         .catch((err) => {
             this.setState({
-                createStatus: err.response.status,
-                createMessage: err.response.data.comment,
+                status: false,
+                message: err.response.data.comment,
                 disableSubmit: false
             })
             
@@ -236,18 +231,18 @@ class AdminCreateEvent extends Component {
                             
                             <Button disabled={this.state.disableSubmit} variant="contained" onClick={this.onCreateEventClick}>Create Event</Button>
                             
-                            {(this.state.createStatus !== "" && this.state.createStatus===201) &&
+                            {(this.state.status !== "" && this.state.status) &&
                                 <div>
                                     <br />
-                                    <Alert severity="success">{this.state.createMessage}</Alert>
+                                    <Alert severity="success">{this.state.message}</Alert>
                                     <br />
                                 </div>
                             }
                             
-                            {(this.state.createStatus !== "" && (this.state.createStatus===400 || this.state.createStatus===500)) &&
+                            {(this.state.status !== "" && !this.state.status) &&
                                 <div>
                                     <br />
-                                    <Alert severity="error">Error: {this.state.createMessage}</Alert>
+                                    <Alert severity="error">Error: {this.state.message}</Alert>
                                     <br />
                                 </div>
                             }

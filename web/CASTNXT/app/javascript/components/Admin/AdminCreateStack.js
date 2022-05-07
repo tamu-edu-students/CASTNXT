@@ -1,9 +1,6 @@
 import React, {Component} from 'react'
 import { Redirect } from 'react-router-dom';
-import Header from '../Navbar/Header';
-import FormBuilderContainer from '../Forms/FormBuilder.js'
 import Form from '@rjsf/core';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,15 +12,16 @@ import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import Slide from '../Forms/Slide';
 import axios from 'axios';
+
+import Header from '../Navbar/Header';
+import FormBuilderContainer from '../Forms/FormBuilder.js'
+import Slide from '../Forms/Slide';
 
 class AdminCreateStack extends Component {
     constructor(props) {
         super(props)
         
-        console.log("Rails properties", props.properties)
-
         this.state = {
             properties: props.properties,
             redirect: "",
