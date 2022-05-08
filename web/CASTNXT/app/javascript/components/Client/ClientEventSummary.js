@@ -26,12 +26,14 @@ class ClientEventSummary extends Component {
     
     componentDidMount() {
         let slides = this.props.properties.data.slides
+        let finalizedIds = this.props.properties.data.finalizedIds
         let tableRows = []
 
         for(var key in slides) {
             tableRows.push({
                 id: key,
                 name: slides[key].talentName,
+                finalized: finalizedIds.includes(key)
             })
         }
         
@@ -57,10 +59,15 @@ class ClientEventSummary extends Component {
         });
     }
     
-    getItemStyle = (isDragging, draggableStyle) => ({
-        background: isDragging && ("lightblue"),
-        ...draggableStyle,
-    })
+    getItemStyle = (isDragging, draggableStyle, finalized) => {
+        return finalized ? ({
+            background: ("lightgreen"),
+            ...draggableStyle,
+        }) : ({
+            background: isDragging && ("lightblue"),
+            ...draggableStyle,
+        })
+    }
     
     updatePreferences = () => {
         let preferences = []
@@ -130,7 +137,8 @@ class ClientEventSummary extends Component {
                                                     <TableRow {...provided.draggableProps} {...provided.dragHandleProps}
                                                         style={this.getItemStyle(
                                                           snapshot.isDragging,
-                                                          provided.draggableProps.style
+                                                          provided.draggableProps.style,
+                                                          row.finalized 
                                                         )}
                                                         key={row.id}
                                                     >

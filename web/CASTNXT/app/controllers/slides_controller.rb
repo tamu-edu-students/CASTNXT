@@ -58,7 +58,7 @@ class SlidesController < ApplicationController
         update_event_clients(event, params[:clients])
         update_event_slides(params[:slides])
         
-        render json: {comment: "Updated event decks!"}, status: 200
+        render json: {comment: "Updated Event Decks!"}, status: 200
       else
         render json: {redirect_path: "/"}, status: 403
       end
@@ -69,8 +69,10 @@ class SlidesController < ApplicationController
     
   def update_event_slides data
     data.keys.each do |slideId|
-      slide = get_slide(slideId)
-      update_slide_data(slide, data[slideId])
+      if data[slideId][:updated]
+        slide = get_slide(slideId)
+        update_slide_data(slide, data[slideId])
+      end
     end
   end
   

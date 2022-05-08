@@ -23,9 +23,6 @@ class ClientEventFeedback extends Component {
         super(props)
         
         this.state = {
-            eventId: props.properties.data.id,
-            title: props.properties.data.title,
-            description: props.properties.data.description,
             schema: props.properties.data.schema,
             uischema: props.properties.data.uischema,
             slides: props.properties.data.slides,

@@ -1,32 +1,31 @@
-import React, {Component} from 'react'
-import { Redirect } from 'react-router-dom';
-import Header from '../Navbar/Header';
-import Form from '@rjsf/core';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
-import Alert from '@mui/material/Alert';
-import axios from 'axios';
+import React, {Component} from "react"
+import Header from "../Navbar/Header";
+import Form from "@rjsf/core";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
+import Alert from "@mui/material/Alert";
+import axios from "axios";
 
 class AdminEventHome extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            properties: props.properties,
             eventStatus: props.properties.data.status,
             message: "",
-            status: "",
-            statusCounter: 0
+            status: ""
         }
     }
     
     handleChange = (e) => {
-      const baseURL = window.location.href.split('#')[0]
+      const baseURL = window.location.href.split("#")[0]
       
       axios.put(baseURL, {
         status: e.target.value
       })
       .then((res) => {
+        this.props.properties.data.status = e.target.value
+        
         this.setState({
           status: true,
           eventStatus: e.target.value,
@@ -43,23 +42,6 @@ class AdminEventHome extends Component {
           window.location.href = err.response.data.redirect_path
         }
       })
-      .finally(()=> {
-        this.setState({
-          statusCounter: this.state.statusCounter + 1
-        })
-        
-        setTimeout(() => {
-          if (this.state.statusCounter == 1) {
-            this.setState({
-              status: ""
-            })
-          } else {
-            this.setState({
-              statusCounter: this.state.statusCounter - 1
-            })
-          }
-        }, 2500)
-      })
     }
 
     render() {
@@ -67,7 +49,7 @@ class AdminEventHome extends Component {
         return(
             <div>
 
-                <div style={{marginTop: '1%'}}>
+                <div style={{marginTop: "1%"}}>
                     <p>Use this page to update an event.</p>
                     
                     <div>

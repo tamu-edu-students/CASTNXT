@@ -133,6 +133,7 @@ class EventsController < ApplicationController
     data[:description] = event.description
     data[:status] = event.status
     data[:negotiationId] = negotiation._id.to_str
+    data[:finalizedIds] = negotiation.finalSlides
     
     data[:slides] = build_client_event_slides(event, client)
     

@@ -22,11 +22,9 @@ class UserController < ApplicationController
           object["accepting"] = true
           object["status"] = "SUBMITTED"
         elsif "FINALIZED".casecmp? event.status
-          slide = get_talent_slide(event._id, talent._id)
-          
           object["accepting"] = false
-          if "ACCEPTED".casecmp? slide.submission_status
-            object["status"] = slide.submission_status
+          if talent_accepted?(event._id, talent._id)
+            object["status"] = "ACCEPTED"
           else
             object["status"] = "REJECTED"
           end
@@ -51,7 +49,7 @@ class UserController < ApplicationController
     return Talent.find_by(:_id => talentId)
   end
   
-  def get_event_negotiations(eventId)
+  def get_event_negotiations eventId
     return Negotiation.where(:event_id => eventId)
   end
   
@@ -62,6 +60,19 @@ class UserController < ApplicationController
   def talent_slide_exists? eventId, talentId
     if Slide.where(:event_id => eventId, :talent_id => talentId).present?
       return true
+    end
+    
+    return false
+  end
+  
+  def talent_accepted? eventId, talentId
+    slide = get_talent_slide(eventId, talentId)
+    negotiations = get_event_negotiations(eventId)
+    
+    negotiations.each do |negotiation|
+      if negotiation.finalSlides.include? slide._id.to_str
+        return true
+      end
     end
     
     return false

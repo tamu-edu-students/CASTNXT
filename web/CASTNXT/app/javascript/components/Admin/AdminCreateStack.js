@@ -1,54 +1,44 @@
-import React, {Component} from 'react'
-import { Redirect } from 'react-router-dom';
-import Form from '@rjsf/core';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
-import TableFooter from '@mui/material/TableFooter';
-import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import axios from 'axios';
+import React, {Component} from "react"
+import Form from "@rjsf/core";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
+import TableFooter from "@mui/material/TableFooter";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import axios from "axios";
 
-import Header from '../Navbar/Header';
-import FormBuilderContainer from '../Forms/FormBuilder.js'
-import Slide from '../Forms/Slide';
+import Header from "../Navbar/Header";
+import Slide from "../Forms/Slide";
 
 class AdminCreateStack extends Component {
     constructor(props) {
         super(props)
         
         this.state = {
-            properties: props.properties,
-            redirect: "",
-            title: props.properties.data.title,
-            description: props.properties.data.description,
             schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
             uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             formData: [],
             entries: [],
             curatedStack: [],
             showStack: false,
-            client: '',
+            client: "",
             page:0,
             rowsPerPage: 1,
-            stackCreateSuccess: "",
-            responseMessage: ""
+            status: "",
+            message: ""
         }
     }
     
     componentDidMount() {
       let entries = []
       let slides = this.props.properties.data.slides
-      let schema = this.state.schema
 
-      schema['title'] = this.props.properties.data.title
-      schema['description'] = this.props.properties.data.description
-      
       for(var key in slides) {
         entries.push({
           ...slides[key],
@@ -58,8 +48,7 @@ class AdminCreateStack extends Component {
       }
       
       this.setState({
-        entries: entries,
-        schema: schema,
+        entries: entries
       })
     }
     
@@ -70,19 +59,16 @@ class AdminCreateStack extends Component {
     }
     
     addToStack = (row) => {
-
       let curStack = this.state.entries
-      
       for(var i=0; i<curStack.length; i++) {
-        if(curStack[i]['id'] === row['id']) {
-          curStack[i]['curated'] = !curStack[i]['curated']
+        if(curStack[i]["id"] === row["id"]) {
+          curStack[i]["curated"] = !curStack[i]["curated"]
         }
       }
       
       this.setState({
         entries: curStack
       })
-      
     }
     
     makeStack = () => {
@@ -90,7 +76,7 @@ class AdminCreateStack extends Component {
       let stack = []
       
       for(var i=0; i<curStack.length; i++) {
-        if(curStack[i]['curated']) {
+        if(curStack[i]["curated"]) {
           stack.push(curStack[i])
         }
       }
@@ -98,8 +84,6 @@ class AdminCreateStack extends Component {
       this.setState({
         curatedStack: stack,
         showStack: true
-      }, () => {
-        window.location.hash = "#curated"
       })
     }
     
@@ -110,7 +94,6 @@ class AdminCreateStack extends Component {
     };
     
     handleChangeRowsPerPage = (event, num) => {
-      console.log(event.target.value)
       this.setState({
         rowsPerPage: event.target.value
       })
@@ -134,6 +117,7 @@ class AdminCreateStack extends Component {
       let entries = this.state.entries
       for(var i=0; i<entries.length; i++) {
         this.props.properties.data.slides[entries[i].id].curated = entries[i].curated
+        this.props.properties.data.slides[entries[i].id].updated = entries[i].updated
         if(entries[i].updated === true)
           this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
       }
@@ -141,14 +125,13 @@ class AdminCreateStack extends Component {
     
     makeMasterStack = () => {
       this.makeSlideChanges()
-      
       let slides = JSON.parse(JSON.stringify(this.props.properties.data.slides))
       
       for(var key in slides) {
         slides[key].formData = JSON.stringify(slides[key].formData)
       }
       
-      const baseURL = window.location.href.split('#')[0]
+      const baseURL = window.location.href.split("#")[0]
       
       const payload = {
         clients: this.props.properties.data.clients,
@@ -157,20 +140,20 @@ class AdminCreateStack extends Component {
       
       axios.post(baseURL+"/slides/", payload)
       .then((res) => {
-        console.log("Success")
-        
         this.setState({
-          stackCreateSuccess: true,
-          responseMessage: res.data.comment
+          status: true,
+          message: res.data.comment
         })
       })
       .catch((err) => {
-        console.log("Failure")
-        
         this.setState({
-          stackCreateSuccess: false,
-          responseMessage: 'An error occured when making master deck'
+          status: false,
+          message: "Failed to curate Submitted Docs!"
         })
+        
+        if(err.response.status === 403) {
+          window.location.href = err.response.data.redirect_path
+        }
       })
     }
 
@@ -178,7 +161,7 @@ class AdminCreateStack extends Component {
         return(
             <div>
 
-                <div style={{marginTop: '1%'}}>
+                <div style={{marginTop: "1%"}}>
                     <p>Use this page to create a master slide deck for this event.</p>
                     
                     <div>
@@ -193,7 +176,7 @@ class AdminCreateStack extends Component {
                                       return(
                                         <TableRow
                                           key={row.id}
-                                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                                         >
 
                                           <TableCell>
@@ -207,7 +190,7 @@ class AdminCreateStack extends Component {
                                             
                                             <br />
                                             
-                                            <div style={{textAlign: 'right'}}>
+                                            <div style={{textAlign: "right"}}>
                                               {!row.curated? (
                                                 <Button onClick={() => this.addToStack(row)} variant="contained" color="success">Add</Button>
                                               ) : (
@@ -243,7 +226,7 @@ class AdminCreateStack extends Component {
                         
                       <br />
 
-                      <Button variant="contained" onClick={this.makeStack}>Make Stack</Button>
+                      <Button variant="contained" onClick={this.makeStack}>Curate Stack</Button>
                       
                       <br /><br />
                       
@@ -256,12 +239,11 @@ class AdminCreateStack extends Component {
                             </thead>
                             <tbody>
                               {this.state.curatedStack.map((row, index) => {
-                              console.log(row)
-                                  return(
-                                    <tr key={index}>
-                                      <td>{row.talentName}</td>
-                                    </tr>
-                                  )
+                                return(
+                                  <tr key={index}>
+                                    <td>{row.talentName}</td>
+                                  </tr>
+                                )
                                 })
                               }
                             </tbody>
@@ -273,18 +255,18 @@ class AdminCreateStack extends Component {
                         </div>
                       }
                       
-                      {(this.state.stackCreateSuccess !== "" && this.state.stackCreateSuccess) && 
+                      {(this.state.status !== "" && this.state.status) && 
                           <div className="col-md-6 offset-md-3">
                             <br />
-                            <Alert severity="success">{this.state.responseMessage}</Alert>
+                            <Alert severity="success">{this.state.message}</Alert>
                             <br />
                           </div>
                       }
                       
-                      {(this.state.stackCreateSuccess !== "" && !this.state.stackCreateSuccess) &&
+                      {(this.state.status !== "" && !this.state.status) &&
                           <div className="col-md-6 offset-md-3">
                             <br />
-                            <Alert severity="error">Error: {this.state.responseMessage}</Alert>
+                            <Alert severity="error">Error: {this.state.message}</Alert>
                             <br />
                           </div>
                       }

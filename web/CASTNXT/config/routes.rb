@@ -20,17 +20,15 @@ Rails.application.routes.draw do
   resources :client, only: [:index] do
     collection do
       resources :events, only: [:show] do
-        resources :negotiations, only: [:index, :update]
+        resources :negotiations, only: [:update]
       end
     end
   end
   
   resources :admin, only: [:index] do
-    post 'signup', :on => :collection
-    
     collection do
       resources :events, only: [:show, :update, :new, :create] do
-        resources :negotiations, only: [:index, :update]
+        resources :negotiations, only: [:update]
         resources :slides, only: [:create]
       end
       resources :forms, :only => [:show, :create]
