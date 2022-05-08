@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core'
+import { DataGrid } from '@material-ui/data-grid';
+
 
 class AdminEventSummary extends Component {
     constructor(props) {
@@ -10,8 +12,58 @@ class AdminEventSummary extends Component {
         this.state = {
             properties: props.properties,
             slides: props.properties.data.slides,
-            eventTalent: []
+            eventTalent: [],
+            rows: [],
+            columns: []
         }
+    }
+    
+    findAssignedClients = (slideId) => {
+      let clients = this.props.properties.data.clients
+      let assignedClients = ''
+      for(var key in clients) {
+        if(clients[key].finalizedIds.indexOf(slideId) !== -1) {
+          if (assignedClients === '') {
+            assignedClients = clients[key].name
+          } else {
+            assignedClients = assignedClients + ', ' + clients[key].name
+          }
+        }
+      }
+      return assignedClients
+    }
+    
+    constructTableData = (eventTalent) => {
+      let columns = [
+        {field: 'name', headerName: 'Name', minWidth: 150},
+        {field: 'clients', headerName: 'Clients assigned', minWidth: 200}
+      ]
+      let rows = []
+      eventTalent.forEach((talentData) => {
+        Object.keys(talentData.formData).forEach((key) => {
+          let existingColumn = columns.find(column => column.field == key)
+          if (!existingColumn) {
+            columns.push({field: key, headerName: key, minWidth: 150})
+          }
+        })
+      })
+      eventTalent.forEach((talentData, index) => {
+        let row = {}
+        row['id'] = index + 1
+        row['name'] = talentData.name
+        row['clients'] = this.findAssignedClients(talentData.id)
+        columns.forEach((column) => {
+          if(column.field !== 'name' && column.field !== 'clients') {
+            if (talentData.formData[column.field]) {
+              row[column.field] = talentData.formData[column.field]
+            } else {
+              row[column.field] = ''
+            }
+          }
+        })
+        rows.push(row)
+      })
+      return [rows,columns]
     }
     
     componentDidMount() {
@@ -22,45 +74,35 @@ class AdminEventSummary extends Component {
             eventTalent.push({
                 id: key,
                 name: slides[key].talentName,
-                curated: slides[key].curated
+                curated: slides[key].curated,
+                formData: slides[key].formData
             })
         }
         
         eventTalent = eventTalent.filter(row => row['curated'] === true)
-        
+        let [rows,columns] = this.constructTableData(eventTalent)
         this.setState({
-            eventTalent: eventTalent
+            eventTalent: eventTalent,
+            rows: rows,
+            columns: columns
         })
     }
     
     render() {
         return(
             <div>
-                <h4>Event Summary</h4>
+                <h4 style={{marginTop: '10px'}}>Event Summary</h4>
                 
                 <div>
-                  <div className="col-md-8 offset-md-2">
+                  <div className="col-md-8 offset-md-2" style={{marginTop: '10px'}}>
                     <Paper>
-                      <TableContainer>
-                        <Table size="small">
-                          <TableHead style={{ backgroundColor: '#3498DB' }}>
-                            <TableRow>
-                              <TableCell align="center">Shortlisted Candidates</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {this.state.eventTalent
-                                .map((row) => {
-                                  return(
-                                    <TableRow key={row.id}>
-                                        <TableCell align="center">{row.name}</TableCell>
-                                    </TableRow>
-                                  )
-                              })
-                            }
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
+                      <DataGrid
+                        rows={this.state.rows}
+                        columns={this.state.columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        autoHeight
+                      />
                     </Paper>
                   </div>
                     

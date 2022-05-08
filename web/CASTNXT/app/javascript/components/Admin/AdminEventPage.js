@@ -56,7 +56,7 @@ class AdminEventPage extends Component {
                                   <Tab label="Submitted Docs" />
                                   <Tab label="Selected Docs" />
                                   <Tab label="Client Decks" />
-                                  <Tab label="Finalized Selections" />
+                                  <Tab label="Finalized Decks" />
                                   <Tab label="Summary" />
                                 </Tabs>
                               </Box>
