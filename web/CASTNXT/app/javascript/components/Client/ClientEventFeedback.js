@@ -96,7 +96,7 @@ class ClientEventFeedback extends Component {
                                         <TableCell>
                                           <Slide
                                             schema={this.state.schema}
-                                            uiSchema={this.state.uiSchema}
+                                            uiSchema={this.state.uischema}
                                             formData={row.formData}
                                             children={true}
                                             disabled
