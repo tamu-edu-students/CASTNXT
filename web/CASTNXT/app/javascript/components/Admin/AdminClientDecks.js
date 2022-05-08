@@ -96,18 +96,18 @@ class AdminClientDecks extends Component {
       })
     }
     
-    updateFinalizedForClient = (client, clientDecks, finalizedSlides, intermediateSlides) => {
+    updateFinalizedForClient = (client, clientDecks, finalizedSlides) => {
       const payload = {
-        event_id: this.state.eventId,
         client_id: client,
-        finalSlides: finalizedSlides,
-        intermediateSlides
+        finalSlides: finalizedSlides
       }
       
       const baseURL = window.location.href.split("#")[0]
       
-      axios.put(baseURL + "/negotiations/"+ this.state.clientList[client].negotiationId, payload)
+      axios.post(baseURL + "/negotiations", payload)
         .then((res) => {
+          this.props.properties.data.clients[client].finalizedIds = finalizedSlides
+          
           this.setState({
             status: true,
             message: res.data.comment
@@ -129,7 +129,6 @@ class AdminClientDecks extends Component {
       let client = this.state.client
       let clientDecks = this.state.clientDecks
       let finalizedSlides = []
-      let intermediateSlides = []
       
       
 
@@ -141,12 +140,9 @@ class AdminClientDecks extends Component {
         if(clientDecks[client][i].finalized) {
           finalizedSlides.push(clientDecks[client][i].slideId)
         }
-        else {
-          intermediateSlides.push(clientDecks[client][i].slideId)
-        }
       }
       
-      this.updateFinalizedForClient(client, clientDecks, finalizedSlides, intermediateSlides)
+      this.updateFinalizedForClient(client, clientDecks, finalizedSlides)
       
       this.setState({
         clientDecks: clientDecks

@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   resources :client, only: [:index] do
     collection do
       resources :events, only: [:show] do
-        resources :negotiations, only: [:update]
+        resources :negotiations, only: [:create]
       end
     end
   end
@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   resources :admin, only: [:index] do
     collection do
       resources :events, only: [:show, :update, :new, :create] do
-        resources :negotiations, only: [:update]
+        resources :negotiations, only: [:create]
         resources :slides, only: [:create]
       end
       resources :forms, :only => [:show, :create]

@@ -77,14 +77,12 @@ class ClientEventSummary extends Component {
         }
         
         const payload = {
-            client_id: sessionStorage.getItem("userId"),
-            event_id: this.state.eventId,
             intermediateSlides: preferences
         }
         
         const baseURL = window.location.href.split("#")[0]
         
-        axios.put(baseURL + "/negotiations/"+ this.state.negotiationId, payload)
+        axios.post(baseURL + "/negotiations", payload)
             .then((res) => {
                 this.setState({
                   status: true,
