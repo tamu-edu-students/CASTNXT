@@ -1,13 +1,13 @@
 class AdminController < ApplicationController
   # GET /admin
   def index
-    unless is_user_logged_in?('ADMIN')
+    unless is_user_logged_in?("ADMIN")
       return redirect_to root_path
     end
     
     tableData = []
     
-    eventIds = get_admin_events(session[:userId])
+    eventIds = get_producer_event_ids(session[:userId])
     eventIds.each do |eventId|
       event = get_event(eventId)
       
@@ -28,7 +28,7 @@ class AdminController < ApplicationController
     return Event.find_by(:_id => eventId)
   end
   
-  def get_admin_events clientId
-    return Producer.find_by(:_id => clientId).event_ids
+  def get_producer_event_ids producerId
+    return Producer.find_by(:_id => producerId).event_ids
   end
 end

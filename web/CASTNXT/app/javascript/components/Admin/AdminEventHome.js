@@ -1,53 +1,46 @@
-import React, {Component} from 'react'
-import { Redirect } from 'react-router-dom';
-import Header from '../Navbar/Header';
-import Form from '@rjsf/core';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
-import Alert from '@mui/material/Alert';
-import axios from 'axios';
+import React, {Component} from "react"
+import Header from "../Navbar/Header";
+import Form from "@rjsf/core";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
+import Alert from "@mui/material/Alert";
+import axios from "axios";
 
 class AdminEventHome extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            properties: props.properties,
-            status: props.properties.data.status,
-            responseMessage: "",
-            eventStatusUpdateSuccess: "",
+            eventStatus: props.properties.data.status,
+            message: "",
+            status: ""
         }
     }
     
     handleChange = (e) => {
-      const baseURL = window.location.href.split('#')[0]
+      const baseURL = window.location.href.split("#")[0]
       
       axios.put(baseURL, {
         status: e.target.value
       })
       .then((res) => {
+        this.props.properties.data.status = e.target.value
+        
         this.setState({
-          eventStatusUpdateSuccess: true,
-          status: e.target.value,
-          responseMessage: res.data.comment
+          status: true,
+          eventStatus: e.target.value,
+          message: res.data.comment
         })
       })
       .catch((err) => {
         this.setState({
-          eventStatusUpdateSuccess: false,
-          responseMessage: "Failed to update Event Status!"
+          status: false,
+          message: "Failed to update Event Status!"
         })
         
         if(err.response.status === 403) {
           window.location.href = err.response.data.redirect_path
         }
-      })
-      .finally(()=> {
-        setTimeout(() => {
-          this.setState({
-            eventStatusUpdateSuccess: ""
-          })
-        }, 2500)
       })
     }
 
@@ -56,14 +49,14 @@ class AdminEventHome extends Component {
         return(
             <div>
 
-                <div style={{marginTop: '1%'}}>
+                <div style={{marginTop: "1%"}}>
                     <p>Use this page to update an event.</p>
                     
                     <div>
                       <div className="col-md-8 offset-md-2">
                         <ToggleButtonGroup
                           color="success"
-                          value={this.state.status}
+                          value={this.state.eventStatus}
                           exclusive
                           onChange={this.handleChange}
                         >
@@ -73,18 +66,18 @@ class AdminEventHome extends Component {
                         </ToggleButtonGroup>
                       </div>
                         
-                      {(this.state.eventStatusUpdateSuccess !== "" && this.state.eventStatusUpdateSuccess) && 
+                      {(this.state.status !== "" && this.state.status) && 
                           <div className="col-md-6 offset-md-3">
                             <br />
-                            <Alert severity="success">{this.state.responseMessage}</Alert>
+                            <Alert severity="success">{this.state.message}</Alert>
                             <br />
                           </div>
                       }
                       
-                      {(this.state.eventStatusUpdateSuccess !== "" && !this.state.eventStatusUpdateSuccess) &&
+                      {(this.state.status !== "" && !this.state.status) &&
                           <div className="col-md-6 offset-md-3">
                             <br />
-                            <Alert severity="error">Error: {this.state.responseMessage}</Alert>
+                            <Alert severity="error">Error: {this.state.message}</Alert>
                             <br />
                           </div>
                       }
