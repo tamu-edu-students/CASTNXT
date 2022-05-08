@@ -2,6 +2,16 @@ import React, { Component } from 'react';
 import Form from '@rjsf/core';
 import './Forms.css';
 
+class ImageWidget extends React.Component {
+    render() { 
+         return (
+              <div>
+                <img style={{maxWidth: '80%'}} src={this.props.value}/>
+              </div>
+            )
+    }
+}
+
 class Slide extends Component {
   constructor(props) {
     super(props);
@@ -17,8 +27,10 @@ class Slide extends Component {
     let uiSchemaCopy = Object.assign({}, props.uiSchema)
     let fieldsCopy = Object.assign({}, state.fields)
     let schemaCopy = Object.assign({}, props.schema)
+    let formDataCopy = Object.assign({}, props.formData)
+
     Object.keys(props.formData).forEach(key => {
-      if(props.formData && typeof props.formData[key] === 'string' && props.formData[key].includes("data:image")) {
+      if(props.formData && typeof props.formData[key] === 'string' && props.formData[key].includes("data:image") && !key.includes("img_")) {
         let fieldIndex = uiSchemaCopy['ui:order'].indexOf(key)
         let uiOrder = [
           ...uiSchemaCopy['ui:order'].slice(0, fieldIndex+1),
@@ -28,11 +40,7 @@ class Slide extends Component {
         uiSchemaCopy = {
           ...uiSchemaCopy,
           [`img_${key}`] : {
-            "ui:widget": () => (
-              <div>
-                <img style={{maxWidth: '80%'}} src={props.formData[key]}/>
-              </div>
-            )
+            "ui:widget": "ImageWidget"
           },
           'ui:order': uiOrder
         }
@@ -43,20 +51,36 @@ class Slide extends Component {
             [`img_${key}`]: {title: 'Uploaded image', type: 'string'}
           }
         }
+        formDataCopy = {
+          ...formDataCopy,
+          [`img_${key}`]: props.formData[key]
+        }
       }
     })
       return {
             ...state,
             schema: schemaCopy,
             uiSchema: uiSchemaCopy,
-            formData: props.formData,
+            formData: formDataCopy,
             fields: fieldsCopy
       }
   }
   
+   ImageWidget = (props) => {
+      return (
+        <ImageWidget
+          value={props.value} />
+      );            
+    };
+  
   render() {
     // schema and uiSchema are to be used from state and not props since image preview is being added in state
-    const { onFormDataChange, onSubmit, schema, uiSchema, ...restProps} = this.props
+    const { onFormDataChange, onSubmit, schema, uiSchema, formData, ...restProps} = this.props
+    
+    const widgets = {
+      ImageWidget: this.ImageWidget
+    };
+      
     return (
         <div className="container" style={{ backgroundColor: 'white', height: '100%'}}>
           <Form
@@ -66,8 +90,10 @@ class Slide extends Component {
               formData={this.state.formData}
               submitButtonMessage={"Submit"}
               onSubmit={this.props.onSubmit}
+              widgets={widgets} 
               {...restProps}
             />
+            {this.state.uiSchema.ui}
         </div>
     );
   }
