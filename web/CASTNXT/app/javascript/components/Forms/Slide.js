@@ -93,7 +93,6 @@ class Slide extends Component {
               widgets={widgets} 
               {...restProps}
             />
-            {this.state.uiSchema.ui}
         </div>
     );
   }
