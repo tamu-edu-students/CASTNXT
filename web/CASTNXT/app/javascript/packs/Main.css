@@ -8,6 +8,11 @@
   background: #F2F3F4;
 }
 
+
+#mui-14{
+  margin: auto;
+}
+
 .App {
   text-align: center;
   background-image: url('../assets/images/background.png');

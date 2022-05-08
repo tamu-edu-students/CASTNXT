@@ -1,36 +1,25 @@
-import React, {Component} from 'react'
-import Header from '../Navbar/Header';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import axios from 'axios';
-import Button from '@mui/material/Button';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import React, {Component} from "react"
+import axios from "axios";
+import Button from "@mui/material/Button";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
 
-import AdminEventHome from './AdminEventHome';
-import AdminCreateStack from './AdminCreateStack';
-import AdminCreateClientStack from './AdminCreateClientStack';
-import AdminClientDecks from './AdminClientDecks';
-import AdminEventSummary from './AdminEventSummary';
-import AdminFinalizedCandidates from './AdminFinalizedCandidates';
+import Header from "../Navbar/Header";
+import AdminEventHome from "./AdminEventHome";
+import AdminCreateStack from "./AdminCreateStack";
+import AdminCreateClientStack from "./AdminCreateClientStack";
+import AdminClientDecks from "./AdminClientDecks";
+import AdminEventSummary from "./AdminEventSummary";
+import AdminFinalizedCandidates from "./AdminFinalizedCandidates";
 
 class AdminEventPage extends Component {
     constructor(props) {
         super(props)
         
-        // console.log("Rails properties", properties)
-
         this.state = {
             title: properties.data.title,
             description: properties.data.description,
-            tableData: [],
             tabValue: 0
         }
     }
@@ -57,11 +46,11 @@ class AdminEventPage extends Component {
                         <h2> {this.state.title} </h2>
                         <h6> {this.state.description} </h6>
                         
-                        <Button size="small" variant="outlined" style={{float: 'right', marginRight: '1%'}} onClick={this.back}>Back to Forms</Button>
+                        <Button size="small" variant="outlined" style={{float: "right", marginRight: "1%"}} onClick={this.back}>Back to Forms</Button>
 
                         <div>
-                            <Box sx={{ width: '100%', marginRight: '-2%' }}>
-                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                            <Box sx={{ width: "100%", marginRight: "-2%" }}>
+                              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange} centered>
                                   <Tab label="Home" />
                                   <Tab label="Submitted Docs" />
