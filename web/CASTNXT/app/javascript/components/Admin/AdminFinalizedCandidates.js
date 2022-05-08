@@ -23,13 +23,12 @@ class AdminFinalizedCandidates extends Component {
     constructTableData = (eventTalent) => {
       let columns = [{field: 'name', headerName: 'Name', minWidth: 150}]
       let rows = []
-      eventTalent.forEach((talentData) => {
-        Object.keys(talentData.formData).forEach((key) => {
-          let existingColumn = columns.find(column => column.field == key)
-          if (!existingColumn) {
-            columns.push({field: key, headerName: key, minWidth: 150})
-          }
-        })
+      let schema = this.props.properties.data.schema.properties
+      Object.keys(schema).forEach(key => {
+        let existingColumn = columns.find(column => column.field == key)
+        if (!existingColumn) {
+          columns.push({field: key, headerName: schema[key].title, minWidth: 150})
+        }
       })
       eventTalent.forEach((talentData, index) => {
         let row = {}
