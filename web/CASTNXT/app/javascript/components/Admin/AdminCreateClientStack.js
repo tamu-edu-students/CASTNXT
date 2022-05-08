@@ -122,7 +122,6 @@ class AdminCreateClientStack extends Component {
     makeSlideChanges = () => {
       let entries = this.state.entries
       for(var i=0; i<entries.length; i++) {
-        this.props.properties.data.slides[entries[i].id].updated = entries[i].updated
         if(entries[i].updated === true)
           this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
       }

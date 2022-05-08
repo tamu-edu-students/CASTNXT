@@ -69,10 +69,8 @@ class SlidesController < ApplicationController
     
   def update_event_slides data
     data.keys.each do |slideId|
-      if data[slideId][:updated]
-        slide = get_slide(slideId)
-        update_slide_data(slide, data[slideId])
-      end
+      slide = get_slide(slideId)
+      update_slide_data(slide, data[slideId])
     end
   end
   
@@ -139,7 +137,9 @@ class SlidesController < ApplicationController
   end
   
   def update_slide_data(slide, data)
-    slide.update(:curated => data[:curated], :data => data[:formData])
+    #slide.update(:curated => data[:curated], :data => data[:formData])
+    Rails.logger.debug("YELLO")
+    Rails.logger.debug(data[:curated])
   end
   
   def is_new_slide? eventId, talentId

@@ -117,7 +117,6 @@ class AdminCreateStack extends Component {
       let entries = this.state.entries
       for(var i=0; i<entries.length; i++) {
         this.props.properties.data.slides[entries[i].id].curated = entries[i].curated
-        this.props.properties.data.slides[entries[i].id].updated = entries[i].updated
         if(entries[i].updated === true)
           this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
       }
