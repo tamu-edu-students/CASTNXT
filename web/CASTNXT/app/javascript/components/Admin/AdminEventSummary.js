@@ -7,8 +7,6 @@ class AdminEventSummary extends Component {
     constructor(props) {
         super(props)
         
-        console.log(props)
-        
         this.state = {
             properties: props.properties,
             slides: props.properties.data.slides,
