@@ -137,9 +137,7 @@ class SlidesController < ApplicationController
   end
   
   def update_slide_data(slide, data)
-    #slide.update(:curated => data[:curated], :data => data[:formData])
-    Rails.logger.debug("YELLO")
-    Rails.logger.debug(data[:curated])
+    slide.update(:curated => data[:curated], :data => data[:formData])
   end
   
   def is_new_slide? eventId, talentId

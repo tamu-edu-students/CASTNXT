@@ -58,7 +58,7 @@ class AdminClientDecks extends Component {
                 ...this.state.slides[clients[key].slideIds[i]],
                 slideId: clients[key].slideIds[i],
                 finalized: clients[key].finalizedIds.includes(clients[key].slideIds[i]),
-                preference: clients[key].preferenceSubmitted ? (i+1) : "N-A",
+                preference: (i+1),
                 preferenceSubmitted: clients[key].preferenceSubmitted
               })
             } 
