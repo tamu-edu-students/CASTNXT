@@ -75,6 +75,9 @@ Rails.application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
+  
+  # Use encrypted secret to start production environemnt.
+  config.read_encrypted_secrets = true
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
