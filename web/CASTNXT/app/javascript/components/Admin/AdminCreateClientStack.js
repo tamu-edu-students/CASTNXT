@@ -1,35 +1,28 @@
-import React, {Component} from 'react'
-import { Redirect } from 'react-router-dom';
-import Header from '../Navbar/Header';
-import FormBuilderContainer from '../Forms/FormBuilder.js'
-import Form from '@rjsf/core';
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
-import TableFooter from '@mui/material/TableFooter';
-import Button from '@mui/material/Button';
+import React, {Component} from "react"
+import Form from "@rjsf/core";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
+import TableFooter from "@mui/material/TableFooter";
+import Button from "@mui/material/Button";
 import { MultiSelect } from "react-multi-select-component";
-import Alert from '@mui/material/Alert';
-import Slide from '../Forms/Slide';
-import axios from 'axios';
+import Alert from "@mui/material/Alert";
+import axios from "axios";
+
+import Header from "../Navbar/Header";
+import Slide from "../Forms/Slide";
+
 
 class AdminCreateClientStack extends Component {
     constructor(props) {
         super(props)
         
-        console.log("Rails properties", props.properties)
-
         this.state = {
-            properties: props.properties,
-            redirect: "",
-            title: props.properties.data.title,
-            description: props.properties.data.description,
             schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
             uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             formData: [],
@@ -41,21 +34,17 @@ class AdminCreateClientStack extends Component {
             rowsPerPage: 1,
             clientOptions: [],
             clientSelections: [],
-            stackCreateSuccess: "",
-            responseMessage: ""
+            status: "",
+            message: ""
         }
     }
     
     componentDidMount() {
         let entries = []
         let slides = this.props.properties.data.slides
-        let schema = this.state.schema
         let clientOptions = []
         let clients = this.props.properties.data.clients
   
-        schema['title'] = this.props.properties.data.title
-        schema['description'] = this.props.properties.data.description
-      
         for(var key in slides) {
           entries.push({
             ...slides[key],
@@ -64,8 +53,7 @@ class AdminCreateClientStack extends Component {
           }) 
         }
 
-        entries = entries.filter(row => row['curated'] === true)
-        
+        entries = entries.filter(row => row["curated"] === true)
         
         for(var key in clients) {
           clientOptions.push({
@@ -74,7 +62,6 @@ class AdminCreateClientStack extends Component {
           }) 
           
           for(var i=0; i<clients[key].slideIds.length; i++) {
-            // console.log(clients[key].slideIds[i])
             for(var j=0; j<entries.length; j++) {
               if(entries[j].id === clients[key].slideIds[i]) {
                 entries[j].clients.push({
@@ -90,19 +77,16 @@ class AdminCreateClientStack extends Component {
             entries: entries,
             clientOptions: clientOptions
         })
-        
     }
     
     handleClientChange = (clients, row) => {
-      
       let i, entries = this.state.entries
       
       for(i=0; i<entries.length; i++) {
-        if(entries[i].id === row['id']) {
-          entries[i]['clients'] = clients
+        if(entries[i].id === row["id"]) {
+          entries[i]["clients"] = clients
         }
       }
-      console.log(entries)
       
       this.setState({
         entries: entries,
@@ -116,7 +100,6 @@ class AdminCreateClientStack extends Component {
     };
     
     handleChangeRowsPerPage = (event, num) => {
-      console.log(event.target.value)
       this.setState({
         rowsPerPage: event.target.value
       })
@@ -150,6 +133,8 @@ class AdminCreateClientStack extends Component {
       
       for (let i in clients) {
         clients[i].slideIds = []
+        clients[i].intermediateSlides = []
+        clients[i].finalSlides = []
       }
       
       for(var i=0; i<entries.length; i++) {
@@ -157,6 +142,7 @@ class AdminCreateClientStack extends Component {
         
         for(var j=0; j<entry_clients.length; j++) {
           clients[entry_clients[j].value].slideIds.push(entries[i].id)
+          clients[entry_clients[j].value].intermediateSlides.push(entries[i].id)
         }
       }
       
@@ -172,23 +158,24 @@ class AdminCreateClientStack extends Component {
         slides: slides
       }
       
-      const baseURL = window.location.href.split('#')[0]
-      console.log(baseURL)
+      const baseURL = window.location.href.split("#")[0]
       
       axios.post(baseURL+"/slides/", payload)
       .then((res) => {
-        console.log("Success")
-        
         this.setState({
-          stackCreateSuccess: true 
+          status: true,
+          message: res.data.comment
         })
       })
       .catch((err) => {
-        console.log("Failure")
-        
         this.setState({
-          stackCreateSuccess: false 
+          status: false,
+          message: "Failed to create Client Decks!"
         })
+        
+        if(err.response.status === 403) {
+          window.location.href = err.response.data.redirect_path
+        }
       })
     }
 
@@ -197,7 +184,7 @@ class AdminCreateClientStack extends Component {
         return(
             <div>
                 
-                <div style={{marginTop: '1%'}}>
+                <div style={{marginTop: "1%"}}>
                 
                     <p>Use this page to create client-specific slide decks</p>
 
@@ -215,7 +202,7 @@ class AdminCreateClientStack extends Component {
                                         return(
                                           <TableRow
                                             key={row.id}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                                           >
 
                                             <TableCell>
@@ -232,9 +219,9 @@ class AdminCreateClientStack extends Component {
                                               Clients:
                                               <MultiSelect
                                                 options={this.state.clientOptions}
-                                                value={row['clients']}
+                                                value={row["clients"]}
                                                 onChange={(option) => this.handleClientChange(option, row)}
-                                                style={{width: '80%'}}
+                                                style={{width: "80%"}}
                                               />
                                               
                                             </TableCell>
@@ -265,20 +252,20 @@ class AdminCreateClientStack extends Component {
                         
                         <br />
 
-                        <Button variant="contained" onClick={this.updateClients}>Update</Button><br />
+                        <Button variant="contained" onClick={this.updateClients}>Update Decks</Button><br />
                         
-                        {(this.state.stackCreateSuccess !== "" && this.state.stackCreateSuccess) && 
+                        {(this.state.status !== "" && this.state.status) && 
                           <div className="col-md-6 offset-md-3">
                             <br />
-                            <Alert severity="success">Succesfully updated client stacks</Alert>
+                            <Alert severity="success">{this.state.message}</Alert>
                             <br />
                           </div>
                         }
                         
-                        {(this.state.stackCreateSuccess !== "" && !this.state.stackCreateSuccess) &&
+                        {(this.state.status !== "" && !this.state.status) &&
                             <div className="col-md-6 offset-md-3">
                               <br />
-                              <Alert severity="error">Error: {this.state.responseMessage}</Alert>
+                              <Alert severity="error">Error: {this.state.message}</Alert>
                               <br />
                             </div>
                         }

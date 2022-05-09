@@ -1,8 +1,10 @@
-import React, {Component} from 'react'
-import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core'
+import React, {Component} from "react"
+import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper } from "@material-ui/core"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { Ref } from 'semantic-ui-react'
-import Button from '@mui/material/Button';
+import { Ref } from "semantic-ui-react"
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import axios from "axios";
 
 
 class ClientEventSummary extends Component {
@@ -12,18 +14,26 @@ class ClientEventSummary extends Component {
         this.state = {
             properties: props.properties,
             slides: props.properties.data.slides,
+            negotiationId: props.properties.data.negotiationId,
             summaryRows: [],
+            eventStatus: props.properties.data.status,
+            eventId: props.properties.data.id,
+            updateSuccess: "",
+            status: "",
+            message: ""
         }
     }
     
     componentDidMount() {
         let slides = this.props.properties.data.slides
+        let finalizedIds = this.props.properties.data.finalizedIds
         let tableRows = []
 
         for(var key in slides) {
             tableRows.push({
                 id: key,
                 name: slides[key].talentName,
+                finalized: finalizedIds.includes(key)
             })
         }
         
@@ -46,29 +56,62 @@ class ClientEventSummary extends Component {
         
         this.setState({
           summaryRows: rowsOrdered,
-        }, () => {console.log(this.state)});
+        });
     }
     
-    getItemStyle = (isDragging, draggableStyle) => ({
-        background: isDragging && ("lightblue"),
-        ...draggableStyle,
-    })
+    getItemStyle = (isDragging, draggableStyle, finalized) => {
+        return finalized ? ({
+            background: ("lightgreen"),
+            ...draggableStyle,
+        }) : ({
+            background: isDragging && ("lightblue"),
+            ...draggableStyle,
+        })
+    }
     
     updatePreferences = () => {
-        console.log("Updated talent preferences")
+        let preferences = []
+        
+        for(var i=0; i<this.state.summaryRows.length; i++) {
+            preferences.push(this.state.summaryRows[i].id)
+        }
+        
+        const payload = {
+            intermediateSlides: preferences
+        }
+        
+        const baseURL = window.location.href.split("#")[0]
+        
+        axios.post(baseURL + "/negotiations", payload)
+            .then((res) => {
+                this.setState({
+                  status: true,
+                  message: res.data.comment
+                })
+            })
+            .catch((err) => {
+                this.setState({
+                  status: false,
+                  message: "Failed to update Event Preferences!"
+                })
+                
+                if(err.response.status === 403) {
+                  window.location.href = err.response.data.redirect_path
+                }
+            })
     }
     
     render() {
         return(
             <div>
-                <div style={{marginTop: '2%', marginBottom: '2%'}}>
+                <div style={{marginTop: "2%", marginBottom: "2%"}}>
                     <span >Indicate your talent preference by dragging and dropping the rows below</span>
                 </div>
                 
                 <div className="row">
                     <div className="col-md-4 offset-md-4">
                         <Table size="small">
-                            <TableHead style={{ backgroundColor: '#3498DB' }}>
+                            <TableHead style={{ backgroundColor: "#3498DB" }}>
                                 <TableRow>
                                     <TableCell align="center">Preference</TableCell>
                                     <TableCell align="center">Name</TableCell>
@@ -92,7 +135,8 @@ class ClientEventSummary extends Component {
                                                     <TableRow {...provided.draggableProps} {...provided.dragHandleProps}
                                                         style={this.getItemStyle(
                                                           snapshot.isDragging,
-                                                          provided.draggableProps.style
+                                                          provided.draggableProps.style,
+                                                          row.finalized 
                                                         )}
                                                         key={row.id}
                                                     >
@@ -110,8 +154,26 @@ class ClientEventSummary extends Component {
                                   </Droppable>
                             </DragDropContext>
                         </Table>
-                        <br /><br />
-                        <Button size="small" variant="contained" onClick={this.updatePreferences}>Update Preferences</Button>
+                        <br />
+                        {this.state.eventStatus !== "FINALIZED" &&
+                            <Button size="small" variant="contained" onClick={this.updatePreferences}>Update Preferences</Button>
+                        }
+                        
+                        {(this.state.status !== "" && this.state.status) &&
+                            <div>
+                                <br />
+                                <Alert severity="success">{this.state.message}</Alert>
+                                <br />
+                            </div>
+                        }
+                        
+                        {(this.state.status !== "" && !this.state.status) &&
+                            <div>
+                                <br />
+                                <Alert severity="error">Error: {this.state.message}</Alert>
+                                <br />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

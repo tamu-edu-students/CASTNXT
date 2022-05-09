@@ -1,39 +1,38 @@
 Rails.application.routes.draw do
 
-  resources :forms
-  resources :slides
-
-  get '/user', to: 'user#index'
-  get '/admin', to: 'admin#index'
-  get '/client', to: 'client#index'
+  root 'home#index'
   
-  scope :admin do 
-    # TODO: update the except block based on actions configured
-    resources :events do
-      resources :slides
-    end
-    resources :forms, :except => [:edit, :update]
-    resources :negotiations
-  end
-  
-  scope :user do 
-    # TODO: update the except block based on actions configured
-    resources :events do
-      resources :slides
-    end
-  end
-  
-  scope :client do 
-    # TODO: update the except block based on actions configured
-    resources :events
-    resources :negotiations
-  end
-  
-  # resources :events
   get '/logout', to: 'application#logout'
   
-  root 'home#index'
-  match '/home/login', :controller => 'home', :action => 'login', :via => :post
-  match '/home/signup', :controller => 'home', :action => 'signup', :via => :post
+  resources :home, only: [] do
+    post 'login', :on => :collection
+    post 'signup', :on => :collection
+  end
+  
+  resources :user, only: [:index] do
+    collection do
+      resources :events, only: [:show] do
+        resources :slides, only: [:create]
+      end
+    end
+  end
+  
+  resources :client, only: [:index] do
+    collection do
+      resources :events, only: [:show] do
+        resources :negotiations, only: [:create]
+      end
+    end
+  end
+  
+  resources :admin, only: [:index] do
+    collection do
+      resources :events, only: [:show, :update, :new, :create] do
+        resources :negotiations, only: [:create]
+        resources :slides, only: [:create]
+      end
+      resources :forms, :only => [:show, :create]
+    end
+  end
   
 end

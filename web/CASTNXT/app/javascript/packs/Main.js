@@ -35,7 +35,6 @@ class Main extends Component {
                 <Route exact path="/user/events/*" render= {() => <UserEventRegister />} />
                 <Route exact path="/user" render= {() => <UserHomepage />} />
                 <Route exact path="/admin/events/new" render= {() => <AdminCreateEvent />} />
-                <Route exact path="/admin/create-event" render= {() => <AdminCreateEvent />} />
                 <Route exact path="/admin/events/*" render= {() => <AdminEventPage />} />
                 <Route exact path="/admin" render= {() => <AdminHomepage />} />
                 <Route exact path="/client/events/*" render= {() => <ClientEventPage />} />
