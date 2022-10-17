@@ -2,8 +2,7 @@ import React, {Component} from 'react'
 import { Paper } from '@material-ui/core'
 import { DataGrid } from '@material-ui/data-grid';
 
-
-class AdminEventSummary extends Component {
+class AdminUserTable extends Component {
     constructor(props) {
         super(props)
         
@@ -16,25 +15,8 @@ class AdminEventSummary extends Component {
         }
     }
     
-    findAssignedClients = (slideId) => {
-      let clients = this.props.properties.data.clients
-      let assignedClients = ''
-      for(var key in clients) {
-        if(clients[key].finalizedIds.indexOf(slideId) !== -1) {
-          if (assignedClients === '') {
-            assignedClients = clients[key].name
-          } else {
-            assignedClients = assignedClients + ', ' + clients[key].name
-          }
-        }
-      }
-      return assignedClients
-    }
-    
     constructTableData = (eventTalent) => {
-      let columns = [
-        {field: 'clients', headerName: 'Clients assigned', minWidth: 200}
-      ]
+      let columns = []
       let rows = []
       let schema = this.props.properties.data.schema.properties
       Object.keys(schema).forEach(key => {
@@ -45,24 +27,20 @@ class AdminEventSummary extends Component {
       })
       eventTalent.forEach((talentData, index) => {
         let row = {}
-        row['id'] = index + 1
-        row['clients'] = this.findAssignedClients(talentData.id)
+        row['id'] = index + 1;
+        row['uniqId'] = talentData.id;
+        row['talentName'] = talentData.name;
         columns.forEach((column) => {
-          if(column.field !== 'name' && column.field !== 'clients') {
+            row[column.field] = ''
             if (talentData.formData[column.field]) {
               row[column.field] = talentData.formData[column.field]
-            } else {
-              row[column.field] = ''
             }
-          }
         })
-        if (row['clients'] !== '') {
-          rows.push(row) 
-        }
+        rows.push(row) 
       })
       return [rows,columns]
     }
-    
+
     componentDidMount() {
         let slides = this.props.properties.data.slides
         let eventTalent = []
@@ -75,9 +53,7 @@ class AdminEventSummary extends Component {
                 formData: slides[key].formData
             })
         }
-        eventTalent = eventTalent.filter(row => row['curated'] === true)
         let [rows,columns] = this.constructTableData(eventTalent)
-        console.log(columns)
         this.setState({
             eventTalent: eventTalent,
             rows: rows,
@@ -88,7 +64,7 @@ class AdminEventSummary extends Component {
     render() {
         return(
             <div>
-                <h4 style={{marginTop: '10px'}}>Event Summary</h4>
+                <h4 style={{marginTop: '10px'}}>Registered Users.</h4>
                 
                 <div>
                   <div className="col-md-8 offset-md-2" style={{marginTop: '10px'}}>
@@ -99,6 +75,7 @@ class AdminEventSummary extends Component {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         autoHeight
+                        onRowClick = {this.props.handleRowClick}
                       />
                     </Paper>
                   </div>
@@ -109,4 +86,4 @@ class AdminEventSummary extends Component {
     }
 }
 
-export default AdminEventSummary
+export default AdminUserTable
