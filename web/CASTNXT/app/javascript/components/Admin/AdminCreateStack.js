@@ -37,9 +37,6 @@ class AdminCreateStack extends Component {
     
     componentWillReceiveProps(props) {
       let entries = []
-      console.log('in Update')
-      //console.log(state.entries);
-      //console.log(props.rowData);
       let slides = props.rowData || props.properties.data.slides
       for(var key in slides) {
         entries.push({
@@ -52,14 +49,11 @@ class AdminCreateStack extends Component {
       this.setState({
         entries: entries
       })
-      //if (props.rowData!==)
-      //return null;
     }
 
     componentDidMount() {
       let entries = []
       let slides = this.props.rowData || this.props.properties.data.slides
-      //console.log(this.props.properties.data.slides)
       for(var key in slides) {
         entries.push({
           ...slides[key],

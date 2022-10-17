@@ -43,6 +43,7 @@ class AdminEventSummary extends Component {
           columns.push({field: key, headerName: schema[key].title, minWidth: 150})
         }
       })
+      // Add Name Validation for form-data.
       eventTalent.forEach((talentData, index) => {
         let row = {}
         row['id'] = index + 1
@@ -77,7 +78,6 @@ class AdminEventSummary extends Component {
         }
         eventTalent = eventTalent.filter(row => row['curated'] === true)
         let [rows,columns] = this.constructTableData(eventTalent)
-        console.log(columns)
         this.setState({
             eventTalent: eventTalent,
             rows: rows,
