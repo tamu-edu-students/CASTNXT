@@ -1,4 +1,4 @@
-FROM ruby:2.6.6
+FROM ruby:3.1.2
 
 ADD ./ /home/
 WORKDIR /home
@@ -14,6 +14,7 @@ RUN npm install -g n
 RUN n 16.13.0
 RUN hash -r
 RUN npm install -g yarn
+RUN npm install express
 
 RUN rails webpacker:install
 RUN rails webpacker:compile
