@@ -18,11 +18,26 @@ class HomeController < ApplicationController
         session[:userName] = currentUser.name
         session[:userId] = currentUser._id.to_str
         render json: {redirect_path: get_redirect_path}, status: 201
+        Truemail.configure
+        if Truemail.valid?(params[:email]) == false
+          #print('Idhar')
+          render json: {comment: Truemail.validate('nonexistent_email@bestweb.com.ua').as_json}, status: 401
+        else
+          create_user(params)
+          currentUser = get_user(params[:email], params[:password])
+          session[:userEmail] = currentUser.email
+          session[:userType] = currentUser.user_type
+          session[:userName] = currentUser.name
+          session[:userId] = currentUser._id.to_str
+          render json: {redirect_path: get_redirect_path}, status: 201
+        end
       else
         render json: {comment: "An account with the given Email already exists!"}, status: 400
       end
     rescue Exception
       render json: {comment: "Internal Error!"}, status: 500
+    rescue Exception => e 
+      render json: {comment: e.message}, status: 500
     end
   end
   
