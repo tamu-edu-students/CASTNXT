@@ -13,7 +13,6 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
 
-import Header from "../Navbar/Header";
 import Slide from "../Forms/Slide";
 
 class AdminCreateStack extends Component {
@@ -47,7 +46,9 @@ class AdminCreateStack extends Component {
       }
       
       this.setState({
-        entries: entries
+        entries,
+        curatedStack: props.currentStack,
+        showStack: props.showStack
       })
     }
 
@@ -75,31 +76,17 @@ class AdminCreateStack extends Component {
     
     addToStack = (row) => {
       let curStack = this.state.entries
-      for(var i=0; i<curStack.length; i++) {
-        if(curStack[i]["id"] === row["id"]) {
-          curStack[i]["curated"] = !curStack[i]["curated"]
-        }
-      }
+      const talentAdded = curStack.find(talent => talent.id === row.id);
+      talentAdded.curated = !talentAdded.curated
       
-      this.setState({
-        entries: curStack
-      })
-    }
-    
-    makeStack = () => {
-      let curStack = this.state.entries
-      let stack = []
-      
-      for(var i=0; i<curStack.length; i++) {
-        if(curStack[i]["curated"]) {
-          stack.push(curStack[i])
-        }
-      }
-      
+      let stack = curStack.filter(element => element.curated);
+      const showStack = true;
       this.setState({
         curatedStack: stack,
-        showStack: true
+        showStack,
+        entries: curStack
       })
+      this.props.onCurate(stack, showStack)
     }
     
     handleChangePage = (event, newPage) => {
@@ -128,23 +115,20 @@ class AdminCreateStack extends Component {
       })
     }
     
-    makeSlideChanges = () => {
-      let entries = this.state.entries
-      for(var i=0; i<entries.length; i++) {
-        this.props.properties.data.slides[entries[i].id].curated = entries[i].curated
-        if(entries[i].updated === true)
-          this.props.properties.data.slides[entries[i].id].formData = entries[i].formData
-      }
-    }
-    
     makeMasterStack = () => {
-      this.makeSlideChanges()
+      let entries = this.state.entries
+      entries.forEach(entry => {
+        this.props.properties.data.slides[entry.id] = entry.curated;
+        if(entries[i].updated)
+          this.props.properties.data.slides[entry.id].formData = entry.formData
+      })
+
       let slides = JSON.parse(JSON.stringify(this.props.properties.data.slides))
-      
-      for(var key in slides) {
-        slides[key].formData = JSON.stringify(slides[key].formData)
-      }
-      
+
+      slides.forEach(slide => {
+        slide.formData = JSON.stringify(slide.formData)
+      })
+
       const baseURL = window.location.href.split("#")[0]
       
       const payload = {
@@ -237,12 +221,6 @@ class AdminCreateStack extends Component {
                           </TableContainer>
                         </Paper>
                       </div>
-                        
-                      <br />
-
-                      <Button variant="contained" onClick={this.makeStack}>Curate Stack</Button>
-                      
-                      <br /><br />
                       
                       {this.state.showStack &&
                         <div tabIndex="-1" id="curated">
