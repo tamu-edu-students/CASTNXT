@@ -14,6 +14,7 @@ import Alert from "@mui/material/Alert";
 import axios from "axios";
 
 import Slide from "../Forms/Slide";
+import { slidesToEntries } from "../../utils/AdminDataUtils";
 
 class AdminCreateStack extends Component {
     constructor(props) {
@@ -23,9 +24,11 @@ class AdminCreateStack extends Component {
             schema: props.properties.data.schema !== undefined ? props.properties.data.schema : [],
             uiSchema: props.properties.data.uischema !== undefined ? props.properties.data.uischema : [],
             formData: [],
+            dataSlides: {},
             entries: [],
             curatedStack: [],
             showStack: false,
+            stackOnlyMode: false,
             client: "",
             page:0,
             rowsPerPage: 1,
@@ -35,36 +38,27 @@ class AdminCreateStack extends Component {
     }
     
     componentWillReceiveProps(props) {
-      let entries = []
       let slides = props.rowData || props.properties.data.slides
-      for(var key in slides) {
-        entries.push({
-          ...slides[key],
-          id: key,
-          updated: false
-        }) 
-      }
+      const entries = slidesToEntries (slides);
       
       this.setState({
         entries,
         curatedStack: props.currentStack,
-        showStack: props.showStack
+        showStack: props.showStack,
+        stackOnlyMode: props.stackOnlyMode
       })
     }
 
     componentDidMount() {
-      let entries = []
       let slides = this.props.rowData || this.props.properties.data.slides
-      for(var key in slides) {
-        entries.push({
-          ...slides[key],
-          id: key,
-          updated: false
-        }) 
-      }
-      
+      const entries = slidesToEntries (slides);
+
       this.setState({
-        entries: entries
+        entries: entries,
+        curatedStack: this.props.currentStack,
+        showStack: this.props.showStack,
+        stackOnlyMode: this.props.stackOnlyMode,
+        dataSlides: this.props.properties.data.slides
       })
     }
     
@@ -74,19 +68,15 @@ class AdminCreateStack extends Component {
       })
     }
     
-    addToStack = (row) => {
-      let curStack = this.state.entries
-      const talentAdded = curStack.find(talent => talent.id === row.id);
-      talentAdded.curated = !talentAdded.curated
-      
-      let stack = curStack.filter(element => element.curated);
-      const showStack = true;
+    changeStack = (row) => {
+      const dataSlides = this.state.dataSlides;
+
+      //toggle for masterStackCall
+      dataSlides[`${row.id}`].curated = !row.curated;
       this.setState({
-        curatedStack: stack,
-        showStack,
-        entries: curStack
-      })
-      this.props.onCurate(stack, showStack)
+        dataSlides
+      });
+      this.props.onCurate(row);
     }
     
     handleChangePage = (event, newPage) => {
@@ -116,18 +106,9 @@ class AdminCreateStack extends Component {
     }
     
     makeMasterStack = () => {
-      let entries = this.state.entries
-      entries.forEach(entry => {
-        this.props.properties.data.slides[entry.id] = entry.curated;
-        if(entries[i].updated)
-          this.props.properties.data.slides[entry.id].formData = entry.formData
-      })
+      const slides = this.state.dataSlides;
 
-      let slides = JSON.parse(JSON.stringify(this.props.properties.data.slides))
-
-      slides.forEach(slide => {
-        slide.formData = JSON.stringify(slide.formData)
-      })
+      Object.keys(slides).forEach(key => slides[key].formData = JSON.stringify(slides[key].formData));
 
       const baseURL = window.location.href.split("#")[0]
       
@@ -142,6 +123,7 @@ class AdminCreateStack extends Component {
           status: true,
           message: res.data.comment
         })
+        window.location.reload();
       })
       .catch((err) => {
         this.setState({
@@ -158,12 +140,12 @@ class AdminCreateStack extends Component {
     render() {
         return(
             <div>
-
                 <div style={{marginTop: "1%"}}>
-                    <p>Use this page to create a master slide deck for this event.</p>
                     
                     <div>
-                      <div className="col-md-8 offset-md-2">
+                      {
+                        !this.state.stackOnlyMode && <div className="col-md-8 offset-md-2">
+                        <hr />  
                         <Paper>
                           <TableContainer>
                             <Table size="medium">
@@ -190,9 +172,9 @@ class AdminCreateStack extends Component {
                                             
                                             <div style={{textAlign: "right"}}>
                                               {!row.curated? (
-                                                <Button onClick={() => this.addToStack(row)} variant="contained" color="success">Add</Button>
+                                                <Button onClick={() => this.changeStack(row)} variant="contained" color="success">Add</Button>
                                               ) : (
-                                                <Button onClick={() => this.addToStack(row)} variant="contained" color="error">Remove</Button>
+                                                <Button onClick={() => this.changeStack(row)} variant="contained" color="error">Remove</Button>
                                               )}
                                             </div>
                                             
@@ -221,6 +203,7 @@ class AdminCreateStack extends Component {
                           </TableContainer>
                         </Paper>
                       </div>
+                      }
                       
                       {this.state.showStack &&
                         <div tabIndex="-1" id="curated">
