@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import { Paper } from '@material-ui/core'
 import { DataGrid } from '@material-ui/data-grid';
+import {DATA_GRID_TYPES_MAP} from '../../utils/DataParser';
+import { extendedNumberOperators } from '../../utils/RangeFilter';
 
 class AdminUserTable extends Component {
     constructor(props) {
@@ -11,7 +13,8 @@ class AdminUserTable extends Component {
             slides: props.properties.data.slides,
             eventTalent: [],
             rows: [],
-            columns: []
+            columns: [],
+            filterModel: {items: []}
         }
     }
     
@@ -22,7 +25,13 @@ class AdminUserTable extends Component {
       Object.keys(schema).forEach(key => {
         let existingColumn = columns.find(column => column.field === key)
         if (!existingColumn) {
-          columns.push({field: key, headerName: schema[key].title, minWidth: 150})
+          const type = DATA_GRID_TYPES_MAP[schema[key].type];
+          const columnConfig = {field: key, headerName: schema[key].title, minWidth: 150, type};
+          if (type === 'number'){
+            columnConfig.filterOperators = extendedNumberOperators;
+          }
+          console.log(columnConfig);
+          columns.push(columnConfig);
         }
       })
       eventTalent.forEach((talentData, index) => {
@@ -38,6 +47,7 @@ class AdminUserTable extends Component {
         })
         rows.push(row) 
       })
+      console.log(columns);
       return [rows,columns]
     }
 
@@ -60,6 +70,12 @@ class AdminUserTable extends Component {
             columns: columns
         })
     }
+
+    onFilterModelChange = (model) => {
+      this.setState({
+        filterModel: model
+      })
+    }
     
     render() {
         return(
@@ -76,6 +92,8 @@ class AdminUserTable extends Component {
                         rowsPerPageOptions={[10]}
                         autoHeight
                         onRowClick = {this.props.handleRowClick}
+                        filterModel = {this.state.filterModel}
+                        onFilterModelChange={(model) => this.onFilterModelChange(model)}
                       />
                     </Paper>
                   </div>

@@ -25,7 +25,6 @@ const AdminCreateWithFilter = (props) =>{
     }
 
     const onCurate = (row) => {
-        //Toggle curated status.
         let newStack = [...stack]
         if(row.curated)
             newStack = stack.filter(talent =>talent.id!==row.id);
@@ -35,7 +34,6 @@ const AdminCreateWithFilter = (props) =>{
         const slideData = rowsToEntries(row, row.curated);
         setRowData(slideData);
         setStack(newStack);
-        //setShowStack(showStack);
     }
     
     return (

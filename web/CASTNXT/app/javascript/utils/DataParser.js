@@ -1,4 +1,4 @@
-export const isNumeric = (str) => {
-    if (typeof str != "string") return false  
-    return !isNaN(str) && !isNaN(parseFloat(str))
+export const DATA_GRID_TYPES_MAP = {
+    'string': 'string',
+    'integer': 'number'
 }
