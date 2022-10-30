@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   root 'home#index'
   
   get '/logout', to: 'application#logout'
+
+  get '/validation/:id', to: 'home#validation'
   
   resources :home, only: [] do
     post 'login', :on => :collection
