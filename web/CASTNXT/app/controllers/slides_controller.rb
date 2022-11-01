@@ -101,6 +101,7 @@ class SlidesController < ApplicationController
         end
       end
       
+      UserMailer.client_assigned(client.email).deliver_now
       clientSlideIds = otherEventSlides + data[clientId][:slideIds]
       update_client_slides(client, clientSlideIds, clientEventIds)
     end
