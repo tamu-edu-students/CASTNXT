@@ -37,11 +37,11 @@ const InputNumberInterval = (props) => {
   
     const handleUpperFilterChange = (event) => {
       const newUpperBound = event.target.value;
-      updateFilterValue(filterValueState[0], parseFloat(newUpperBound));
+      updateFilterValue(filterValueState[0], Number(newUpperBound));
     };
     const handleLowerFilterChange = (event) => {
       const newLowerBound = event.target.value;
-      updateFilterValue(parseFloat(newLowerBound), filterValueState[1]);
+      updateFilterValue(Number(newLowerBound), filterValueState[1]);
     };
   
     return (
@@ -112,7 +112,8 @@ InputNumberInterval.propTypes = {
 
 export const extendedNumberOperators = [
     ...getGridNumericColumnOperators(),
-    {
+    //This feature is available in mui-v5. Data-grid needs to be migrated.
+    /*{
       label: 'Between',
       value: 'between',
       getApplyFilterFn: (filterItem) => {
@@ -122,8 +123,9 @@ export const extendedNumberOperators = [
         if (filterItem.value[0] == null || filterItem.value[1] == null) {
           return null;
         }
-  
+        console.log('here');
         return ({ value }) => {
+          console.log(value);
           return (
             value !== null &&
             filterItem.value[0] <= value &&
@@ -132,5 +134,6 @@ export const extendedNumberOperators = [
         };
       },
       InputComponent: InputNumberInterval,
-    },
+      //InputComponentProps: { type: 'number' },
+    },*/
 ];

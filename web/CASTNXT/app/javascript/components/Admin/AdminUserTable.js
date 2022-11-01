@@ -30,7 +30,6 @@ class AdminUserTable extends Component {
           if (type === 'number'){
             columnConfig.filterOperators = extendedNumberOperators;
           }
-          console.log(columnConfig);
           columns.push(columnConfig);
         }
       })
@@ -47,7 +46,6 @@ class AdminUserTable extends Component {
         })
         rows.push(row) 
       })
-      console.log(columns);
       return [rows,columns]
     }
 
