@@ -17,6 +17,10 @@ class AdminEventHome extends Component {
         }
     }
     
+    back = () => {
+        window.location.href = "/admin"
+    }
+    
     handleChange = (e) => {
       const baseURL = window.location.href.split("#")[0]
       
@@ -24,13 +28,16 @@ class AdminEventHome extends Component {
         status: e.target.value
       })
       .then((res) => {
-        this.props.properties.data.status = e.target.value
-        
-        this.setState({
-          status: true,
-          eventStatus: e.target.value,
-          message: res.data.comment
-        })
+        if (confirm("Are you sure you want to change the event status?")==true){
+          this.props.properties.data.status = e.target.value
+          
+          this.setState({
+            status: true,
+            eventStatus: e.target.value,
+            message: res.data.comment
+          })
+          this.back()
+        }
       })
       .catch((err) => {
         this.setState({
@@ -63,6 +70,7 @@ class AdminEventHome extends Component {
                           <ToggleButton value="ACCEPTING">ACCEPTING</ToggleButton>
                           <ToggleButton value="REVIEWING">REVIEWING</ToggleButton>
                           <ToggleButton value="FINALIZED">FINALIZED</ToggleButton>
+                          <ToggleButton value="DELETED">DELETED</ToggleButton>
                         </ToggleButtonGroup>
                       </div>
                         
