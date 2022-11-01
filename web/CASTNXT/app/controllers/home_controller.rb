@@ -6,6 +6,39 @@ class HomeController < ApplicationController
     end
   end
   
+  # GET /validation/:id
+  def validation
+    begin
+      if "ADMIN".casecmp? params[:type]
+        user = Producer.find_by(:_id => params[:id])
+        user.is_valid = true
+        user.save
+        auth = Auth.find_by(:_id => params[:id])
+        puts auth.email
+        auth.is_valid = true
+        auth.save
+      elsif "CLIENT".casecmp? params[:type]
+        user = Client.find_by(:_id => params[:id])
+        user.is_valid = true
+        user.save
+        auth = Auth.find_by(:_id => params[:id])
+        puts auth.email
+        auth.is_valid = true
+        auth.save
+      else
+        user = Talent.find_by(:_id => params[:id])
+        user.is_valid = true
+        user.save
+        auth = Auth.find_by(:_id => params[:id])
+        puts "talent"
+        puts auth.email
+        auth.is_valid = true
+        auth.save
+      end
+      render json: {redirect_path: "User validated!"}, status: 201
+    end
+  end
+
   # POST /home/signup
   # POST /admin/signup
   def signup
@@ -13,6 +46,7 @@ class HomeController < ApplicationController
       if new_user?(params[:email])
         create_user(params)
         currentUser = get_user(params[:email], params[:password])
+        UserMailer.send_welcome(params[:email], currentUser._id.to_str).deliver_now
         session[:userEmail] = currentUser.email
         session[:userType] = currentUser.user_type
         session[:userName] = currentUser.name
@@ -21,7 +55,8 @@ class HomeController < ApplicationController
       else
         render json: {comment: "An account with the given Email already exists!"}, status: 400
       end
-    rescue Exception
+    rescue => exception
+      puts exception.message
       render json: {comment: "Internal Error!"}, status: 500
     end
   end
@@ -31,6 +66,10 @@ class HomeController < ApplicationController
     begin
       if correct_user?(params[:email], params[:password])
         currentUser = get_user(params[:email], params[:password])
+        if currentUser.is_valid == false
+          render json: {comment: "User not validated! Please check your mailbox for validation email."}, status: 400
+          return
+        end
         session[:userEmail] = currentUser.email
         session[:userType] = currentUser.user_type
         session[:userName] = currentUser.name
@@ -39,8 +78,8 @@ class HomeController < ApplicationController
       else
         render json: {comment: "The entered Username or Password is incorrect!"}, status: 400
       end
-    rescue Exception
-      render json: {comment: "Internal Error!"}, status: 500
+    rescue Exception => e
+      render json: {comment: e.message}, status: 500
     end
   end
   
@@ -67,13 +106,14 @@ class HomeController < ApplicationController
   end
   
   def create_user params
-    user = Auth.create(:name => params[:name], :email => params[:email], :password => params[:password], :user_type => params[:type])
+    puts (params)
+    user = Auth.create(:name => params[:name], :email => params[:email], :password => params[:password], :user_type => params[:type], :is_valid => false)
     if "ADMIN".casecmp? params[:type]
-      Producer.create(:_id => user._id.to_str, :name => user.name, :email => user.email)
+      Producer.create(:_id => user._id.to_str, :name => user.name, :email => user.email, :is_valid => false)
     elsif "CLIENT".casecmp? params[:type]
-      Client.create(:_id => user._id.to_str, :name => user.name, :email => user.email)
+      Client.create(:_id => user._id.to_str, :name => user.name, :email => user.email, :is_valid => false)
     else
-      Talent.create(:_id => user._id.to_str, :name => user.name, :email => user.email)
+      Talent.create(:_id => user._id.to_str, :name => user.name, :email => user.email, :is_valid => false)
     end
   end
 

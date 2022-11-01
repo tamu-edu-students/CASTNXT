@@ -6,4 +6,5 @@ class Auth
   field :email, type: String
   field :password, type: String
   field :user_type, type: String
+  field :is_valid, type: Boolean
 end
