@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {FormBuilder} from "@ginkgo-bioworks/react-json-schema-form-builder";
-import Form from "@rjsf/core";
 
 import Slide from "./Slide.js";
 import "./Forms.css";
