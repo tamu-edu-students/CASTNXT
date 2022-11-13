@@ -1,12 +1,14 @@
 export const slidesToEntries = (slides, filterSlides) => {
     let entries = [];
-    Object.keys(slides).forEach(key => {
-        entries.push({
-            ...slides[key],
-            id: key,
-            updated: false
-        })
-    });
+    if (slides){
+        Object.keys(slides).forEach(key => {
+            entries.push({
+                ...slides[key],
+                id: key,
+                updated: false
+            })
+        });
+    }
     return filterSlides ? filterSlidesOnStatus(entries) : entries;
 }
 
@@ -17,8 +19,7 @@ export const filterSlidesOnStatus = (stack) => {
 export const rowsToEntries = (rowData, curated) => {
     const uniqId = rowData.row?.uniqId || rowData.id;
     const talentName = rowData.row?.talentName || rowData.talentName;
-    const formData = rowData.row || rowData.formData;
-    //console.log(props.properties);
+    const formData = rowData.row?.formData || rowData.formData;
     const slideData = {};
     slideData[`${uniqId}`] = {
         talentName,

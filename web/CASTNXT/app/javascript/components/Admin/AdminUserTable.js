@@ -7,7 +7,6 @@ import { extendedNumberOperators } from '../../utils/RangeFilter';
 class AdminUserTable extends Component {
     constructor(props) {
         super(props)
-        
         this.state = {
             properties: props.properties,
             slides: props.properties.data.slides,
@@ -49,24 +48,37 @@ class AdminUserTable extends Component {
       return [rows,columns]
     }
 
-    componentDidMount() {
-        let slides = this.props.properties.data.slides
-        let eventTalent = []
+    createEventTalentData() {
+      let slides = this.props.properties.data.slides
+      let eventTalent = []
 
-        for(var key in slides) {
-            eventTalent.push({
-                id: key,
-                name: slides[key].talentName,
-                curated: slides[key].curated,
-                formData: slides[key].formData
-            })
-        }
+      for(var key in slides) {
+        eventTalent.push({
+            id: key,
+            name: slides[key].talentName,
+            curated: slides[key].curated,
+            formData: slides[key].formData
+        })
+      }
+      return eventTalent;
+    }
+
+    componentDidMount() {
+        let eventTalent = this.createEventTalentData()
         let [rows,columns] = this.constructTableData(eventTalent)
         this.setState({
             eventTalent: eventTalent,
             rows: rows,
             columns: columns
         })
+    }
+
+    onRowClick = (rowData) => {
+      const talentData = this.state.eventTalent[rowData.id-1];
+      rowData.row = talentData;
+      rowData.row.uniqId = talentData.id;
+      rowData.row.talentName = talentData.name;
+      this.props.handleRowClick(rowData);
     }
 
     onFilterModelChange = (model) => {
@@ -89,7 +101,7 @@ class AdminUserTable extends Component {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         autoHeight
-                        onRowClick = {this.props.handleRowClick}
+                        onRowClick = {this.onRowClick}
                         filterModel = {this.state.filterModel}
                         onFilterModelChange={(model) => this.onFilterModelChange(model)}
                       />

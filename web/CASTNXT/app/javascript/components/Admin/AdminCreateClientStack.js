@@ -14,7 +14,6 @@ import { MultiSelect } from "react-multi-select-component";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
 
-import Header from "../Navbar/Header";
 import Slide from "../Forms/Slide";
 
 

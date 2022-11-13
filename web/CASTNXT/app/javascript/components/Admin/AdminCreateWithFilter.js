@@ -8,7 +8,6 @@ const AdminCreateWithFilter = (props) =>{
     const [rowData, setRowData] = useState(null);
     const [showRowData, setShowRowData] = useState(false);
     const [stack, setStack] = useState(slidesToEntries(props?.properties?.data?.slides, true));
-    //const [showStack, setShowStack] = useState(false);
 
     /**
      * Function to handle click of the row in Filtering Table.
@@ -18,7 +17,7 @@ const AdminCreateWithFilter = (props) =>{
      */
     const onRowClick = (rowData, _event, _details) => {
         //initial loads and subsequent ones that follow.
-        const isCurated = rowData?.curated || props?.properties?.data?.slides[`${rowData.row.uniqId}`].curated;
+        const isCurated = rowData?.curated || props?.properties?.data?.slides[`${rowData.row.uniqId}`]?.curated;
         const slideData = rowsToEntries(rowData, isCurated)
         setRowData(slideData);
         setShowRowData(true);
