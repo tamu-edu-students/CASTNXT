@@ -27,6 +27,10 @@ class AdminCreateEvent extends Component {
             uischema: "{}",
             title: "",
             description: "",
+            location: "",
+            statename: "",
+            eventdate: "",
+            category: "",
             formIds: properties.formIds !== undefined ? properties.formIds : [],
             formData: null,
             newFormData: {},
@@ -106,7 +110,11 @@ class AdminCreateEvent extends Component {
             return axios.post("/admin/events", {
                 form_id: this.state.newFormId,
                 title: this.state.title,
-                description: this.state.description
+                description: this.state.description,
+                location: this.state.location,
+                statename: this.state.statename,
+                eventdate: this.state.eventdate,
+                category: this.state.category
             })
         })
         .then((res) => {
@@ -157,6 +165,10 @@ class AdminCreateEvent extends Component {
                             <div className="input-fields">
                               <TextField id="outlined-basic" name="title" label="Event title" variant="outlined" onChange={this.handleChange} value={this.state.title} />
                               <TextField id="outlined-basic" name="description" label="Event description" variant="outlined" onChange={this.handleChange} value={this.state.description} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <TextField id="outlined-basic" name="location" label="Event location" variant="outlined" onChange={this.handleChange} value={this.state.location} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <TextField id="outlined-basic" name="statename" label="Event state" variant="outlined" onChange={this.handleChange} value={this.state.statename} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <TextField id="outlined-basic" name="eventdate" label="Event date" variant="outlined" onChange={this.handleChange} value={this.state.eventdate} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <TextField id="outlined-basic" name="category" label="Event category" variant="outlined" onChange={this.handleChange} value={this.state.category} style={{marginTop: "20px", marginBottom: "20px"}}/>
                             </div>
                             
                             <br/>

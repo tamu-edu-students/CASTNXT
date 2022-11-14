@@ -78,6 +78,11 @@ class EventsController < ApplicationController
     data[:id] = eventId
     data[:title] = event.title
     data[:description] = event.description
+    data[:location] = event.location
+    data[:statename] = event.statename
+    data[:eventdate] = event.eventdate
+    data[:category] = event.category
+    
     
     if talent_slide_exists?(eventId, session[:userId])
       slide = get_talent_slide(eventId, session[:userId])
@@ -105,6 +110,10 @@ class EventsController < ApplicationController
     data[:title] = event.title
     data[:description] = event.description
     data[:status] = event.status
+    data[:location] = event.location
+    data[:statename] = event.statename
+    data[:eventdate] = event.eventdate
+    data[:category] = event.category
     
     data[:clients] = build_producer_event_clients(event)
     data[:slides] = build_producer_event_slides(event)
@@ -134,6 +143,10 @@ class EventsController < ApplicationController
     data[:status] = event.status
     data[:negotiationId] = negotiation._id.to_str
     data[:finalizedIds] = negotiation.finalSlides
+    data[:location] = event.location
+    data[:statename] = event.statename
+    data[:eventdate] = event.eventdate
+    data[:category] = event.category
     
     data[:slides] = build_client_event_slides(event, client)
     
@@ -273,6 +286,6 @@ class EventsController < ApplicationController
   end
   
   def create_event producerId, params
-    Event.create(:form_id => params[:form_id], :producer_id => producerId, :status => "ACCEPTING", :title => params[:title], :description => params[:description], :location => params[:location], :state => params[:state], :date => params[:date], :category => params[:category])
+    Event.create(:form_id => params[:form_id], :producer_id => producerId, :status => "ACCEPTING", :title => params[:title], :description => params[:description], :location => params[:location], :statename => params[:statename], :eventdate => params[:eventdate], :category => params[:category])
   end
 end

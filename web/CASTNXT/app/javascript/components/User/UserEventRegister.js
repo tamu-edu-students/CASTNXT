@@ -14,6 +14,10 @@ class UserEventRegister extends Component {
             eventId: properties.data.id,
             title: properties.data.title,
             description: properties.data.description,
+            location: properties.data.location, 
+            statename: properties.data.statename,
+            eventdate: properties.data.eventdate, 
+            category: properties.data.category,
             schema: properties.data.schema !== undefined ? properties.data.schema : {},
             uischema: properties.data.uischema !== undefined ? properties.data.uischema : {},
             formData: properties.data.formData !== undefined ? properties.data.formData : {},
@@ -83,6 +87,7 @@ class UserEventRegister extends Component {
                             <div className="form-preview">
                                 <h3>{this.state.title}</h3>
                                 <span>{this.state.description}</span>
+                                <span>{this.state.location}, {this.state.statename}, {this.state.eventdate}, {this.state.category}</span>
                                 <Slide
                                   schema={this.state.schema}
                                   uiSchema={this.state.uischema}

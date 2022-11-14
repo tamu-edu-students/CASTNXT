@@ -12,7 +12,7 @@ class Event
   field :title, type: String
   field :description, type: String
   field :location, type: String
-  field :state, type: String
-  field :date, type: String
+  field :statename, type: String
+  field :eventdate, type: String
   field :category, type: String
 end
