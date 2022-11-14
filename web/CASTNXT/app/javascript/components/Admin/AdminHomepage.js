@@ -13,7 +13,7 @@ import Header from "../Navbar/Header";
 class AdminHomepage extends Component {
     constructor(props) {
         super(props)
-
+        console.log(properties);
         this.state = {
             tableData: properties.tableData !== undefined ? properties.tableData : []
         }
@@ -55,7 +55,7 @@ class AdminHomepage extends Component {
     }
 
     render() {
-        return(
+        return (
             <div>
                 <div>
                     <Header />
