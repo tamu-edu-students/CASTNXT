@@ -1888,6 +1888,7 @@
     "mkdirp" "^1.0.4"
     "rimraf" "^3.0.2"
 
+<<<<<<< HEAD
 "@npmcli/name-from-folder@^1.0.1":
   "integrity" "sha512-qq3oEfcLFwNfEYOQ8HLimRGKlD8WSeGEdtUa7hmzpR8Sa7haL1KVQrvgO6wqMjhWFFVjgtrh1gIxDz+P8sjUaA=="
   "resolved" "https://registry.npmjs.org/@npmcli/name-from-folder/-/name-from-folder-1.0.1.tgz"
@@ -1914,6 +1915,8 @@
     "node-gyp" "^9.0.0"
     "read-package-json-fast" "^2.0.3"
 
+=======
+>>>>>>> main
 "@popperjs/core@^2.0.0", "@popperjs/core@^2.10.2", "@popperjs/core@^2.11.3", "@popperjs/core@^2.6.0":
   "integrity" "sha512-q/ytXxO5NKvyT37pmisQAItCFqA7FD/vNb8dgaJy3/630Fsc+Mz9/9f2SziBoIZ30TJooXyTwZmhi1zjXmObYg=="
   "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.11.4.tgz"
@@ -9223,6 +9226,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
+<<<<<<< HEAD
 "promzard@^0.3.0":
   "integrity" "sha512-JZeYqd7UAcHCwI+sTOeUDYkvEU+1bQ7iE0UT1MgB/tERkAPkesW46MrpIySzODi+owTjZtiF8Ay5j9m60KmMBw=="
   "resolved" "https://registry.npmjs.org/promzard/-/promzard-0.3.0.tgz"
@@ -9230,6 +9234,8 @@
   dependencies:
     "read" "1"
 
+=======
+>>>>>>> main
 "prop-types@^15.0.0", "prop-types@^15.5.8", "prop-types@^15.6.0", "prop-types@^15.6.2", "prop-types@^15.7.2", "prop-types@^15.8.1":
   "integrity" "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"

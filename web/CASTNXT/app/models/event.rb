@@ -11,4 +11,8 @@ class Event
   field :status, type: String
   field :title, type: String
   field :description, type: String
+  field :location, type: String
+  field :statename, type: String
+  field :eventdate, type: String
+  field :category, type: String
 end

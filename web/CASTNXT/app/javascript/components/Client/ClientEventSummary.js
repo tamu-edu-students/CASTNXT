@@ -10,7 +10,6 @@ import axios from "axios";
 class ClientEventSummary extends Component {
     constructor(props) {
         super(props)
-        
         this.state = {
             properties: props.properties,
             slides: props.properties.data.slides,
