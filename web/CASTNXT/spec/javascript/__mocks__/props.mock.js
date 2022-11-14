@@ -124,3 +124,55 @@ export const ROWDATA_MOCKED = {
         "talentName": "Model One"
     }
 }
+
+export const PROPERTIES_CLIENT_EMPTY = {
+    "name": "momo",
+    "tableData": []
+}
+
+export const PROPERTIES_CLIENT_NONEMPTY ={
+    "name": "njknknj",
+    "tableData": [
+        {
+            "title": "wewwq",
+            "id": "6371983eed22d5ed037d39cd",
+            "status": "ACCEPTING"
+        }
+    ]
+}
+
+export const PROPERTIES_CLIENT_SUMMARY ={
+    "name": "njknknj",
+    "data": {
+        "schema": {
+            "type": "object",
+            "properties": {
+                "plp": {
+                    "title": "plp",
+                    "type": "string"
+                }
+            },
+            "dependencies": {},
+            "required": []
+        },
+        "uischema": {
+            "ui:order": [
+                "plp"
+            ]
+        },
+        "id": "6371983eed22d5ed037d39cd",
+        "title": "wewwq",
+        "description": "asasdsa",
+        "status": "ACCEPTING",
+        "negotiationId": "63719985ed22d5ed037d39d3",
+        "finalizedIds": [],
+        "slides": {
+            "6371988eed22d5ed037d39d0": {
+                "talentName": "efsedfsd",
+                "formData": {
+                    "plp": "nfjkdsnkjfds"
+                }
+            }
+        }
+    }
+}
