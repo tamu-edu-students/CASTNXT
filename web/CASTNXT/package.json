@@ -54,8 +54,10 @@
     "roots": [
       "spec/javascript"
     ],
+    "testEnvironment": "jsdom",
     "testPathIgnorePatterns": [
       "<rootDir>/spec/javascript/__mocks__",
+      "<rootDir>/spec/javascript/__utils__",
       "<rootDir>/node_modules"
     ],
     "transform": {
