@@ -25,6 +25,10 @@ class ClientEventPage extends Component {
         this.state = {
             title: properties.data.title,
             description: properties.data.description,
+            location: properties.data.location,
+            statename: properties.data.statename, 
+            eventdate: properties.data.eventdate, 
+            category: properties.data.category,
             tabValue: 0
         }
     }
@@ -50,6 +54,9 @@ class ClientEventPage extends Component {
                     <div className="user-events">
                         <h2> {this.state.title} </h2>
                         <h6> {this.state.description} </h6>
+                        <h6>Location : {this.state.location}, {this.state.statename}</h6>
+                        <h6>Date : {this.state.eventdate}</h6>
+                        <h6>Category : {this.state.category}</h6>
                         
                         <Button size="small" variant="outlined" style={{float: "right", marginRight: "1%"}} onClick={this.back}>Back to Homepage</Button>
                         
