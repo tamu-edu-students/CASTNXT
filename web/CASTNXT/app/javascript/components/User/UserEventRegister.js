@@ -87,9 +87,9 @@ class UserEventRegister extends Component {
                             <div className="form-preview">
                                 <h3>{this.state.title}</h3>
                                 <span>{this.state.description}</span>
-                                <p>Location : {this.state.location}, {this.state.statename}</p>
-                                <p>Date : {this.state.eventdate}</p>
-                                <p>Category: {this.state.category}</p>
+                                <h6>Location : {this.state.location}, {this.state.statename}</h6>
+                                <h6>Date : {this.state.eventdate}</h6>
+                                <h6>Category: {this.state.category}</h6>
                                 <Slide
                                   schema={this.state.schema}
                                   uiSchema={this.state.uischema}
