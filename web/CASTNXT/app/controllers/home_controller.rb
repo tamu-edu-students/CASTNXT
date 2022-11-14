@@ -8,8 +8,10 @@ class HomeController < ApplicationController
   
   # GET /validation/:id
   def validation
+    u1 = Auth.find_by(:_id => params[:id])
+    typeuser = u1.user_type
     begin
-      if "ADMIN".casecmp? params[:type]
+      if "ADMIN".casecmp? typeuser
         user = Producer.find_by(:_id => params[:id])
         user.is_valid = true
         user.save
@@ -17,7 +19,7 @@ class HomeController < ApplicationController
         puts auth.email
         auth.is_valid = true
         auth.save
-      elsif "CLIENT".casecmp? params[:type]
+      elsif "CLIENT".casecmp? typeuser
         user = Client.find_by(:_id => params[:id])
         user.is_valid = true
         user.save
@@ -35,7 +37,8 @@ class HomeController < ApplicationController
         auth.is_valid = true
         auth.save
       end
-      render json: {redirect_path: "User validated!"}, status: 201
+      return redirect_to root_path
+      #render json: {redirect_path: "User validated!"}, status: 201
     end
   end
 
