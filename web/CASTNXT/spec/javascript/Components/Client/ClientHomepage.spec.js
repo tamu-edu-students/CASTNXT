@@ -33,18 +33,3 @@ test('Client Home Page NonEmpty Table', ()=>{
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
 })
-/*
-test('Log Out test', ()=>{
-    const component = renderer.create(
-        <ClientHomepage />
-    )
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-    
-    renderer.act(() =>{
-        component.root.find(el => el.props.id === 'logoutBtn').props.onClick()
-    })
-
-    tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-})*/

@@ -222,6 +222,33 @@ export const USER_PROPERTIES_WITH_ACCEPTING = {
     "submittedTableData": []
 }
 
+export const ADMIN_PROPERTIES_EVENT_ACCEPTING = {
+    "name": "admin1",
+    "tableData": [
+        {
+            "id": "634b4470c2e881bd9a343e45",
+            "title": "Paris Fashion Week",
+            "status": "ACCEPTING"
+        }
+    ]
+}
+
+export const ADMIN_PROPERTIES_EVENT_NONE = {
+    "name": "admin1",
+    "tableData": []
+}
+
+export const ADMIN_PROPERTIES_EVENT_DELETED = {
+    "name": "admin1",
+    "tableData": [
+        {
+            "id": "634b4470c2e881bd9a343e45",
+            "title": "Paris Fashion Week",
+            "status": "DELETED"
+        }
+    ]
+}
+
 export const ROW_CURATED = {
     "talentName": "Rohan",
     "formData": {

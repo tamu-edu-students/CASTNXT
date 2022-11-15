@@ -1,6 +1,4 @@
 import React, {Component} from "react"
-import Header from "../Navbar/Header";
-import Form from "@rjsf/core";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import Alert from "@mui/material/Alert";
@@ -50,11 +48,9 @@ class AdminEventHome extends Component {
       })
     }
 
-    render() {
-        
+    render() { 
         return(
             <div>
-
                 <div style={{marginTop: "1%"}}>
                     <p>Use this page to update an event.</p>
                     
