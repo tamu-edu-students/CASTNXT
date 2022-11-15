@@ -9,7 +9,6 @@ import axios from "axios";
 class AdminEventHome extends Component {
     constructor(props) {
         super(props)
-
         this.state = {
             eventStatus: props.properties.data.status,
             message: "",
@@ -62,6 +61,7 @@ class AdminEventHome extends Component {
                     <div>
                       <div className="col-md-8 offset-md-2">
                         <ToggleButtonGroup
+                          id='ToggleButtonGroup'
                           color="success"
                           value={this.state.eventStatus}
                           exclusive

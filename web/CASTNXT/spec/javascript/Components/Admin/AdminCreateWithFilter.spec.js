@@ -39,7 +39,7 @@ test('Admin Create on Row Click', ()=>{
     expect(tree).toMatchSnapshot();
 })
 
-
+// npm run test -- ./spec/javascript/Components/Admin/AdminEventHome.spec.js 
 test('Admin Create With Row Curation', ()=>{
     const component = renderer.create(
         <AdminCreateWithFilter properties={propsDefault.properties} />
