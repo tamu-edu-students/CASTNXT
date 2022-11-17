@@ -96,6 +96,7 @@ class AdminUserTable extends Component {
                   <div className="col-md-8 offset-md-2" style={{marginTop: '10px'}}>
                     <Paper>
                       <DataGrid
+                        testId='userTableDataGrid'
                         rows={this.state.rows}
                         columns={this.state.columns}
                         pageSize={10}

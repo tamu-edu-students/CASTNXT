@@ -8,7 +8,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import axios from "axios";
 
 import Header from "../Navbar/Header";
 
@@ -16,9 +15,10 @@ class UserHomepage extends Component {
     constructor(props) {
         super(props)
         
+        console.log(properties);
         this.state = {
-            acceptingTableData: properties.acceptingTableData !== undefined ? properties.acceptingTableData : [],
-            submittedTableData: properties.submittedTableData !== undefined ? properties.submittedTableData : [],
+            acceptingTableData: properties.acceptingTableData ? properties.acceptingTableData : [],
+            submittedTableData: properties.submittedTableData ? properties.submittedTableData : [],
             tabValue: 0
         }
     }
@@ -128,7 +128,7 @@ class UserHomepage extends Component {
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {this.renderAcceptingEventList()}
+                                                <div id='eventList'>{this.renderAcceptingEventList()}</div>
                                             </TableBody>
                                         </Table>
                                     </TableContainer>

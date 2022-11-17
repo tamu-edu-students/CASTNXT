@@ -35,7 +35,7 @@ class AdminHomepage extends Component {
             
         } else {
             tableData.map((event, i) => {
-                if (event.status != "DELETED"){
+                if (event.status !== "DELETED"){
                     rows.push(
                         <TableRow key={i}>
                             <TableCell align="center" onClick={() => {window.location.href="/admin/events/"+event.id}}>

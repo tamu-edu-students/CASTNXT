@@ -40,7 +40,7 @@ const Header = (props) => {
                         <IconButton edge="start" color="inherit" aria-label="menu">
                             <img src={require("../../assets/images/logo.png")} alt="FASHIONXT" style={{ width: "200px" }} />
                         </IconButton>
-                        <Typography id='hey' variant="h6" className={classes.title}></Typography>
+                        <Typography variant="h6" className={classes.title}></Typography>
                         <Typography color="inherit" style={{marginRight: "1%"}}>Welcome, {properties?.name}</Typography>
                         <Typography><Button id='logoutBtn' variant="contained" onClick={logoutUser}>Logout</Button></Typography>
                         

@@ -198,6 +198,57 @@ export const PROPS_DELETED_EVENT = {
     }
 }
 
+export const USER_PROPERTIES_WITH_SUBMISSIONS = {
+    "name": "Model One",
+    "acceptingTableData": [],
+    "submittedTableData": [
+        {
+            "title": "Paris Fashion Week",
+            "id": "634b4470c2e881bd9a343e45",
+            "accepting": true,
+            "status": "SUBMITTED"
+        }
+    ]
+}
+
+export const USER_PROPERTIES_WITH_ACCEPTING = {
+    "name": "Model One",
+    "acceptingTableData": [{
+        "title": "Paris Fashion Week",
+        "id": "634b4470c2e881bd9a343e45",
+        "accepting": true,
+        "status": "SOME_STATUS"
+    }],
+    "submittedTableData": []
+}
+
+export const ADMIN_PROPERTIES_EVENT_ACCEPTING = {
+    "name": "admin1",
+    "tableData": [
+        {
+            "id": "634b4470c2e881bd9a343e45",
+            "title": "Paris Fashion Week",
+            "status": "ACCEPTING"
+        }
+    ]
+}
+
+export const ADMIN_PROPERTIES_EVENT_NONE = {
+    "name": "admin1",
+    "tableData": []
+}
+
+export const ADMIN_PROPERTIES_EVENT_DELETED = {
+    "name": "admin1",
+    "tableData": [
+        {
+            "id": "634b4470c2e881bd9a343e45",
+            "title": "Paris Fashion Week",
+            "status": "DELETED"
+        }
+    ]
+}
+
 export const ROW_CURATED = {
     "talentName": "Rohan",
     "formData": {

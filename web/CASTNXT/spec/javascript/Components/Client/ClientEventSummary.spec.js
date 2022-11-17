@@ -1,5 +1,4 @@
 import renderer from 'react-test-renderer';
-import Header from '../../../../app/javascript/components/Navbar/Header';
 import ClientEventSummary from '../../../../app/javascript/components/Client/ClientEventSummary';
 import {propsDefault, PROPERTIES_CLIENT_SUMMARY} from '../../__mocks__/props.mock';
 
@@ -27,19 +26,3 @@ test('Client Summary Page Table', ()=>{
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
 })
-
-/*
-test('Log Out test', ()=>{
-    const component = renderer.create(
-        <ClientHomepage />
-    )
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-    
-    renderer.act(() =>{
-        component.root.find(el => el.props.id === 'logoutBtn').props.onClick()
-    })
-
-    tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-})*/

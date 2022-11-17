@@ -1,14 +1,11 @@
 import AdminHomepage from "../../../../app/javascript/components/Admin/AdminHomepage";
 import renderer from 'react-test-renderer';
-import { propsDefault, ROW_CURATED, ROWDATA_MOCKED } from '../../__mocks__/props.mock';
-import axios from 'axios';
+import { propsDefault, ADMIN_PROPERTIES_EVENT_NONE, ADMIN_PROPERTIES_EVENT_ACCEPTING, ADMIN_PROPERTIES_EVENT_DELETED } from '../../__mocks__/props.mock';
 
 const mockTableContainer = jest.fn();
 const mockButton = jest.fn();
 const mockHeader = jest.fn()
-jest.mock('axios');
 const originalProperties = global.properties;
-const mockedAxios = axios;
 
 
 jest.mock('.../../../../app/javascript/components/Navbar/Header.js', () => (props) =>{
@@ -27,15 +24,12 @@ jest.mock('@mui/material/Button', ()=>(props)=>{
     return (<mock-Button props={props}>{props.children}</mock-Button>);
 })
 
-beforeEach(() =>{
-    global.properties = propsDefault.properties;
-})
-
 afterEach(() => {
     global.properties = originalProperties;
 });
 
 test('AdminHomepage Load test', ()=>{
+    global.properties = ADMIN_PROPERTIES_EVENT_ACCEPTING;
     const component = renderer.create(
         <AdminHomepage />
     )
@@ -44,6 +38,17 @@ test('AdminHomepage Load test', ()=>{
 })
 
 test('AdminHomepage Load test: DELETED event', ()=>{
+    global.properties = ADMIN_PROPERTIES_EVENT_DELETED
+    const component = renderer.create(
+        <AdminHomepage />
+    )
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+    ADMIN_PROPERTIES_EVENT_NONE
+})
+
+test('AdminHomepage Load test: NO events', ()=>{
+    global.properties = ADMIN_PROPERTIES_EVENT_NONE
     const component = renderer.create(
         <AdminHomepage />
     )
