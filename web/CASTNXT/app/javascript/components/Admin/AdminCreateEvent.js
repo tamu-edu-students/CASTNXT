@@ -15,6 +15,12 @@ import FormBuilderContainer from "../Forms/FormBuilder.js"
 import Slide from "../Forms/Slide.js"
 import "./Admin.css";
 import "../Forms/Forms.css";
+import {defaultDataSchema, defaultUiSchema, UsStates, getCities} from '../../utils/FormsUtils';
+import { FormHelperText } from "@mui/material";
+import DatePickerWrapper from "../Shared/DatePicker";
+
+
+const commonStyle = {marginTop: "20px", marginBottom: "20px"}
 
 class AdminCreateEvent extends Component {
     constructor(props) {
@@ -23,8 +29,8 @@ class AdminCreateEvent extends Component {
         this.state = {
             tabValue: 0,
             selectedFormNo: "",
-            schema: "{}",
-            uischema: "{}",
+            schema: JSON.stringify(defaultDataSchema),
+            uischema: JSON.stringify(defaultUiSchema),
             title: "",
             description: "",
             location: "",
@@ -139,6 +145,12 @@ class AdminCreateEvent extends Component {
             }
         })
     }
+
+    onLocationClick = (name) => {
+        this.setState({
+            [`is${name}Focused`]: true
+        })
+    }
     
     back = () => {
         window.location.href = "/admin"
@@ -163,12 +175,35 @@ class AdminCreateEvent extends Component {
                         <div className="container" style={{ backgroundColor: "white", height: "100%", width: "50vw", paddingTop: "1%" }}>
                             <p>Step 1</p>
                             <div className="input-fields">
-                              <TextField id="outlined-basic" name="title" label="Event title" variant="outlined" onChange={this.handleChange} value={this.state.title} />
-                              <TextField id="outlined-basic" name="description" label="Event description" variant="outlined" onChange={this.handleChange} value={this.state.description} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <TextField id="outlined-basic" name="location" label="Event location" variant="outlined" onChange={this.handleChange} value={this.state.location} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <TextField id="outlined-basic" name="statename" label="Event state" variant="outlined" onChange={this.handleChange} value={this.state.statename} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <TextField id="outlined-basic" name="eventdate" label="Event date" variant="outlined" onChange={this.handleChange} value={this.state.eventdate} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <TextField id="outlined-basic" name="category" label="Event category" variant="outlined" onChange={this.handleChange} value={this.state.category} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <TextField id="title-textfield" name="title" label="Event title" variant="outlined" onChange={this.handleChange} value={this.state.title} />
+                              <TextField id="description-textfield" name="description" label="Event description" variant="outlined" onChange={this.handleChange} value={this.state.description} style={commonStyle}/>
+                              <DatePickerWrapper id='eventdate' name='eventdate' variant='outlined' onChange={this.handleChange} value={this.state.eventdate} style={commonStyle} />
+                              <FormControl fullWidth>
+                                <InputLabel id="state-select-label" style={commonStyle}>Event State</InputLabel>
+                                <Select labelId="state-select-label" id="state-select" name="statename"  label="Event state" variant="outlined" onChange = {this.handleChange} value={this.state.statename} style={commonStyle}>
+                                    {
+                                        UsStates.map((state) =>{
+                                            return (
+                                                <MenuItem key={state} value={state}>{state}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                              </FormControl>
+                              <FormControl fullWidth error={this.state.islocationFocused &&!this.state.statename}>
+                                <InputLabel id="city-select-label" style={commonStyle}>Event Location</InputLabel>
+                                <Select onClick={() => this.onLocationClick('location')} labelId="city-select-label" id="state-select" name="location" label="Event Location" variant="outlined" onChange = {this.handleChange} value={this.state.location} style={commonStyle}>
+                                    {
+                                        getCities(this.state.statename).map((city) =>{
+                                            return (
+                                                <MenuItem key={city} value={city}>{city}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
+                              </FormControl>
+                              <TextField id="category-textfield" name="category" label="Event category" variant="outlined" onChange={this.handleChange} value={this.state.category} style={{marginTop: "20px", marginBottom: "20px"}}/>
                             </div>
                             
                             <br/>
