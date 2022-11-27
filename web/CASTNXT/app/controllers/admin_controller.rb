@@ -14,7 +14,8 @@ class AdminController < ApplicationController
       object = {
         id: event._id.to_str,
         title: event.title,
-        status: event.status
+        status: event.status,
+        delete_time: event.delete_time
       }
       
       tableData << object

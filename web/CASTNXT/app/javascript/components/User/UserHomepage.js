@@ -8,17 +8,26 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-
+import MuiAlert from '@mui/material/Alert';
 import Header from "../Navbar/Header";
 
 class UserHomepage extends Component {
     constructor(props) {
         super(props)
         
-        console.log(properties);
+        const submittedTableData = properties.submittedTableData || []
+        const eventDeletedFlag = submittedTableData.find((event)=>{
+            if(event.status === 'DELETED'){
+                let currTime = new Date();
+                let updatedTime = new Date(event.delete_time);
+                return (currTime.getTime() - updatedTime.getTime())/(1000 * 3600 * 24) <7;
+            }
+        }) 
+
         this.state = {
             acceptingTableData: properties.acceptingTableData ? properties.acceptingTableData : [],
             submittedTableData: properties.submittedTableData ? properties.submittedTableData : [],
+            eventDeletedFlag,
             tabValue: 0
         }
     }
@@ -103,9 +112,11 @@ class UserHomepage extends Component {
                 <div>
                     <Header />
                 </div>
-                
                 <div>
                     <div className="container user-events">
+                        {
+                            this.state.eventDeletedFlag ? <MuiAlert onClick={() => (this.setState({eventDeletedFlag: false}))} severity="warning" elevation={6} variant="filled">Note: Certain events have been cancelled. Please check submissions for more details. Sorry for the inconvenience.</MuiAlert> : null
+                        }
                         <div className="row">
                             <h2> FashioNXT Events </h2>
                         </div>
