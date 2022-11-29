@@ -3,8 +3,12 @@ import axios from "axios";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
+import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import FormLabel from "@mui/material/FormLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
@@ -37,6 +41,7 @@ class AdminCreateEvent extends Component {
             statename: "",
             eventdate: "",
             category: "",
+            is_paid_event: true,
             formIds: properties.formIds !== undefined ? properties.formIds : [],
             formData: null,
             newFormData: {},
@@ -120,7 +125,8 @@ class AdminCreateEvent extends Component {
                 location: this.state.location,
                 statename: this.state.statename,
                 eventdate: this.state.eventdate,
-                category: this.state.category
+                category: this.state.category, 
+                is_paid_event: this.state.is_paid_event
             })
         })
         .then((res) => {
@@ -204,6 +210,13 @@ class AdminCreateEvent extends Component {
                                 {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
                               </FormControl>
                               <TextField id="category-textfield" name="category" label="Event category" variant="outlined" onChange={this.handleChange} value={this.state.category} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <FormControl>
+                                <FormLabel id = "is_paid_event_label">Is this a paid event?</FormLabel>
+                                <RadioGroup name = "is_paid_event_group" defaultValue = "yes" label="Paid Event" variant="outlined" onChange = {this.handleChange} value={this.state.is_paid_event} style={commonStyle}>
+                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" checked={this.state.is_paid_event === true}/>
+                                    <FormControlLabel value="no" control={<Radio />} label="No" checked={this.state.is_paid_event === true}/>
+                                </RadioGroup>
+                              </FormControl>
                             </div>
                             
                             <br/>
