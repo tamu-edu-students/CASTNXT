@@ -3,8 +3,12 @@ import axios from "axios";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
+import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import FormLabel from "@mui/material/FormLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
@@ -15,7 +19,7 @@ import FormBuilderContainer from "../Forms/FormBuilder.js"
 import Slide from "../Forms/Slide.js"
 import "./Admin.css";
 import "../Forms/Forms.css";
-import {defaultDataSchema, defaultUiSchema, UsStates, getCities} from '../../utils/FormsUtils';
+import {defaultDataSchema, defaultUiSchema, UsStates, getCities, EventCategories} from '../../utils/FormsUtils';
 import { FormHelperText } from "@mui/material";
 import DatePickerWrapper from "../Shared/DatePicker";
 
@@ -37,6 +41,7 @@ class AdminCreateEvent extends Component {
             statename: "",
             eventdate: "",
             category: "",
+            is_paid_event: "",
             formIds: properties.formIds !== undefined ? properties.formIds : [],
             formData: null,
             newFormData: {},
@@ -120,7 +125,8 @@ class AdminCreateEvent extends Component {
                 location: this.state.location,
                 statename: this.state.statename,
                 eventdate: this.state.eventdate,
-                category: this.state.category
+                category: this.state.category, 
+                is_paid_event: this.state.is_paid_event
             })
         })
         .then((res) => {
@@ -203,7 +209,24 @@ class AdminCreateEvent extends Component {
                                 </Select>
                                 {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
                               </FormControl>
-                              <TextField id="category-textfield" name="category" label="Event category" variant="outlined" onChange={this.handleChange} value={this.state.category} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <FormControl>
+                                <InputLabel id="category-select-label" style={commonStyle}>Event Category</InputLabel>
+                                <Select labelId="category-select-labelId" id="category-select" name="category" label="Event Category" variant="outlined" onChange = {this.handleChange} value={this.state.category} style={commonStyle}>
+                                    {
+                                        EventCategories.Categories.map((category) =>{
+                                            return (
+                                                <MenuItem key={category} value={category}>{category}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
+                              </FormControl>
+                              <div> 
+                              <h6>Is this a paid event ?</h6>
+                              <input type = "radio" name = "is_paid_event" value = "Yes" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> Yes
+                              <input type = "radio" name = "is_paid_event" value = "No" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> No
+                              </div>
                             </div>
                             
                             <br/>
