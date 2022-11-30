@@ -104,8 +104,16 @@ class EventsController < ApplicationController
       slide = get_talent_slide(eventId, session[:userId])
       data[:formData] = JSON.parse(slide.data)
     end
+    userTalent = Talent.find_by(:_id => session[:userId])
     
-    @properties = {name: session[:userName], data: data}
+    if userTalent[:talentData].nil?
+      newTalentData = {}
+    else
+      newTalentData = JSON.parse(userTalent[:talentData])
+    end
+   
+    
+    @properties = {name: session[:userName], data: data , talentData: newTalentData}
   end
   
   def producer_event
