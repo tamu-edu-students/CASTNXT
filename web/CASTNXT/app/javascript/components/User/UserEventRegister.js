@@ -20,7 +20,7 @@ class UserEventRegister extends Component {
             category: properties.data.category,
             schema: properties.data.schema !== undefined ? properties.data.schema : {},
             uischema: properties.data.uischema !== undefined ? properties.data.uischema : {},
-            formData: properties.data.formData !== undefined ? properties.data.formData : {},
+            formData: properties.data.formData !== undefined ? properties.data.formData : properties.talentData,
             status: "",
             message: "",
             disableSubmit: false
