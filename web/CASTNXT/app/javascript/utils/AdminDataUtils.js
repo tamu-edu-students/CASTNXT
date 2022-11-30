@@ -28,6 +28,5 @@ export const rowsToEntries = (rowData, curated) => {
     };
     delete(slideData[`${uniqId}`].formData.id);
     delete(slideData[`${uniqId}`].formData.uniqId);
-    delete(slideData[`${uniqId}`].formData.talentName);
     return slideData;
 }

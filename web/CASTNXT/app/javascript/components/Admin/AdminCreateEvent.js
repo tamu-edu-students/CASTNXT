@@ -3,8 +3,12 @@ import axios from "axios";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
+import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import FormLabel from "@mui/material/FormLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
@@ -15,6 +19,12 @@ import FormBuilderContainer from "../Forms/FormBuilder.js"
 import Slide from "../Forms/Slide.js"
 import "./Admin.css";
 import "../Forms/Forms.css";
+import {defaultDataSchema, defaultUiSchema, UsStates, getCities, EventCategories} from '../../utils/FormsUtils';
+import { FormHelperText } from "@mui/material";
+import DatePickerWrapper from "../Shared/DatePicker";
+
+
+const commonStyle = {marginTop: "20px", marginBottom: "20px"}
 
 class AdminCreateEvent extends Component {
     constructor(props) {
@@ -23,14 +33,15 @@ class AdminCreateEvent extends Component {
         this.state = {
             tabValue: 0,
             selectedFormNo: "",
-            schema: "{}",
-            uischema: "{}",
+            schema: JSON.stringify(defaultDataSchema),
+            uischema: JSON.stringify(defaultUiSchema),
             title: "",
             description: "",
             location: "",
             statename: "",
             eventdate: "",
             category: "",
+            is_paid_event: "",
             formIds: properties.formIds !== undefined ? properties.formIds : [],
             formData: null,
             newFormData: {},
@@ -114,7 +125,8 @@ class AdminCreateEvent extends Component {
                 location: this.state.location,
                 statename: this.state.statename,
                 eventdate: this.state.eventdate,
-                category: this.state.category
+                category: this.state.category, 
+                is_paid_event: this.state.is_paid_event
             })
         })
         .then((res) => {
@@ -137,6 +149,12 @@ class AdminCreateEvent extends Component {
             if(err.response.status === 403) {
                 window.location.href = err.response.data.redirect_path
             }
+        })
+    }
+
+    onLocationClick = (name) => {
+        this.setState({
+            [`is${name}Focused`]: true
         })
     }
     
@@ -163,12 +181,52 @@ class AdminCreateEvent extends Component {
                         <div className="container" style={{ backgroundColor: "white", height: "100%", width: "50vw", paddingTop: "1%" }}>
                             <p>Step 1</p>
                             <div className="input-fields">
-                              <TextField id="outlined-basic" name="title" label="Event title" variant="outlined" onChange={this.handleChange} value={this.state.title} />
-                              <TextField id="outlined-basic" name="description" label="Event description" variant="outlined" onChange={this.handleChange} value={this.state.description} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <TextField id="outlined-basic" name="location" label="Event location" variant="outlined" onChange={this.handleChange} value={this.state.location} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <TextField id="outlined-basic" name="statename" label="Event state" variant="outlined" onChange={this.handleChange} value={this.state.statename} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <TextField id="outlined-basic" name="eventdate" label="Event date" variant="outlined" onChange={this.handleChange} value={this.state.eventdate} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <TextField id="outlined-basic" name="category" label="Event category" variant="outlined" onChange={this.handleChange} value={this.state.category} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <TextField id="title-textfield" name="title" label="Event title" variant="outlined" onChange={this.handleChange} value={this.state.title} />
+                              <TextField id="description-textfield" name="description" label="Event description" variant="outlined" onChange={this.handleChange} value={this.state.description} style={commonStyle}/>
+                              <DatePickerWrapper id='eventdate' name='eventdate' variant='outlined' onChange={this.handleChange} value={this.state.eventdate} style={commonStyle} />
+                              <FormControl fullWidth>
+                                <InputLabel id="state-select-label" style={commonStyle}>Event State</InputLabel>
+                                <Select labelId="state-select-label" id="state-select" name="statename"  label="Event state" variant="outlined" onChange = {this.handleChange} value={this.state.statename} style={commonStyle}>
+                                    {
+                                        UsStates.map((state) =>{
+                                            return (
+                                                <MenuItem key={state} value={state}>{state}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                              </FormControl>
+                              <FormControl fullWidth error={this.state.islocationFocused &&!this.state.statename}>
+                                <InputLabel id="city-select-label" style={commonStyle}>Event Location</InputLabel>
+                                <Select onClick={() => this.onLocationClick('location')} labelId="city-select-label" id="state-select" name="location" label="Event Location" variant="outlined" onChange = {this.handleChange} value={this.state.location} style={commonStyle}>
+                                    {
+                                        getCities(this.state.statename).map((city) =>{
+                                            return (
+                                                <MenuItem key={city} value={city}>{city}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
+                              </FormControl>
+                              <FormControl>
+                                <InputLabel id="category-select-label" style={commonStyle}>Event Category</InputLabel>
+                                <Select labelId="category-select-labelId" id="category-select" name="category" label="Event Category" variant="outlined" onChange = {this.handleChange} value={this.state.category} style={commonStyle}>
+                                    {
+                                        EventCategories.Categories.map((category) =>{
+                                            return (
+                                                <MenuItem key={category} value={category}>{category}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
+                              </FormControl>
+                              <div> 
+                              <h6>Is this a paid event ?</h6>
+                              <input type = "radio" name = "is_paid_event" value = "Yes" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> Yes
+                              <input type = "radio" name = "is_paid_event" value = "No" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> No
+                              </div>
                             </div>
                             
                             <br/>
