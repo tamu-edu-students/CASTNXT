@@ -41,7 +41,7 @@ class AdminCreateEvent extends Component {
             statename: "",
             eventdate: "",
             category: "",
-            is_paid_event: true,
+            is_paid_event: "",
             formIds: properties.formIds !== undefined ? properties.formIds : [],
             formData: null,
             newFormData: {},
@@ -210,13 +210,11 @@ class AdminCreateEvent extends Component {
                                 {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
                               </FormControl>
                               <TextField id="category-textfield" name="category" label="Event category" variant="outlined" onChange={this.handleChange} value={this.state.category} style={{marginTop: "20px", marginBottom: "20px"}}/>
-                              <FormControl>
-                                <FormLabel id = "is_paid_event_label">Is this a paid event?</FormLabel>
-                                <RadioGroup name = "is_paid_event_group" defaultValue = "yes" label="Paid Event" variant="outlined" onChange = {this.handleChange} value={this.state.is_paid_event} style={commonStyle}>
-                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" checked={this.state.is_paid_event === true}/>
-                                    <FormControlLabel value="no" control={<Radio />} label="No" checked={this.state.is_paid_event === true}/>
-                                </RadioGroup>
-                              </FormControl>
+                              <div> 
+                              <h6>Is this a paid event ?</h6>
+                              <input type = "radio" name = "is_paid_event" value = "Yes" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> Yes
+                              <input type = "radio" name = "is_paid_event" value = "No" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> No
+                              </div>
                             </div>
                             
                             <br/>

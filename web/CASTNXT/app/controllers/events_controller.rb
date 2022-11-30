@@ -289,8 +289,6 @@ class EventsController < ApplicationController
   end
   
   def create_event producerId, params
-    puts "Rohan"
-    puts params
     Event.create(:form_id => params[:form_id], :producer_id => producerId, :status => "ACCEPTING", :title => params[:title], :description => params[:description], :location => params[:location], :statename => params[:statename], :eventdate => params[:eventdate], :category => params[:category], :is_paid_event => params[:is_paid_event])
   end
 end
