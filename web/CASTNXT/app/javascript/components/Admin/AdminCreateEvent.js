@@ -19,7 +19,7 @@ import FormBuilderContainer from "../Forms/FormBuilder.js"
 import Slide from "../Forms/Slide.js"
 import "./Admin.css";
 import "../Forms/Forms.css";
-import {defaultDataSchema, defaultUiSchema, UsStates, getCities} from '../../utils/FormsUtils';
+import {defaultDataSchema, defaultUiSchema, UsStates, getCities, EventCategories} from '../../utils/FormsUtils';
 import { FormHelperText } from "@mui/material";
 import DatePickerWrapper from "../Shared/DatePicker";
 
@@ -209,7 +209,19 @@ class AdminCreateEvent extends Component {
                                 </Select>
                                 {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
                               </FormControl>
-                              <TextField id="category-textfield" name="category" label="Event category" variant="outlined" onChange={this.handleChange} value={this.state.category} style={{marginTop: "20px", marginBottom: "20px"}}/>
+                              <FormControl>
+                                <InputLabel id="category-select-label" style={commonStyle}>Event Category</InputLabel>
+                                <Select labelId="category-select-labelId" id="category-select" name="category" label="Event Category" variant="outlined" onChange = {this.handleChange} value={this.state.category} style={commonStyle}>
+                                    {
+                                        EventCategories.Categories.map((category) =>{
+                                            return (
+                                                <MenuItem key={category} value={category}>{category}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
+                              </FormControl>
                               <div> 
                               <h6>Is this a paid event ?</h6>
                               <input type = "radio" name = "is_paid_event" value = "Yes" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> Yes

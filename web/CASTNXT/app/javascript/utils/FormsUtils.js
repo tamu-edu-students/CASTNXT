@@ -49,6 +49,15 @@ export const defaultUiSchema = {
     'gender': {'ui:widget': 'radio'}
 }
 
+export const EventCategories = {
+  "Categories": [
+    "Fashion",
+    "Performing Arts", 
+    "Music",
+    "Other"
+  ]
+}
+
 export const UsCitiesWithStates = {
     "New York": [
       "New York",
