@@ -8,12 +8,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-<<<<<<< HEAD
+import MuiAlert from '@mui/material/Alert';
 import FilterEvents from "../Filter/FilterEvents";
 
-=======
-import MuiAlert from '@mui/material/Alert';
->>>>>>> main
 import Header from "../Navbar/Header";
 
 class UserHomepage extends Component {
@@ -32,13 +29,9 @@ class UserHomepage extends Component {
         this.state = {
             acceptingTableData: properties.acceptingTableData ? properties.acceptingTableData : [],
             submittedTableData: properties.submittedTableData ? properties.submittedTableData : [],
-<<<<<<< HEAD
+            eventDeletedFlag,
             tabValue: 0,
             filterTextValue: 'All'
-=======
-            eventDeletedFlag,
-            tabValue: 0
->>>>>>> main
         }
     }
     
