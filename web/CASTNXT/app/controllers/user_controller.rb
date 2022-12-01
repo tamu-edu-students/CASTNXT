@@ -14,8 +14,9 @@ class UserController < ApplicationController
     events.each do |event|
       object = {
         title: event.title,
-        id: event._id.to_str,
-        delete_time: event.delete_time
+        id: event._id.to_str, 
+        delete_time: event.delete_time,
+        category: event.category
       }
       
       if talent_slide_exists?(event._id, talent._id)

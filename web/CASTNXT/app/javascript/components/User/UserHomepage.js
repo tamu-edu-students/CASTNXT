@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {useState, Component} from "react"
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,6 +9,8 @@ import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MuiAlert from '@mui/material/Alert';
+import FilterEvents from "../Filter/FilterEvents";
+
 import Header from "../Navbar/Header";
 
 class UserHomepage extends Component {
@@ -28,7 +30,8 @@ class UserHomepage extends Component {
             acceptingTableData: properties.acceptingTableData ? properties.acceptingTableData : [],
             submittedTableData: properties.submittedTableData ? properties.submittedTableData : [],
             eventDeletedFlag,
-            tabValue: 0
+            tabValue: 0,
+            filterTextValue: 'All'
         }
     }
     
@@ -38,8 +41,30 @@ class UserHomepage extends Component {
         })
     }
     
+    onFilterValueSelected = (filterValue) =>{
+        this.setState({
+            filterTextValue: filterValue
+        })
+    }
+    
     renderAcceptingEventList() {
         const { acceptingTableData } = this.state
+        
+        let filteredAcceptingTableData = acceptingTableData.filter((event) => {
+            if(this.state.filterTextValue == 'Fashion') {
+                return event.category === 'Fashion';
+            } else if (this.state.filterTextValue == 'Music') {
+                return event.category === 'Music';
+            } else if(this.state.filterTextValue === 'Performing Arts') {
+                return event.category === 'Performing Arts';
+            } else if(this.state.filterTextValue === 'Other') {
+                return event.category === 'Other'
+            } else if(this.state.filterTextValue === 'All') {
+                return event
+            }
+        })
+        
+        console.log(filteredAcceptingTableData)
         
         let rows = []
         if (!acceptingTableData.length) {
@@ -51,7 +76,7 @@ class UserHomepage extends Component {
                  </TableRow>
             )
         } else {
-            acceptingTableData.map((event, i) => {
+            filteredAcceptingTableData.map((event, i) => {
                 rows.push(
                     <TableRow key={i}>
                         <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
@@ -129,6 +154,9 @@ class UserHomepage extends Component {
                                     </Tabs>
                                     <hr style={{ color: "black" }} />
                                 </div>
+                                
+                                <div><b>Category Filter</b></div>
+                                <FilterEvents filterValueSelected = {this.onFilterValueSelected}></FilterEvents>
                             
                                 {this.state.tabValue === 0 &&
                                     <TableContainer component={Paper}>
