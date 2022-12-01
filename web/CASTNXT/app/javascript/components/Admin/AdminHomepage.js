@@ -64,7 +64,7 @@ class AdminHomepage extends Component {
                 <div>
                     <div className="container user-events">
                         <div className="row">
-                            <h2> FashioNXT Events </h2>
+                            <h2> CastNXT Events </h2>
                         </div>
                         <div className="row">
                             <div style={{marginBottom: 20}}>
