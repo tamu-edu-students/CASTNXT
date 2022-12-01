@@ -55,7 +55,7 @@ class ClientHomepage extends Component {
                 <div>
                     <div className="container user-events">
                         <div className="row">
-                            <h2> FashioNXT Events </h2>
+                            <h2> CastNXT Events </h2>
                         </div>
                         <hr />
                         <div className="row">
