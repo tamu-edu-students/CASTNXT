@@ -36,6 +36,21 @@ class EventsController < ApplicationController
         event = get_event(eventId)
         
         update_event_status(event, params[:status])
+        puts("step 1")
+        if(params[:status] == "DELETED")
+          talents = Talent.all
+          talents.each do |talent|
+            puts("step 2")
+            if talent_slide_exists?(eventId, talent.id)
+              event = get_event(eventId)
+              puts("step 3")
+              UserMailer.deleted_event(talent.email, event.title, event.delete_time).deliver_now
+              puts(talent.email)
+              puts(event.title)
+              puts("step 4")
+            end
+          end
+        end
         render json: {comment: "Updated Event Status!"}, status: 200
       else
         render json: {redirect_path: "/"}, status: 403
@@ -89,8 +104,16 @@ class EventsController < ApplicationController
       slide = get_talent_slide(eventId, session[:userId])
       data[:formData] = JSON.parse(slide.data)
     end
+    userTalent = Talent.find_by(:_id => session[:userId])
     
-    @properties = {name: session[:userName], data: data}
+    if userTalent[:talentData].nil?
+      newTalentData = {}
+    else
+      newTalentData = JSON.parse(userTalent[:talentData])
+    end
+   
+    
+    @properties = {name: session[:userName], data: data , talentData: newTalentData}
   end
   
   def producer_event
@@ -238,6 +261,7 @@ class EventsController < ApplicationController
   
   def update_event_status event, status
     event.update(:status => status)
+    event.update(:delete_time => Time.now)
   end
   
   def get_event eventId
@@ -289,6 +313,10 @@ class EventsController < ApplicationController
   end
   
   def create_event producerId, params
-    Event.create(:form_id => params[:form_id], :producer_id => producerId, :status => "ACCEPTING", :title => params[:title], :description => params[:description], :location => params[:location], :statename => params[:statename], :eventdate => params[:eventdate], :category => params[:category], :is_paid_event => params[:is_paid_event])
+    timeval = Time.now
+    #puts("here here yess")
+    #puts(timeval)
+    Event.create(:form_id => params[:form_id], :producer_id => producerId, :status => "ACCEPTING", :title => params[:title], :description => params[:description], :location => params[:location], :statename => params[:statename], :eventdate => params[:eventdate], :category => params[:category], :delete_time => "timeval", :is_paid_event => params[:is_paid_event])
+
   end
 end

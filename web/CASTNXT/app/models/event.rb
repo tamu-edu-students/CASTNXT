@@ -15,5 +15,6 @@ class Event
   field :statename, type: String
   field :eventdate, type: String
   field :category, type: String
+  field :delete_time, type: String
   field :is_paid_event, type: String
 end

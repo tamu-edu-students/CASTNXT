@@ -28,14 +28,22 @@ class SlidesController < ApplicationController
         if "ACCEPTING".casecmp? event.status
           if is_new_slide?(eventId, talentId)
             create_slide(eventId, talentId, formData)
+            userTalent = Talent.find_by(:_id => talentId)
+            userTalent.update(:talentData => formData)
+           
             render json: {comment: "Registered successfully!"}, status: 201
           else
             slide = get_talent_slide(eventId, talentId)
+            
             data = {}
             data[:formData] = formData
             data[:curated] = slide.curated
             
             update_slide_data(slide, data)
+            
+            userTalent = Talent.find_by(:_id => talentId)
+            userTalent.update(:talentData => formData)
+           
             render json: {comment: "Updated registration!"}, status: 200
           end
         else
