@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MuiAlert from '@mui/material/Alert';
-<<<<<<< HEAD
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -20,9 +19,6 @@ import FilterEvents from "../Filter/FilterEvents";
 import CityFilter from "../Filter/CityFilter";
 
 import {UsStates, getCities} from '../../utils/FormsUtils';
-=======
-import FilterEvents from "../Filter/FilterEvents";
->>>>>>> main
 
 import Header from "../Navbar/Header";
 
