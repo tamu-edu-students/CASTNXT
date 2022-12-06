@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MuiAlert from '@mui/material/Alert';
+<<<<<<< HEAD
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -19,6 +20,9 @@ import FilterEvents from "../Filter/FilterEvents";
 import CityFilter from "../Filter/CityFilter";
 
 import {UsStates, getCities} from '../../utils/FormsUtils';
+=======
+import FilterEvents from "../Filter/FilterEvents";
+>>>>>>> main
 
 import Header from "../Navbar/Header";
 
@@ -113,6 +117,22 @@ class UserHomepage extends Component {
     renderAcceptingEventList() {
         const { acceptingTableData, filteredTableData } = this.state
         
+        let filteredAcceptingTableData = acceptingTableData.filter((event) => {
+            if(this.state.filterTextValue == 'Fashion') {
+                return event.category === 'Fashion';
+            } else if (this.state.filterTextValue == 'Music') {
+                return event.category === 'Music';
+            } else if(this.state.filterTextValue === 'Performing Arts') {
+                return event.category === 'Performing Arts';
+            } else if(this.state.filterTextValue === 'Other') {
+                return event.category === 'Other'
+            } else if(this.state.filterTextValue === 'All') {
+                return event
+            }
+        })
+        
+        console.log(filteredAcceptingTableData)
+        
         let rows = []
         if (!filteredTableData.length) {
             rows.push(
@@ -128,6 +148,18 @@ class UserHomepage extends Component {
                     <TableRow key={i}>
                         <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
                             <b><a href={"/user/events/" + event.id}>{event.title}</a></b>
+                        </TableCell>
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                            <b>{event.category}</b>
+                        </TableCell>
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                            <b>{new Date(event.date).toLocaleDateString()}</b>
+                        </TableCell>
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                            <b>{event.location + " " + event.statename}</b>
+                        </TableCell>
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                            <b>{event.ispaid}</b>
                         </TableCell>
                     </TableRow>
                 )
@@ -190,7 +222,7 @@ class UserHomepage extends Component {
                             this.state.eventDeletedFlag ? <MuiAlert onClick={() => (this.setState({eventDeletedFlag: false}))} severity="warning" elevation={6} variant="filled">Note: Certain events have been cancelled. Please check submissions for more details. Sorry for the inconvenience.</MuiAlert> : null
                         }
                         <div className="row">
-                            <h2> FashioNXT Events </h2>
+                            <h2> CastNXT Events </h2>
                         </div>
                         <div className="row">
                             <div className="col-md-6 offset-md-3">
@@ -214,11 +246,15 @@ class UserHomepage extends Component {
                                         <Table aria-label="simple table">
                                             <TableHead style={{ backgroundColor: "#3498DB" }}>
                                                 <TableRow>
-                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Events</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Event</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Category</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Date</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Location</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Is Paid?</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                <div id='eventList'>{this.renderAcceptingEventList()}</div>
+                                                {this.renderAcceptingEventList()}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
