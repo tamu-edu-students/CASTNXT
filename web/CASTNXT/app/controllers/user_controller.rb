@@ -16,7 +16,11 @@ class UserController < ApplicationController
         title: event.title,
         id: event._id.to_str, 
         delete_time: event.delete_time,
-        category: event.category
+        category: event.category,
+        date: event.eventdate,
+        statename: event.statename,
+        location: event.location,
+        ispaid: event.is_paid_event
       }
       
       if talent_slide_exists?(event._id, talent._id)

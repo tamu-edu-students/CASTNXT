@@ -82,6 +82,18 @@ class UserHomepage extends Component {
                         <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
                             <b><a href={"/user/events/" + event.id}>{event.title}</a></b>
                         </TableCell>
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                            <b>{event.category}</b>
+                        </TableCell>
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                            <b>{new Date(event.date).toLocaleDateString()}</b>
+                        </TableCell>
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                            <b>{event.location + " " + event.statename}</b>
+                        </TableCell>
+                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                            <b>{event.ispaid}</b>
+                        </TableCell>
                     </TableRow>
                 )
             });
@@ -163,11 +175,15 @@ class UserHomepage extends Component {
                                         <Table aria-label="simple table">
                                             <TableHead style={{ backgroundColor: "#3498DB" }}>
                                                 <TableRow>
-                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Events</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Event</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Category</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Date</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Location</TableCell>
+                                                    <TableCell align="center" style={{fontSize: "12pt"}}>Is Paid?</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                <div id='eventList'>{this.renderAcceptingEventList()}</div>
+                                                {this.renderAcceptingEventList()}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
