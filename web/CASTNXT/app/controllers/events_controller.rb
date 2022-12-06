@@ -22,7 +22,11 @@ class EventsController < ApplicationController
 
     forms = get_producer_forms(session[:userId])
     forms.each do |form|
-      formIds << form._id.to_str
+      fd = []
+      km = get_events(form._id)
+      fd << form._id.to_str
+      fd << km[0].title.to_str
+      formIds << fd
     end
 
     @properties = {name: session[:userName], formIds: formIds}
@@ -270,6 +274,10 @@ class EventsController < ApplicationController
   
   def get_producer_forms producerId
     return Form.where(:producer_id => producerId)
+  end
+
+  def get_events formId
+    return Event.where(:form_id => formId)
   end
   
   def get_form formId

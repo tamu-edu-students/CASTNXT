@@ -29,7 +29,7 @@ const commonStyle = {marginTop: "20px", marginBottom: "20px"}
 class AdminCreateEvent extends Component {
     constructor(props) {
         super(props)
-
+        console.log(properties)
         this.state = {
             tabValue: 0,
             selectedFormNo: "",
@@ -240,7 +240,6 @@ class AdminCreateEvent extends Component {
                                 <hr style={{ color: "black" }} />
                             </div>
                             
-                            
                             {this.state.tabValue === 0 &&
                                 <div>
                                     <div className="flex-row">
@@ -259,7 +258,7 @@ class AdminCreateEvent extends Component {
                                                 >
                                                     {this.state.formIds.map(formId => {
                                                         return (
-                                                            <MenuItem key={formId} value={formId}>Form {formId}</MenuItem>
+                                                            <MenuItem key={formId[0]} value={formId[0]}>Form {formId[1]}</MenuItem>
                                                         )
                                                     })}
                                                 </Select>
