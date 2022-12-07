@@ -91,21 +91,11 @@ class UserHomepage extends Component {
             }
         }
         
-        console.log(finalFilterValues)
-        
-        let paidFilterValues = finalFilterValues.filter((event) => {
-            if(this.state.isPaidFilterValue === 'None') {
-                return event
-            } else {
-                console.log(this.state.isPaidFilterValue)
-                console.log(event.ispaid)
-                return this.state.isPaidFilterValue === event.ispaid
-            }})
-            
-        console.log(paidFilterValues)
+        // IsPaid Based Filtering
+        finalFilterValues = finalFilterValues.filter((event) => this.state.isPaidFilterValue === 'None' ? true: this.state.isPaidFilterValue === event.ispaid)
         
         this.setState({
-            filteredTableData: paidFilterValues
+            filteredTableData: finalFilterValues
         })
     }
 
@@ -148,7 +138,7 @@ class UserHomepage extends Component {
                             <b>{new Date(event.date).toLocaleDateString()}</b>
                         </TableCell>
                         <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
-                            <b>{event.location + " " + event.statename}</b>
+                            <b>{event.location + ", " + event.statename}</b>
                         </TableCell>
                         <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
                             <b>{event.ispaid}</b>
@@ -230,8 +220,8 @@ class UserHomepage extends Component {
                                 <CategoryFilter categoryFilterValueSelected = {this.onCategoryFilterValueSelected}></CategoryFilter>
                                 <LocationFilter handleLocationFilterChange = {this.handleLocationFilterChange}></LocationFilter>
                                 <div><b>Is the event paid ?</b></div>
-                                <IsPaidFilter handleIsPaidFilterSelected = {this.onIsPaidFilterSelected}></IsPaidFilter>
-                                <Button onClick = {this.onSubmit}>Submit Filter</Button> 
+                                <IsPaidFilter isPaidFilterSelected = {this.onIsPaidFilterSelected}></IsPaidFilter>
+                                <Button variant="outlined" onClick = {this.onSubmit} style={commonStyle}>Submit Filter</Button> 
                             
                                 {this.state.tabValue === 0 &&
                                     <TableContainer component={Paper}>
