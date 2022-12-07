@@ -1,65 +1,4 @@
 // This schema will act as the default schema for any new event.
-export const defaultDataSchema = {
-    type: 'object',
-    properties: {
-        talentName: {
-            title: "Name",
-            type: "string"
-        },
-        gender: {
-            title: "Gender",
-            type: "string",
-            enum: [
-                "Male",
-                "Female",
-                "Other"
-            ]
-        },
-        birthDate: {
-            title: "Birth Date",
-            format: "date",
-            type: "string"
-        },
-        email: {
-            title: "Email",
-            type: "string",
-            description: "Enter your email address."
-        },
-        city: {
-            title: "City",
-            description: "Enter your city of residence.",
-            type: "string"
-        },
-        state: {
-            title: "State",
-            description: "Enter your state of residence.",
-            type: "string"
-        }
-    }
-}
-
-export const defaultUiSchema = {
-    'ui:order': ['talentName', 'gender', 'birthDate', 'email', 'city', 'state'],
-    'gender': {'ui:widget': 'radio'}
-}
-
-export const getSchema = (isPaid) => {
-  console.log(isPaid)
-  if (isPaid === 'No'){
-    return {dataSchema: defaultDataSchema, uiSchema: defaultUiSchema}
-  }
-  const dataSchema = JSON.parse(JSON.stringify(defaultDataSchema));
-  const uiSchema = JSON.parse(JSON.stringify(defaultUiSchema));
-  dataSchema.properties.paymentLink = { 
-    title: "Payment Link",
-    type: "string",
-    description: "Enter your PayPal or Venmo payment link."
-  }
-  uiSchema['ui:order'].push('paymentLink')
-  return {dataSchema, uiSchema}
-}
-
-
 export const EventCategories = {
   "Categories": [
     "Fashion",
@@ -1177,10 +1116,73 @@ export const UsCitiesWithStates = {
 export const getCities = (state) => {
     if(!state){
         const cities = [];
-        Object.values(UsCitiesWithStates).forEach(stateCities => cities.concat(stateCities));
-        return cities;
+        Object.values(UsCitiesWithStates).forEach(stateCities => {
+          cities.push(...stateCities)
+        });
+        return cities.sort();
     } 
     return UsCitiesWithStates[state];
 } 
 
-export const UsStates = Object.keys(UsCitiesWithStates).sort(); 
+export const UsStates = Object.keys(UsCitiesWithStates).sort();
+
+export const defaultDataSchema = {
+    type: 'object',
+    properties: {
+        talentName: {
+            title: "Name",
+            type: "string"
+        },
+        gender: {
+            title: "Gender",
+            type: "string",
+            enum: [
+                "Male",
+                "Female",
+                "Other"
+            ]
+        },
+        birthDate: {
+            title: "Birth Date",
+            format: "date",
+            type: "string"
+        },
+        email: {
+            title: "Email",
+            type: "string",
+            description: "Enter your email address."
+        },
+        state: {
+          title: "State",
+          enum: [...UsStates],
+          description: "Enter your state of residence.",
+          type: "string"
+        },
+        city: {
+            title: "City",
+            description: "Enter your city of residence.",
+            enum: [...getCities()],
+            type: "string"
+        },
+    }
+}
+
+export const defaultUiSchema = {
+    'ui:order': ['talentName', 'gender', 'birthDate', 'email', 'state', 'city'],
+    'gender': {'ui:widget': 'radio'}
+}
+
+export const getSchema = (isPaid) => {
+  if (isPaid === 'No'){
+    return {dataSchema: defaultDataSchema, uiSchema: defaultUiSchema}
+  }
+  const dataSchema = JSON.parse(JSON.stringify(defaultDataSchema));
+  const uiSchema = JSON.parse(JSON.stringify(defaultUiSchema));
+  dataSchema.properties.paymentLink = { 
+    title: "Payment Link",
+    type: "string",
+    description: "Enter your PayPal or Venmo payment link."
+  }
+  uiSchema['ui:order'].push('paymentLink')
+  return {dataSchema, uiSchema}
+}

@@ -3,12 +3,8 @@ import axios from "axios";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
-import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import FormLabel from "@mui/material/FormLabel";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
@@ -29,7 +25,6 @@ const commonStyle = {marginTop: "20px", marginBottom: "20px"}
 class AdminCreateEvent extends Component {
     constructor(props) {
         super(props)
-        console.log(properties)
         this.state = {
             tabValue: 0,
             selectedFormNo: "",
@@ -49,7 +44,6 @@ class AdminCreateEvent extends Component {
             disableSubmit: false,
             status: "",
             message: ""
-            
         }
     }
     
@@ -67,7 +61,6 @@ class AdminCreateEvent extends Component {
 
     handleRadioChange = (e, value) => {
         const {dataSchema, uiSchema} = getSchema(e.target.value)
-        console.log(uiSchema);
         this.setState({
             [e.target.name]: e.target.value,
             schema: JSON.stringify(dataSchema),
