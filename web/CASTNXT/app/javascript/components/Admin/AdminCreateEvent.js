@@ -19,7 +19,7 @@ import FormBuilderContainer from "../Forms/FormBuilder.js"
 import Slide from "../Forms/Slide.js"
 import "./Admin.css";
 import "../Forms/Forms.css";
-import {defaultDataSchema, defaultUiSchema, UsStates, getCities, EventCategories} from '../../utils/FormsUtils';
+import {getSchema, UsStates, getCities, EventCategories} from '../../utils/FormsUtils';
 import { FormHelperText } from "@mui/material";
 import DatePickerWrapper from "../Shared/DatePicker";
 
@@ -33,8 +33,8 @@ class AdminCreateEvent extends Component {
         this.state = {
             tabValue: 0,
             selectedFormNo: "",
-            schema: JSON.stringify(defaultDataSchema),
-            uischema: JSON.stringify(defaultUiSchema),
+            schema: JSON.stringify(getSchema('No').dataSchema),
+            uischema: JSON.stringify(getSchema('No').uiSchema),
             title: "",
             description: "",
             location: "",
@@ -62,6 +62,16 @@ class AdminCreateEvent extends Component {
     handleChange = (e, value) => {
         this.setState({
             [e.target.name]: e.target.value
+        })
+    }
+
+    handleRadioChange = (e, value) => {
+        const {dataSchema, uiSchema} = getSchema(e.target.value)
+        console.log(uiSchema);
+        this.setState({
+            [e.target.name]: e.target.value,
+            schema: JSON.stringify(dataSchema),
+            uischema: JSON.stringify(uiSchema)
         })
     }
     
@@ -224,8 +234,8 @@ class AdminCreateEvent extends Component {
                               </FormControl>
                               <div> 
                               <h6>Is this a paid event ?</h6>
-                              <input type = "radio" name = "is_paid_event" value = "Yes" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> Yes
-                              <input type = "radio" name = "is_paid_event" value = "No" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> No
+                              <input type = "radio" name = "is_paid_event" value = "Yes" onChange={this.handleRadioChange} style={{marginLeft: "20px", marginRight: "10px"}}/> Yes
+                              <input type = "radio" name = "is_paid_event" value = "No" onChange={this.handleRadioChange} style={{marginLeft: "20px", marginRight: "10px"}}/> No
                               </div>
                             </div>
                             

@@ -20,12 +20,6 @@ export const defaultDataSchema = {
             format: "date",
             type: "string"
         },
-        paymentLink: { 
-            //Add only if the event is paid for.
-            title: "Payment Link",
-            type: "string",
-            description: "Enter your PayPal or Venmo payment link."
-        },
         email: {
             title: "Email",
             type: "string",
@@ -45,9 +39,26 @@ export const defaultDataSchema = {
 }
 
 export const defaultUiSchema = {
-    'ui:order': ['talentName', 'gender', 'birthDate', 'paymentLink', 'email', 'city', 'state'],
+    'ui:order': ['talentName', 'gender', 'birthDate', 'email', 'city', 'state'],
     'gender': {'ui:widget': 'radio'}
 }
+
+export const getSchema = (isPaid) => {
+  console.log(isPaid)
+  if (isPaid === 'No'){
+    return {dataSchema: defaultDataSchema, uiSchema: defaultUiSchema}
+  }
+  const dataSchema = JSON.parse(JSON.stringify(defaultDataSchema));
+  const uiSchema = JSON.parse(JSON.stringify(defaultUiSchema));
+  dataSchema.properties.paymentLink = { 
+    title: "Payment Link",
+    type: "string",
+    description: "Enter your PayPal or Venmo payment link."
+  }
+  uiSchema['ui:order'].push('paymentLink')
+  return {dataSchema, uiSchema}
+}
+
 
 export const EventCategories = {
   "Categories": [
