@@ -50,7 +50,7 @@ class UserHomepage extends Component {
         })
     }
     
-    handleLocationFilterChange = (cityName, stateName) =>{
+    handleLocationFilterChange = (stateName, cityName) =>{
         this.setState({
             stateName,
             cityName
@@ -59,42 +59,38 @@ class UserHomepage extends Component {
 
     onSubmit = () => {
         let tableDataCopy = this.state.acceptingTableData;
-        console.log(tableDataCopy)
-        //let finalValues = tableDataCopy.filter((event) => this.state.filterTextValue === 'All' ? true: this.state.filterTextValue === event.category)
-        let finalValues = tableDataCopy.filter((event) => {
-            if(this.state.filterTextValue == 'Fashion') {
-                return event.category === 'Fashion';
-            } else if (this.state.filterTextValue == 'Music') {
-                return event.category === 'Music';
-            } else if (this.state.filterTextValue === 'Performing Arts') {
-                return event.category === 'Performing Arts';
-            } else if (this.state.filterTextValue === 'Other') {
-                return event.category === 'Other'
-            } else if (this.state.filterTextValue === 'All') {
-                return event
-            }
-        })
-        console.log(finalValues)
-        let stateFilteredValues = null
+        
+        // Category Based Filtering
+        let categoryFilterValues = tableDataCopy.filter((event) => this.state.filterTextValue === 'All' ? true: this.state.filterTextValue === event.category)
+        
+        let finalFilterValues = categoryFilterValues
+        let stateFilterValues = null
+        let cityFilterValues = null
+        
+        // State Based Filtering
         if(this.state.stateName){
-            console.log(this.state.stateName)
-            stateFilteredValues = finalValues.filter((event) => {
+            stateFilterValues = categoryFilterValues.filter((event) => {
                 return event.statename === this.state.stateName
             })
-            finalValues = stateFilteredValues
-            console.log(finalValues)
+            finalFilterValues = stateFilterValues
         }
+        
+        // City Based Filtering
         if(this.state.cityName){
-            console.log(this.state.cityName)
-            let applyFilter = stateFilteredValues ? stateFilteredValues : finalValues;
-            //finalValues = applyFilter.filter((event) => this.state?.cityName === event.location)
-            stateFilteredValues = finalValues.filter((event) => {
+            cityFilterValues = stateFilterValues.filter((event) => {
                 return event.location === this.state.cityName
             })
-            console.log(finalValues)
+            finalFilterValues = cityFilterValues
+        } else {
+            if(stateFilterValues) {
+                finalFilterValues = stateFilterValues
+            } else {
+                finalFilterValues = categoryFilterValues
+            }
         }
+        
         this.setState({
-            filteredTableData: finalValues
+            filteredTableData: finalFilterValues
         })
     }
 
@@ -106,27 +102,10 @@ class UserHomepage extends Component {
     }
     
     renderAcceptingEventList() {
-        const { acceptingTableData } = this.state
-        const { filteredTableData } = this.state
-        
-        let filteredAcceptingTableData = acceptingTableData.filter((event) => {
-            if(this.state.filterTextValue == 'Fashion') {
-                return event.category === 'Fashion';
-            } else if (this.state.filterTextValue == 'Music') {
-                return event.category === 'Music';
-            } else if(this.state.filterTextValue === 'Performing Arts') {
-                return event.category === 'Performing Arts';
-            } else if(this.state.filterTextValue === 'Other') {
-                return event.category === 'Other'
-            } else if(this.state.filterTextValue === 'All') {
-                return event
-            }
-        })
-        
-        console.log(filteredAcceptingTableData)
+        const { acceptingTableData, filteredTableData } = this.state
         
         let rows = []
-        if (!acceptingTableData.length) {
+        if (!filteredTableData.length) {
             rows.push(
                  <TableRow key={0}>
                     <TableCell align="center">
