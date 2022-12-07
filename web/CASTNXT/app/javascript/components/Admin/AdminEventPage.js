@@ -11,7 +11,7 @@ import AdminCreateClientStack from "./AdminCreateClientStack";
 import AdminClientDecks from "./AdminClientDecks";
 import AdminEventSummary from "./AdminEventSummary";
 import AdminFinalizedCandidates from "./AdminFinalizedCandidates";
-import AdminCreateWithFilter from "./AdminCreateWithFilter";
+import AdminSubmittedDocs from "./AdminSubmittedDocs";
 
 class AdminEventPage extends Component {
     constructor(props) {
@@ -75,7 +75,7 @@ class AdminEventPage extends Component {
                               
                               {this.state.tabValue === 1 &&
                                   <div>
-                                    <AdminCreateWithFilter properties={properties} />
+                                    <AdminSubmittedDocs properties={properties} />
                                   </div>
                               }
                               

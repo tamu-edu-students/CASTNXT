@@ -3,7 +3,7 @@ import { rowsToEntries, slidesToEntries } from "../../utils/AdminDataUtils";
 import AdminCreateStack from "./AdminCreateStack";
 import AdminUserTable from "./AdminUserTable";
 
-const AdminCreateWithFilter = (props) =>{
+const AdminSubmittedDocs = (props) =>{
 
     const [rowData, setRowData] = useState(null);
     const [showRowData, setShowRowData] = useState(false);
@@ -55,4 +55,4 @@ const AdminCreateWithFilter = (props) =>{
 
 }
 
-export default AdminCreateWithFilter;
+export default AdminSubmittedDocs;

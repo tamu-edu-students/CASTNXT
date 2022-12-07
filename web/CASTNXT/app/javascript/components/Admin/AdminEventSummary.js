@@ -89,7 +89,7 @@ class AdminEventSummary extends Component {
         return(
             <div>
                 <h4 style={{marginTop: '10px'}}>Event Summary</h4>
-                
+                <p>Here you will find a report of mapped clients and talents for a certain event.</p>
                 <div>
                   <div className="col-md-8 offset-md-2" style={{marginTop: '10px'}}>
                     <Paper>

@@ -44,7 +44,6 @@ test('AdminHomepage Load test: DELETED event', ()=>{
     )
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
-    ADMIN_PROPERTIES_EVENT_NONE
 })
 
 test('AdminHomepage Load test: NO events', ()=>{

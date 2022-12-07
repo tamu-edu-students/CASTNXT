@@ -1,4 +1,4 @@
-import AdminCreateWithFilter from "../../../../app/javascript/components/Admin/AdminCreateWithFilter";
+import AdminSubmittedDocs from "../../../../app/javascript/components/Admin/AdminSubmittedDocs";
 import renderer from 'react-test-renderer';
 import { propsDefault, ROW_CURATED, ROWDATA_MOCKED } from '../../__mocks__/props.mock';
 
@@ -18,7 +18,7 @@ jest.mock("../../../../app/javascript/components/Admin/AdminCreateStack", ()=>(p
 
 test('Admin Create With Filter Load', ()=>{
     const component = renderer.create(
-        <AdminCreateWithFilter properties={propsDefault.properties} />
+        <AdminSubmittedDocs properties={propsDefault.properties} />
     )
 
     let tree = component.toJSON();
@@ -27,7 +27,7 @@ test('Admin Create With Filter Load', ()=>{
 
 test('Admin Create on Row Click', ()=>{
     const component = renderer.create(
-        <AdminCreateWithFilter properties={propsDefault.properties} />
+        <AdminSubmittedDocs properties={propsDefault.properties} />
     )
 
     let tree = component.toJSON();
@@ -42,7 +42,7 @@ test('Admin Create on Row Click', ()=>{
 // npm run test -- ./spec/javascript/Components/Admin/AdminEventHome.spec.js 
 test('Admin Create With Row Curation', ()=>{
     const component = renderer.create(
-        <AdminCreateWithFilter properties={propsDefault.properties} />
+        <AdminSubmittedDocs properties={propsDefault.properties} />
     )
     let tree = component.toJSON();
     renderer.act(() => {

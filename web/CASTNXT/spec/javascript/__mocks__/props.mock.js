@@ -327,3 +327,4 @@ export const PROPERTIES_CLIENT_SUMMARY ={
         }
     }
 }
+

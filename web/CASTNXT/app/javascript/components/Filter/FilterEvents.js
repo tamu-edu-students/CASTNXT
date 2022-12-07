@@ -3,7 +3,6 @@ import React, {Component} from "react"
 let FilterEvents = (props) => {
     
     function onFilterValueChanged(event) {
-        console.log(event.target.value); 
         props.filterValueSelected(event.target.value)
     }
     
