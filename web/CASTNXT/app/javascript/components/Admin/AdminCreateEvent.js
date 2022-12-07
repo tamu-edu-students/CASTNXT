@@ -19,7 +19,6 @@ import {getSchema, UsStates, getCities, EventCategories} from '../../utils/Forms
 import { FormHelperText } from "@mui/material";
 import DatePickerWrapper from "../Shared/DatePicker";
 
-
 const commonStyle = {marginTop: "20px", marginBottom: "20px"}
 
 class AdminCreateEvent extends Component {
