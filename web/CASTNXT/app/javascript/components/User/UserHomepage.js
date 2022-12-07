@@ -10,8 +10,14 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MuiAlert from '@mui/material/Alert';
 import FilterEvents from "../Filter/FilterEvents";
+import Button from "@mui/material/Button";
+import CityFilter from "../Filter/CityFilter";
+
+import {UsStates, getCities} from '../../utils/FormsUtils';
 
 import Header from "../Navbar/Header";
+
+const commonStyle = {marginTop: "20px", marginBottom: "20px"}
 
 class UserHomepage extends Component {
     constructor(props) {
@@ -31,7 +37,10 @@ class UserHomepage extends Component {
             submittedTableData: properties.submittedTableData ? properties.submittedTableData : [],
             eventDeletedFlag,
             tabValue: 0,
-            filterTextValue: 'All'
+            filterTextValue: 'All', 
+            stateName: '', 
+            cityName: '', 
+            filteredTableData: properties.acceptingTableData ? properties.acceptingTableData : []
         }
     }
     
@@ -41,6 +50,55 @@ class UserHomepage extends Component {
         })
     }
     
+    handleLocationFilterChange = (cityName, stateName) =>{
+        this.setState({
+            stateName,
+            cityName
+        })
+    }
+
+    onSubmit = () => {
+        let tableDataCopy = this.state.acceptingTableData;
+        console.log(tableDataCopy)
+        //let finalValues = tableDataCopy.filter((event) => this.state.filterTextValue === 'All' ? true: this.state.filterTextValue === event.category)
+        let finalValues = tableDataCopy.filter((event) => {
+            if(this.state.filterTextValue == 'Fashion') {
+                return event.category === 'Fashion';
+            } else if (this.state.filterTextValue == 'Music') {
+                return event.category === 'Music';
+            } else if (this.state.filterTextValue === 'Performing Arts') {
+                return event.category === 'Performing Arts';
+            } else if (this.state.filterTextValue === 'Other') {
+                return event.category === 'Other'
+            } else if (this.state.filterTextValue === 'All') {
+                return event
+            }
+        })
+        console.log(finalValues)
+        let stateFilteredValues = null
+        if(this.state.stateName){
+            console.log(this.state.stateName)
+            stateFilteredValues = finalValues.filter((event) => {
+                return event.statename === this.state.stateName
+            })
+            finalValues = stateFilteredValues
+            console.log(finalValues)
+        }
+        if(this.state.cityName){
+            console.log(this.state.cityName)
+            let applyFilter = stateFilteredValues ? stateFilteredValues : finalValues;
+            //finalValues = applyFilter.filter((event) => this.state?.cityName === event.location)
+            stateFilteredValues = finalValues.filter((event) => {
+                return event.location === this.state.cityName
+            })
+            console.log(finalValues)
+        }
+        this.setState({
+            filteredTableData: finalValues
+        })
+    }
+
+    
     onFilterValueSelected = (filterValue) =>{
         this.setState({
             filterTextValue: filterValue
@@ -49,6 +107,7 @@ class UserHomepage extends Component {
     
     renderAcceptingEventList() {
         const { acceptingTableData } = this.state
+        const { filteredTableData } = this.state
         
         let filteredAcceptingTableData = acceptingTableData.filter((event) => {
             if(this.state.filterTextValue == 'Fashion') {
@@ -76,7 +135,7 @@ class UserHomepage extends Component {
                  </TableRow>
             )
         } else {
-            filteredAcceptingTableData.map((event, i) => {
+            filteredTableData.map((event, i) => {
                 rows.push(
                     <TableRow key={i}>
                         <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
@@ -105,7 +164,7 @@ class UserHomepage extends Component {
         const { submittedTableData } = this.state
         
         let rows = []
-        if (!submittedTableData.length) {
+        if (!filteredTableData.length) {
             rows.push(
                  <TableRow key={0}>
                     <TableCell colSpan={2} align="center">
@@ -114,7 +173,7 @@ class UserHomepage extends Component {
                  </TableRow>
             )
         } else {
-            submittedTableData.map((event, i) => {
+            filteredTableData.map((event, i) => {
                 if (event.accepting) {
                     rows.push(
                         <TableRow key={i}>
@@ -169,6 +228,9 @@ class UserHomepage extends Component {
                                 
                                 <div><b>Category Filter</b></div>
                                 <FilterEvents filterValueSelected = {this.onFilterValueSelected}></FilterEvents>
+                                <CityFilter handleLocationFilterChange = {this.handleLocationFilterChange}></CityFilter>
+
+                                <Button onClick = {this.onSubmit}>Submit Query</Button> 
                             
                                 {this.state.tabValue === 0 &&
                                     <TableContainer component={Paper}>
