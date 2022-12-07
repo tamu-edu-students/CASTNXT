@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   get '/validation/:id', to: 'home#validation'
   
+  get '/api/change_status/:id', to: 'api#change_status'
+  
   resources :home, only: [] do
     post 'login', :on => :collection
     post 'signup', :on => :collection
