@@ -3,12 +3,8 @@ import axios from "axios";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
-import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import FormLabel from "@mui/material/FormLabel";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
@@ -19,22 +15,20 @@ import FormBuilderContainer from "../Forms/FormBuilder.js"
 import Slide from "../Forms/Slide.js"
 import "./Admin.css";
 import "../Forms/Forms.css";
-import {defaultDataSchema, defaultUiSchema, UsStates, getCities, EventCategories} from '../../utils/FormsUtils';
+import {getSchema, UsStates, getCities, EventCategories} from '../../utils/FormsUtils';
 import { FormHelperText } from "@mui/material";
 import DatePickerWrapper from "../Shared/DatePicker";
-
 
 const commonStyle = {marginTop: "20px", marginBottom: "20px"}
 
 class AdminCreateEvent extends Component {
     constructor(props) {
         super(props)
-        console.log(properties)
         this.state = {
             tabValue: 0,
             selectedFormNo: "",
-            schema: JSON.stringify(defaultDataSchema),
-            uischema: JSON.stringify(defaultUiSchema),
+            schema: JSON.stringify(getSchema('No').dataSchema),
+            uischema: JSON.stringify(getSchema('No').uiSchema),
             title: "",
             description: "",
             location: "",
@@ -49,7 +43,6 @@ class AdminCreateEvent extends Component {
             disableSubmit: false,
             status: "",
             message: ""
-            
         }
     }
     
@@ -62,6 +55,15 @@ class AdminCreateEvent extends Component {
     handleChange = (e, value) => {
         this.setState({
             [e.target.name]: e.target.value
+        })
+    }
+
+    handleRadioChange = (e, value) => {
+        const {dataSchema, uiSchema} = getSchema(e.target.value)
+        this.setState({
+            [e.target.name]: e.target.value,
+            schema: JSON.stringify(dataSchema),
+            uischema: JSON.stringify(uiSchema)
         })
     }
     
@@ -224,8 +226,8 @@ class AdminCreateEvent extends Component {
                               </FormControl>
                               <div> 
                               <h6>Is this a paid event ?</h6>
-                              <input type = "radio" name = "is_paid_event" value = "Yes" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> Yes
-                              <input type = "radio" name = "is_paid_event" value = "No" onChange={this.handleChange} style={{marginLeft: "20px", marginRight: "10px"}}/> No
+                              <input type = "radio" name = "is_paid_event" value = "Yes" onChange={this.handleRadioChange} style={{marginLeft: "20px", marginRight: "10px"}}/> Yes
+                              <input type = "radio" name = "is_paid_event" value = "No" onChange={this.handleRadioChange} style={{marginLeft: "20px", marginRight: "10px"}}/> No
                               </div>
                             </div>
                             

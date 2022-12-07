@@ -77,7 +77,7 @@ const InputNumberInterval = (props) => {
         />
       </Box>
     );
-  }
+}
   
 InputNumberInterval.propTypes = {
     applyValue: PropTypes.func.isRequired,
@@ -110,8 +110,23 @@ InputNumberInterval.propTypes = {
     }).isRequired,
 };
 
+const labelMapper = {
+  '=': 'Equals to',
+  '!=': 'Not Equal to',
+  '>': 'Greater than',
+  '>=': 'Greater or Equal to',
+  '<': 'Lesser than',
+  '<=': 'Lesser or Equal to'
+}
+
+const getNumberOperators = () =>{
+  const operators = getGridNumericColumnOperators();
+  operators.forEach(op => op.label = labelMapper[op.label])
+  return operators
+}
+
 export const extendedNumberOperators = [
-    ...getGridNumericColumnOperators(),
+    ...getNumberOperators(),
     //This feature is available in mui-v5. Data-grid needs to be migrated.
     /*{
       label: 'Between',

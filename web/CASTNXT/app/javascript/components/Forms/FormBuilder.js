@@ -69,6 +69,7 @@ class FormBuilderContainer extends Component {
             schema={this.props.schema}
             uischema={this.props.uischema}
             onChange={(newSchema, newUiSchema) => {
+              console.log(newSchema);
               const { dataSchemaObj, uiSchemaObj } =  this.checkUiSchemaForFiles(newSchema,newUiSchema);
               this.props.onSchemaChange(JSON.stringify(dataSchemaObj));
               this.props.onUISchemaChange(JSON.stringify(uiSchemaObj));
