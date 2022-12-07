@@ -6,9 +6,9 @@ import MenuItem from "@mui/material/MenuItem";
 
 import {UsStates, getCities} from '../../utils/FormsUtils';
 
-const commonStyle = {marginTop: "20px", marginBottom: "20px"}
+const commonStyle = {marginTop: "20px", marginBottom: "20px"};
 
-const CityFilter = (props) => {
+const LocationFilter = (props) => {
 
     const [cityName, setCity] = useState(null)
     const [stateName, setState] = useState(null)
@@ -19,7 +19,7 @@ const CityFilter = (props) => {
         setCity(cityName);
         setState(stateName);
         props.handleLocationFilterChange(stateName,cityName)
-    }
+    };
 
     return (
     <div>
@@ -51,4 +51,4 @@ const CityFilter = (props) => {
     </div>);
 }
 
-export default CityFilter;
+export default LocationFilter;

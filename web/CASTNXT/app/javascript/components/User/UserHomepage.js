@@ -9,9 +9,10 @@ import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MuiAlert from '@mui/material/Alert';
-import FilterEvents from "../Filter/FilterEvents";
+import CategoryFilter from "../Filter/CategoryFilter";
 import Button from "@mui/material/Button";
-import CityFilter from "../Filter/CityFilter";
+import LocationFilter from "../Filter/LocationFilter";
+import IsPaidFilter from "../Filter/IsPaidFilter";
 
 import {UsStates, getCities} from '../../utils/FormsUtils';
 
@@ -37,10 +38,11 @@ class UserHomepage extends Component {
             submittedTableData: properties.submittedTableData ? properties.submittedTableData : [],
             eventDeletedFlag,
             tabValue: 0,
-            filterTextValue: 'All', 
+            categoryFilterTextValue: 'All', 
             stateName: '', 
             cityName: '', 
-            filteredTableData: properties.acceptingTableData ? properties.acceptingTableData : []
+            filteredTableData: properties.acceptingTableData ? properties.acceptingTableData : [], 
+            isPaidFilterValue: 'None'
         }
     }
     
@@ -61,14 +63,14 @@ class UserHomepage extends Component {
         let tableDataCopy = this.state.acceptingTableData;
         
         // Category Based Filtering
-        let categoryFilterValues = tableDataCopy.filter((event) => this.state.filterTextValue === 'All' ? true: this.state.filterTextValue === event.category)
+        let categoryFilterValues = tableDataCopy.filter((event) => this.state.categoryFilterTextValue === 'All' ? true: this.state.categoryFilterTextValue === event.category)
         
         let finalFilterValues = categoryFilterValues
         let stateFilterValues = null
         let cityFilterValues = null
         
         // State Based Filtering
-        if(this.state.stateName){
+        if(this.state.stateName) {
             stateFilterValues = categoryFilterValues.filter((event) => {
                 return event.statename === this.state.stateName
             })
@@ -76,7 +78,7 @@ class UserHomepage extends Component {
         }
         
         // City Based Filtering
-        if(this.state.cityName){
+        if(this.state.cityName) {
             cityFilterValues = stateFilterValues.filter((event) => {
                 return event.location === this.state.cityName
             })
@@ -89,15 +91,34 @@ class UserHomepage extends Component {
             }
         }
         
+        console.log(finalFilterValues)
+        
+        let paidFilterValues = finalFilterValues.filter((event) => {
+            if(this.state.isPaidFilterValue === 'None') {
+                return event
+            } else {
+                console.log(this.state.isPaidFilterValue)
+                console.log(event.ispaid)
+                return this.state.isPaidFilterValue === event.ispaid
+            }})
+            
+        console.log(paidFilterValues)
+        
         this.setState({
-            filteredTableData: finalFilterValues
+            filteredTableData: paidFilterValues
         })
     }
 
     
-    onFilterValueSelected = (filterValue) =>{
+    onCategoryFilterValueSelected = (categoryFilterValue) =>{
         this.setState({
-            filterTextValue: filterValue
+            categoryFilterTextValue: categoryFilterValue
+        })
+    }
+    
+    onIsPaidFilterSelected = (isPaidValue) =>{
+        this.setState({
+            isPaidFilterValue: isPaidValue
         })
     }
     
@@ -140,7 +161,7 @@ class UserHomepage extends Component {
     }
     
     renderSubmittedEventList(type) {
-        const { submittedTableData } = this.state
+        const { submittedTableData, filteredTableData } = this.state
         
         let rows = []
         if (!filteredTableData.length) {
@@ -206,10 +227,11 @@ class UserHomepage extends Component {
                                 </div>
                                 
                                 <div><b>Category Filter</b></div>
-                                <FilterEvents filterValueSelected = {this.onFilterValueSelected}></FilterEvents>
-                                <CityFilter handleLocationFilterChange = {this.handleLocationFilterChange}></CityFilter>
-
-                                <Button onClick = {this.onSubmit}>Submit Query</Button> 
+                                <CategoryFilter categoryFilterValueSelected = {this.onCategoryFilterValueSelected}></CategoryFilter>
+                                <LocationFilter handleLocationFilterChange = {this.handleLocationFilterChange}></LocationFilter>
+                                <div><b>Is the event paid ?</b></div>
+                                <IsPaidFilter handleIsPaidFilterSelected = {this.onIsPaidFilterSelected}></IsPaidFilter>
+                                <Button onClick = {this.onSubmit}>Submit Filter</Button> 
                             
                                 {this.state.tabValue === 0 &&
                                     <TableContainer component={Paper}>
