@@ -125,20 +125,20 @@ class UserHomepage extends Component {
         } else {
             filteredTableData.map((event, i) => {
                 rows.push(
-                    <TableRow key={i}>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                    <TableRow key={i} onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b><a href={"/user/events/" + event.id}>{event.title}</a></b>
                         </TableCell>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b>{event.category}</b>
                         </TableCell>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b>{new Date(event.date).toLocaleDateString()}</b>
                         </TableCell>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b>{event.location + ", " + event.statename}</b>
                         </TableCell>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b>{event.ispaid}</b>
                         </TableCell>
                     </TableRow>

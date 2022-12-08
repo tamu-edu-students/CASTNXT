@@ -29,7 +29,6 @@ test('Form Builder Load.', () => {
             formData={FORMBUILDER_PROPS.formData}
         />
     )
-
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
 })

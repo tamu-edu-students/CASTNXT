@@ -328,3 +328,70 @@ export const PROPERTIES_CLIENT_SUMMARY ={
     }
 }
 
+export const PROPERTIES_CLIENT_FEEDBACK = {
+    "name": "Sid",
+    "data": {
+        "schema": {
+            "type": "object",
+            "properties": {
+                "newInput1": {
+                    "title": "Age",
+                    "type": "integer",
+                    "default": 0
+                },
+                "newInput2": {
+                    "title": "First Name",
+                    "type": "string",
+                    "description": "Your First Name"
+                },
+                "newInput3": {
+                    "title": "Given Name",
+                    "type": "string",
+                    "description": "Your Given Name"
+                }
+            },
+            "dependencies": {},
+            "required": [
+                "newInput1",
+                "newInput2",
+                "newInput3"
+            ]
+        },
+        "uischema": {
+            "ui:order": [
+                "newInput1",
+                "newInput2",
+                "newInput3"
+            ]
+        },
+        "id": "634b4470c2e881bd9a343e45",
+        "title": "Paris Fashion Week",
+        "description": "Some Description",
+        "status": "ACCEPTING",
+        "negotiationId": "634b4956c2e881bec01f8fea",
+        "finalizedIds": [],
+        "location": null,
+        "statename": null,
+        "eventdate": null,
+        "category": null,
+        "is_paid_event": null,
+        "slides": {
+            "634b4541c2e881bd9a343e4b": {
+                "talentName": "Anushka Garg",
+                "formData": {
+                    "newInput1": 25,
+                    "newInput2": "Anushka",
+                    "newInput3": "Garg"
+                }
+            },
+            "634b4586c2e881bd9a343e4e": {
+                "talentName": "Mounika",
+                "formData": {
+                    "newInput1": 25,
+                    "newInput2": "Mounika",
+                    "newInput3": "Balivada"
+                }
+            }
+        }
+    }
+}

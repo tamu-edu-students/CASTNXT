@@ -2,7 +2,7 @@ import React from "react"
 
 let CategoryFilter = (props) => {
     
-    function onCategoryFilterValueChanged(event) {
+    const onCategoryFilterValueChanged = (event) => {
         props.categoryFilterValueSelected(event.target.value)
     }
     

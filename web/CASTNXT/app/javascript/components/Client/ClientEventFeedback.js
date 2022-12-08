@@ -3,25 +3,19 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableFooter from "@mui/material/TableFooter";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
 import Button from "@mui/material/Button";
-import axios from "axios";
-import FormBuilderContainer from "../Forms/FormBuilder.js"
-import Form from "@rjsf/core";
 import TextField from "@mui/material/TextField";
 
-import Header from "../Navbar/Header";
 import Slide from "../Forms/Slide";
 
 
 class ClientEventFeedback extends Component {
     constructor(props) {
         super(props)
-        
         this.state = {
             schema: props.properties.data.schema,
             uischema: props.properties.data.uischema,
