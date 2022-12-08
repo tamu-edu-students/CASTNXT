@@ -64,8 +64,6 @@ class UserHomepage extends Component {
             }
         })
         
-        console.log(filteredAcceptingTableData)
-        
         let rows = []
         if (!acceptingTableData.length) {
             rows.push(

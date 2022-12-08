@@ -6,20 +6,23 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const DatePickerWrapper =  (props) => {
+
+  const onChange = (newValue) => {
+    const e = {
+      target: {
+          name: props.name,
+          value: new Date(newValue).toISOString()
+      }
+    }
+    props.onChange(e);
+  }
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         label="Choose Date."
         value={new Date(props.value).getTime()}
-        onChange={(newValue) => {
-            const e = {
-                target: {
-                    name: props.name,
-                    value: new Date(newValue).toISOString()
-                }
-            }
-            props.onChange(e);
-        }}
+        onChange={(newValue) => onChange(newValue)}
         renderInput={(params) => <TextField {...params} />}
       />
     </LocalizationProvider>
