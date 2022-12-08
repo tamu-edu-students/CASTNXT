@@ -1,14 +1,14 @@
 import React from "react"
 
-let FilterEvents = (props) => {
+let CategoryFilter = (props) => {
     
-    function onFilterValueChanged(event) {
-        props.filterValueSelected(event.target.value)
+    function onCategoryFilterValueChanged(event) {
+        props.categoryFilterValueSelected(event.target.value)
     }
     
     return (
     <div>
-        <select name = "Category" onChange = {onFilterValueChanged}>
+        <select name = "Category" onChange = {onCategoryFilterValueChanged}>
             <option value = "All">All</option>
             <option value = "Fashion">Fashion</option>
             <option value = "Music">Music</option>
@@ -18,4 +18,4 @@ let FilterEvents = (props) => {
     </div>); 
 }
 
-export default FilterEvents;
+export default CategoryFilter;
