@@ -222,7 +222,6 @@ class AdminCreateEvent extends Component {
                                         })
                                     }
                                 </Select>
-                                {this.state.islocationFocused && !this.state.statename ? <FormHelperText>Please Select State to see list of cities.</FormHelperText> : null}
                               </FormControl>
                               <div> 
                               <h6>Is this a paid event ?</h6>

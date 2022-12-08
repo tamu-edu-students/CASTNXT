@@ -58,6 +58,14 @@ class FormBuilderContainer extends Component {
     })
     return changedSchema;
   }
+
+  onFormBuilderChange = (newSchema, newUiSchema) => {
+    console.log(newSchema);
+    console.log(newUiSchema);
+    const { dataSchemaObj, uiSchemaObj } =  this.checkUiSchemaForFiles(newSchema,newUiSchema);
+    this.props.onSchemaChange(JSON.stringify(dataSchemaObj));
+    this.props.onUISchemaChange(JSON.stringify(uiSchemaObj));
+  }
   
   render() {
     return (
@@ -68,12 +76,7 @@ class FormBuilderContainer extends Component {
           <FormBuilder
             schema={this.props.schema}
             uischema={this.props.uischema}
-            onChange={(newSchema, newUiSchema) => {
-              console.log(newSchema);
-              const { dataSchemaObj, uiSchemaObj } =  this.checkUiSchemaForFiles(newSchema,newUiSchema);
-              this.props.onSchemaChange(JSON.stringify(dataSchemaObj));
-              this.props.onUISchemaChange(JSON.stringify(uiSchemaObj));
-            }}
+            onChange={(newSchema, newUiSchema) => this.onFormBuilderChange(newSchema,newUiSchema)}
             mods={
               {
                 customFormInputs,

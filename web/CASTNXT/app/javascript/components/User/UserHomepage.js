@@ -1,4 +1,4 @@
-import React, {useState, Component} from "react"
+import React, { Component} from "react"
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,8 +13,6 @@ import CategoryFilter from "../Filter/CategoryFilter";
 import Button from "@mui/material/Button";
 import LocationFilter from "../Filter/LocationFilter";
 import IsPaidFilter from "../Filter/IsPaidFilter";
-
-import {UsStates, getCities} from '../../utils/FormsUtils';
 
 import Header from "../Navbar/Header";
 
@@ -127,20 +125,20 @@ class UserHomepage extends Component {
         } else {
             filteredTableData.map((event, i) => {
                 rows.push(
-                    <TableRow key={i}>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                    <TableRow key={i} onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b><a href={"/user/events/" + event.id}>{event.title}</a></b>
                         </TableCell>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b>{event.category}</b>
                         </TableCell>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b>{new Date(event.date).toLocaleDateString()}</b>
                         </TableCell>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b>{event.location + ", " + event.statename}</b>
                         </TableCell>
-                        <TableCell align="center" onClick={() => {window.location.href="/user/events/"+event.id}}>
+                        <TableCell align="center" >
                             <b>{event.ispaid}</b>
                         </TableCell>
                     </TableRow>

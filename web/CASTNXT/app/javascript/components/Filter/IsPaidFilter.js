@@ -2,7 +2,7 @@ import React, {Component} from "react"
 
 let IsPaidFilter = (props) => {
 
-    function onPaidFilterChanged(event) {
+    const onPaidFilterChanged = (event) => {
         props.isPaidFilterSelected(event.target.value)
     }
 

@@ -16,7 +16,7 @@ class ImageWidget extends React.Component {
 class Slide extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       schema: props.schema,
       uiSchema: props.uiSchema,

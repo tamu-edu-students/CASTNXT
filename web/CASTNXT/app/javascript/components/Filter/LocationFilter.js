@@ -14,8 +14,6 @@ const LocationFilter = (props) => {
     const [stateName, setState] = useState(null)
 
     const onValueChange= (stateName, cityName) => {
-        console.log(stateName);
-        console.log(cityName)
         setCity(cityName);
         setState(stateName);
         props.handleLocationFilterChange(stateName,cityName)
