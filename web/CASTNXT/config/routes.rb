@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   
   get '/api/change_status/:id', to: 'api#change_status'
   
+  get '/api/', to: 'api#index'
+  
   resources :home, only: [] do
     post 'login', :on => :collection
     post 'signup', :on => :collection
