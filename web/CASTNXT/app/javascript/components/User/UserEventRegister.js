@@ -37,7 +37,7 @@ class UserEventRegister extends Component {
                 disableSubmit: true
             })
         }
-        console.log(this.state.formData);
+        
         axios.post(baseURL + "/slides", {
             formData: JSON.stringify(this.state.formData)
         })

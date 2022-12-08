@@ -1,5 +1,4 @@
 import React, {Component} from "react"
-import axios from "axios";
 import Button from "@mui/material/Button";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -13,9 +12,19 @@ import AdminEventSummary from "./AdminEventSummary";
 import AdminFinalizedCandidates from "./AdminFinalizedCandidates";
 import AdminSubmittedDocs from "./AdminSubmittedDocs";
 
+const tabToComponent = {
+    0: AdminEventHome,
+    1: AdminSubmittedDocs,
+    2: AdminCreateClientStack,
+    3: AdminClientDecks,
+    4: AdminFinalizedCandidates,
+    5: AdminEventSummary
+}
+
 class AdminEventPage extends Component {
     constructor(props) {
         super(props)
+        
         this.state = {
             title: properties.data.title,
             description: properties.data.description,
@@ -25,6 +34,11 @@ class AdminEventPage extends Component {
             category: properties.data.category,
             tabValue: 0
         }
+    }
+
+    renderTab = () => {
+        let Component = tabToComponent[this.state.tabValue];
+        return <Component key={`tab_${this.state.tabValue}`} properties={properties} />
     }
     
     handleTabChange = (e, newValue) => {
@@ -58,49 +72,14 @@ class AdminEventPage extends Component {
                             <Box sx={{ width: "100%", marginRight: "-2%" }}>
                               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange} centered>
-                                  <Tab label="Home" />
-                                  <Tab label="Submitted Docs" />
-                                  <Tab label="Selected Docs" />
-                                  <Tab label="Client Decks" />
-                                  <Tab label="Finalized Decks" />
-                                  <Tab label="Summary" />
+                                    {["Home","Submitted Docs","Selected Docs", "Client Decks", "Finalized Decks", "Summary"].map((label) => {
+                                        return <Tab key={label} label={label} />
+                                    })}
                                 </Tabs>
                               </Box>
-                              
-                              {this.state.tabValue === 0 &&
-                                  <div>
-                                    <AdminEventHome properties={properties} />
-                                  </div>
-                              }
-                              
-                              {this.state.tabValue === 1 &&
-                                  <div>
-                                    <AdminSubmittedDocs properties={properties} />
-                                  </div>
-                              }
-                              
-                              {this.state.tabValue === 2 &&
-                                  <div>
-                                    <AdminCreateClientStack properties={properties} />
-                                  </div>
-                              }
-                              
-                              {this.state.tabValue === 3 &&
-                                  <div>
-                                    <AdminClientDecks properties={properties} />
-                                  </div>
-                              }
-                              
-                              {this.state.tabValue === 4 &&
-                                  <div>
-                                    <AdminFinalizedCandidates properties={properties} />
-                                  </div>
-                              }
-                              
-                              {this.state.tabValue === 5 &&
-                                  <div>
-                                    <AdminEventSummary properties={properties} />
-                                  </div>
+
+                              {
+                                this.renderTab()
                               }
                             </Box>
                         </div>

@@ -395,3 +395,101 @@ export const PROPERTIES_CLIENT_FEEDBACK = {
         }
     }
 }
+
+export const ADMIN_EVENT_PROPERTIES = {
+    "name": "admin1",
+    "data": {
+        "schema": {
+            "type": "object",
+            "properties": {
+                "newInput1": {
+                    "title": "Age",
+                    "type": "integer",
+                    "default": 0
+                },
+                "newInput2": {
+                    "title": "First Name",
+                    "type": "string",
+                    "description": "Your First Name"
+                },
+                "newInput3": {
+                    "title": "Given Name",
+                    "type": "string",
+                    "description": "Your Given Name"
+                }
+            },
+            "dependencies": {},
+            "required": [
+                "newInput1",
+                "newInput2",
+                "newInput3"
+            ]
+        },
+        "uischema": {
+            "ui:order": [
+                "newInput1",
+                "newInput2",
+                "newInput3"
+            ]
+        },
+        "id": "634b4470c2e881bd9a343e45",
+        "title": "Paris Fashion Week",
+        "description": "Some Description",
+        "status": "ACCEPTING",
+        "location": null,
+        "statename": null,
+        "eventdate": null,
+        "category": null,
+        "is_paid_event": null,
+        "clients": {
+            "634b4854c2e881bec01f8fe8": {
+                "name": "Sid",
+                "slideIds": [
+                    "634b4541c2e881bd9a343e4b",
+                    "634b4586c2e881bd9a343e4e"
+                ],
+                "finalizedIds": [],
+                "negotiationId": "634b4956c2e881bec01f8fea",
+                "preferenceSubmitted": true
+            }
+        },
+        "slides": {
+            "634b44f0c2e881bd9a343e48": {
+                "talentName": "Model One",
+                "formData": {
+                    "newInput1": 18,
+                    "newInput2": "Model",
+                    "newInput3": "One"
+                },
+                "curated": true
+            },
+            "634b4541c2e881bd9a343e4b": {
+                "talentName": "Anushka Garg",
+                "formData": {
+                    "newInput1": 25,
+                    "newInput2": "Anushka",
+                    "newInput3": "Garg"
+                },
+                "curated": true
+            },
+            "634b4586c2e881bd9a343e4e": {
+                "talentName": "Mounika",
+                "formData": {
+                    "newInput1": 25,
+                    "newInput2": "Mounika",
+                    "newInput3": "Balivada"
+                },
+                "curated": true
+            },
+            "634b4ff6c2e881c05b22c390": {
+                "talentName": "Rohan",
+                "formData": {
+                    "newInput1": 25,
+                    "newInput2": "Rohan",
+                    "newInput3": "Kandikoda"
+                },
+                "curated": false
+            }
+        }
+    }
+}

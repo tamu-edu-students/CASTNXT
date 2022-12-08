@@ -1,6 +1,6 @@
 import AdminHomepage from "../../../../app/javascript/components/Admin/AdminHomepage";
 import renderer from 'react-test-renderer';
-import { propsDefault, ADMIN_PROPERTIES_EVENT_NONE, ADMIN_PROPERTIES_EVENT_ACCEPTING, ADMIN_PROPERTIES_EVENT_DELETED } from '../../__mocks__/props.mock';
+import { ADMIN_PROPERTIES_EVENT_NONE, ADMIN_PROPERTIES_EVENT_ACCEPTING, ADMIN_PROPERTIES_EVENT_DELETED } from '../../__mocks__/props.mock';
 
 const mockTableContainer = jest.fn();
 const mockButton = jest.fn();
