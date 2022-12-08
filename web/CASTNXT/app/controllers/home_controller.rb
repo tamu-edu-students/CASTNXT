@@ -54,7 +54,7 @@ class HomeController < ApplicationController
         session[:userType] = currentUser.user_type
         session[:userName] = currentUser.name
         session[:userId] = currentUser._id.to_str
-        render json: {redirect_path: get_redirect_path}, status: 201
+        render json: {comment: "Please check your mailbox for validation email. Validate and login back!"}, status: 400
       else
         render json: {comment: "An account with the given Email already exists!"}, status: 400
       end
@@ -71,6 +71,9 @@ class HomeController < ApplicationController
         currentUser = get_user(params[:email], params[:password])
         if currentUser.is_valid == false
           render json: {comment: "User not validated! Please check your mailbox for validation email."}, status: 400
+          return
+        elsif currentUser.is_active == false
+          render json: {comment: "User is inactive. Contact the admin of the event."}, status: 400
           return
         end
         session[:userEmail] = currentUser.email

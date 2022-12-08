@@ -33,7 +33,7 @@ gem 'coffee-rails', '~> 4.2'
 # Use tp to display tables in tabular format on rails console
 gem 'table_print'
 
-
+gem 'rack-cors', '~> 0.3.1'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
