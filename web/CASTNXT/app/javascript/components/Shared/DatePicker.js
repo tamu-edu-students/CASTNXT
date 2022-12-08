@@ -5,28 +5,37 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-const DatePickerWrapper =  (props) => {
+class DatePickerWrapper extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state ={
+      name: props.name,
+      value: new Date(props.value).getTime()
+    }
+  }
 
-  const onChange = (newValue) => {
+  onChange = (newValue) => {
     const e = {
       target: {
-          name: props.name,
+          name: this.state.name,
           value: new Date(newValue).toISOString()
       }
     }
-    props.onChange(e);
+    this.props.onChange(e);
   }
 
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        label="Choose Date."
-        value={new Date(props.value).getTime()}
-        onChange={(newValue) => onChange(newValue)}
-        renderInput={(params) => <TextField {...params} />}
-      />
-    </LocalizationProvider>
-  );
+  render () {
+    return (
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Choose Date."
+          value={this.state.value}
+          onChange={(newValue) => onChange(newValue)}
+          renderInput={(params) => <TextField {...params} />}
+        />
+      </LocalizationProvider>
+    );
+  }
 }
 
 export default DatePickerWrapper;
