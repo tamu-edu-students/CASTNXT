@@ -161,7 +161,7 @@ class UserHomepage extends Component {
                  </TableRow>
             )
         } else {
-            filteredTableData.map((event, i) => {
+            submittedTableData.map((event, i) => {
                 if (event.accepting) {
                     rows.push(
                         <TableRow key={i}>

@@ -21,6 +21,9 @@ class DatePickerWrapper extends React.Component{
           value: new Date(newValue).toISOString()
       }
     }
+    this.setState({
+      value: new Date(newValue).toISOString()
+    })
     this.props.onChange(e);
   }
 
@@ -30,7 +33,7 @@ class DatePickerWrapper extends React.Component{
         <DatePicker
           label="Choose Date."
           value={this.state.value}
-          onChange={(newValue) => onChange(newValue)}
+          onChange={(newValue) => this.onChange(newValue)}
           renderInput={(params) => <TextField {...params} />}
         />
       </LocalizationProvider>
