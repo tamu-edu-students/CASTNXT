@@ -1119,7 +1119,8 @@ export const getCities = (state) => {
         Object.values(UsCitiesWithStates).forEach(stateCities => {
           cities.push(...stateCities)
         });
-        return cities.sort();
+        const citySet = [...new Set(cities)]
+        return citySet.sort();
     } 
     return UsCitiesWithStates[state];
 } 
