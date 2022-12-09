@@ -11,18 +11,19 @@ Web-App to Automate Talent Audition, Placement, Replacement and Tabulate Pay
 
 This repo has both Javascript and Ruby on Rails test-cases. Please run them in the following way respectfully.
 
-ReactJS
+# ReactJS
 1. We rely on JEST for UTs in ReactJS. 
 2. After navigating to the code folder, you can either run the command `npm run coverage` or `npm run test`, this shall show you test coverage.
 
-Ruby:
-...
+# Ruby:
+1. We use rspec for ruby tests.
 
-# Iteration Reports:
-Link the Folder here.
+# Iteration Reports: 
+There are 5 iteration reports and 1 final report in total.
+https://github.com/tamu-edu-students/CASTNXT/tree/main/documentation/Fall2022
 
 # Presentation:
-View only link.
+https://tamucs-my.sharepoint.com/:p:/g/personal/anushkagarg_tamu_edu/Efy2j5Wx94RGg3DHXSwwhzABcBfsTAJGz2VbhXSGtP7-5Q?e=glfvnl
 
 # Demo:
 Demo Link.
