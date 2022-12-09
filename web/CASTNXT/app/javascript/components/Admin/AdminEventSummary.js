@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { Paper } from '@material-ui/core'
 import { DataGrid } from '@material-ui/data-grid';
-
+import {DATA_GRID_TYPES_MAP} from '../../utils/DataParser';
+import { extendedNumberOperators } from '../../utils/RangeFilter';
 
 class AdminEventSummary extends Component {
     constructor(props) {
@@ -39,7 +40,12 @@ class AdminEventSummary extends Component {
       let schema = this.props.properties.data.schema.properties
       Object.keys(schema).forEach(key => {
         let existingColumn = columns.find(column => column.field === key)
-        if (!existingColumn) {
+        if (!existingColumn && !key.startsWith('file')) {
+          const type = DATA_GRID_TYPES_MAP[schema[key].type];
+          const columnConfig = {field: key, headerName: schema[key].title, minWidth: 150, type};
+          if (type === 'number'){
+            columnConfig.filterOperators = extendedNumberOperators;
+          }
           columns.push({field: key, headerName: schema[key].title, minWidth: 150})
         }
       })
