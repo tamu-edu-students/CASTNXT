@@ -26,4 +26,4 @@ https://github.com/tamu-edu-students/CASTNXT/tree/main/documentation/Fall2022
 https://tamucs-my.sharepoint.com/:p:/g/personal/anushkagarg_tamu_edu/Efy2j5Wx94RGg3DHXSwwhzABcBfsTAJGz2VbhXSGtP7-5Q?e=glfvnl
 
 # Demo:
-Demo Link.
+https://drive.google.com/file/d/1ltjPFTOFTjmW5PaYCQwqj9crIkx1Y_8r/view
