@@ -172,10 +172,10 @@ production:
         #     - use: web
 
         # The name of the user for authentication.
-        user: 'root'
+        user:  <%= ENV['DB_USER'] %>
 
         # The password of the user for authentication.
-        password: 'example'
+        password:  <%= ENV['DB_PWD'] %>
 
         # The user's database roles.
         # roles:

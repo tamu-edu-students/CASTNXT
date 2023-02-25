@@ -7,7 +7,7 @@ services:
     ports:
       - "27017:27017"
   web:
-    build: .
+    build: Dockerfile
     command: "rails s -b 0.0.0.0 -p 3000"
     ports:
       - "3000:3000"
@@ -15,5 +15,8 @@ services:
     tty: true
     links:
       - db
+    environment:
+      DB_USER: root
+      DB_PWD: example
     volumes:
       - ./:/castnxt
