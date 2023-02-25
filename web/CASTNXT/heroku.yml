@@ -1,0 +1,10 @@
+build:
+  docker:
+    web: Dockerfile
+  config:
+    MONGO_INITDB_ROOT_USERNAME: root
+    MONGO_INITDB_ROOT_PASSWORD: example
+run:
+  web: rails s -b 0.0.0.0 -p 3000
+  db:
+    image: mongo
